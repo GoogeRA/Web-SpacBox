@@ -1,0 +1,78 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}SpecBox | Конфигуратор ПК{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/style_index.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <h1 class="main-title">SPECBOX</h1>
+    <p class="tagline">
+        Соберите идеальный компьютер за несколько кликов. Сравните цены по всей России и найдите лучшие предложения без переплат. Все компоненты автоматически проверяются на совместимость: никаких конфликтов, только готовая к сборке конфигурация.
+    </p>
+    <button class="main-btn" onclick="location.href='{% url 'core:components' %}'">НАЧАТЬ СБОРКУ</button>
+</section>
+
+<!-- Functions Section -->
+<section class="section">
+    <h2 class="section-title">ОСНОВНЫЕ ФУНКЦИИ</h2>
+    <div class="cards-grid">
+        <div class="card fade-in">
+            <h3 class="card-title">БАЗА КОМПОНЕНТОВ</h3>
+            <p class="card-content">Более 12 000 актуальных компонентов от всех крупных производителей. База данных обновляется в реальном времени.</p>
+        </div>
+        <div class="card fade-in">
+            <h3 class="card-title">ПРОВЕРКА СОВМЕСТИМОСТИ</h3>
+            <p class="card-content">Автоматическая проверка совместимости всех компонентов. Система гарантирует работу без ошибок.</p>
+        </div>
+        <div class="card fade-in">
+            <h3 class="card-title">СРАВНЕНИЕ ЦЕН</h3>
+            <p class="card-content">Сравнение цен в DNS, Ситилинк, М.Видео. Найдите лучшую цену и сэкономьте до 15%.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Advantages Section -->
+<section class="section">
+    <h2 class="section-title">ПРЕИМУЩЕСТВА</h2>
+    <div class="cards-grid">
+        <div class="card fade-in">
+            <h3 class="card-title">ЭКОНОМИЯ</h3>
+            <p class="card-content">Сравнивайте цены по регионам. Экономия до 15% по сравнению с покупкой в одном магазине.</p>
+        </div>
+        <div class="card fade-in">
+            <h3 class="card-title">НАДЕЖНОСТЬ</h3>
+            <p class="card-content">Проверенная система совместимости гарантирует работу без ошибок.</p>
+        </div>
+        <div class="card fade-in">
+            <h3 class="card-title">УДОБСТВО</h3>
+            <p class="card-content">Простой интерфейс для сборки ПК. Не нужно разбираться в деталях.</p>
+        </div>
+        <div class="card fade-in">
+            <h3 class="card-title">АКТУАЛЬНОСТЬ</h3>
+            <p class="card-content">Ежедневное обновление цен и ассортимента.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="section">
+    <h2 class="section-title">СВЯЖИТЕСЬ С НАМИ</h2>
+    <div class="contact-form">
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Ваше имя" required>
+        </div>
+        <div class="form-group">
+            <input type="email" class="form-control" placeholder="Email" required>
+        </div>
+        <div class="form-group">
+            <textarea class="form-control" placeholder="Сообщение" required></textarea>
+        </div>
+        <button class="main-btn" style="width:100%;margin:0;font-size:1.6rem;padding:18px;">ОТПРАВИТЬ</button>
+    </div>
+</section>
+{% endblock %}

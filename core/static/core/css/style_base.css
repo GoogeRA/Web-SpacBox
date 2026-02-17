@@ -1,0 +1,223 @@
+/* ========================================
+   BASE.CSS - ОБЩИЕ СТИЛИ
+   ======================================== */
+
+/* ===== ГЛОБАЛЬНЫЕ СТИЛИ ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, #0a0a12 0%, #1a1a2e 100%);
+    color: #e0e0ff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow-x: hidden;
+    line-height: 1.6;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* ===== КОСМИЧЕСКИЙ ФОН ===== */
+.cosmic-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(
+        ellipse at center,
+        rgba(15, 15, 30, 0.9) 0%,
+        rgba(10, 10, 18, 0.95) 70%,
+        rgba(5, 5, 12, 1) 100%
+    );
+    z-index: -3;
+}
+
+.stars {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+}
+
+.star {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    animation: twinkle 4s infinite;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.2; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+}
+
+.nebula {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(60px);
+    z-index: -1;
+    opacity: 0.25;
+}
+
+.nebula-1 {
+    top: 15%; left: 10%; width: 400px; height: 400px;
+    background: radial-gradient(circle, #9d4edd 0%, transparent 70%);
+}
+
+.nebula-2 {
+    bottom: 10%; right: 15%; width: 350px; height: 350px;
+    background: radial-gradient(circle, #6366f1 0%, transparent 70%);
+}
+
+.nebula-3 {
+    top: 60%; left: 65%; width: 300px; height: 300px;
+    background: radial-gradient(circle, #ff5eda 0%, transparent 70%);
+}
+
+/* ===== HEADER ===== */
+.site-header {
+    width: 95%;
+    max-width: 1200px;
+    background: rgba(20, 20, 40, 0.85);
+    border: 2px solid rgba(157, 78, 221, 0.6);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(157, 78, 221, 0.15);
+    padding: 15px 30px;
+    margin: 20px auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+    position: relative;
+}
+
+.site-title {
+    color: #ffffff;
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.site-title::before {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: #10b981;
+    border-radius: 50%;
+    margin-right: 12px;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+}
+
+.nav-menu {
+    display: flex;
+    gap: 25px;
+}
+
+.nav-link {
+    color: #c5c5e0;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1.05rem;
+    padding: 8px 12px;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: #ffffff;
+    background: rgba(157, 78, 221, 0.25);
+}
+
+.site-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.control-btn {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.control-btn.close:hover { background: #ff5252; border-color: #ff1a1a; }
+.control-btn.minimize:hover { background: #ffcc00; border-color: #cc9900; }
+.control-btn.maximize:hover { background: #2ecc40; border-color: #1a8c26; }
+
+/* ===== MAIN CONTENT ===== */
+.main-content {
+    width: 95%;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 5;
+}
+
+/* ===== FOOTER ===== */
+.site-footer {
+    width: 95%;
+    max-width: 1200px;
+    background: rgba(15, 15, 35, 0.7);
+    padding: 22px 30px;
+    border-top: 1px solid rgba(157, 78, 221, 0.3);
+    border-radius: 16px;
+    font-size: 1.05rem;
+    color: #b0b0d0;
+    text-align: center;
+    margin: 0 auto 40px;
+    position: relative;
+    z-index: 10;
+}
+
+.status-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: #10b981;
+    border-radius: 50%;
+    margin-right: 10px;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(16, 185, 129, 0.6); }
+    50% { opacity: 0.7; box-shadow: 0 0 12px rgba(16, 185, 129, 0.9); }
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .site-header {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .nav-menu {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .nav-link {
+        font-size: 0.95rem;
+        padding: 6px 10px;
+    }
+}

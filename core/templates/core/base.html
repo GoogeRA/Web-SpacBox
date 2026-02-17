@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SpecBox{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'core/css/style_base.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Космический фон -->
+    <div class="cosmic-bg"></div>
+
+    <!-- Звёзды -->
+    <div class="stars">
+        <div class="star" style="width:1.5px;height:1.5px;top:10%;left:20%;animation-delay:0s;"></div>
+        <div class="star" style="width:2px;height:2px;top:25%;left:40%;animation-delay:0.5s;"></div>
+        <div class="star" style="width:1px;height:1px;top:40%;left:60%;animation-delay:1s;"></div>
+        <div class="star" style="width:1.5px;height:1.5px;top:55%;left:30%;animation-delay:1.5s;"></div>
+        <div class="star" style="width:2px;height:2px;top:70%;left:80%;animation-delay:2s;"></div>
+        <div class="star" style="width:1px;height:1px;top:85%;left:15%;animation-delay:2.5s;"></div>
+        <div class="star" style="width:1.5px;height:1.5px;top:5%;left:75%;animation-delay:0.3s;"></div>
+        <div class="star" style="width:1px;height:1px;top:50%;left:10%;animation-delay:1.2s;"></div>
+        <div class="star" style="width:1.5px;height:1.5px;top:30%;left:90%;animation-delay:0.8s;"></div>
+        <div class="star" style="width:2px;height:2px;top:65%;left:5%;animation-delay:1.7s;"></div>
+    </div>
+
+    <!-- Туманности -->
+    <div class="nebula nebula-1"></div>
+    <div class="nebula nebula-2"></div>
+    <div class="nebula nebula-3"></div>
+
+    <!-- Header -->
+    <header class="site-header">
+        <div class="site-title">SPECBOX</div>
+        <nav class="nav-menu">
+            <a href="/" class="nav-link" onclick="location.href='/'">Главная</a>
+            <a href="#" class="nav-link">Сравнение</a>
+            <a href="#" class="nav-link">Конфигуратор</a>
+            <a href="/components/" class="nav-link" onclick="location.href='/components/'">Компоненты</a>
+            <a href="#" class="nav-link">Новости</a>
+            <a href="#" class="nav-link">О проекте</a>
+        </nav>
+        <div class="site-controls">
+            <div class="control-btn close"></div>
+            <div class="control-btn minimize"></div>
+            <div class="control-btn maximize"></div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <span class="status-indicator"></span>
+        <span>SPECBOX | Сравнение цен • Проверка совместимости • Горячие предложения | © 2026</span>
+    </footer>
+
+    <script src="{% static 'core/js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

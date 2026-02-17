@@ -1,0 +1,169 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}SpecBox | Комплектующие{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/style_components.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header">
+    <h1 class="page-title">КОМПЛЕКТУЮЩИЕ</h1>
+    <p class="page-subtitle">Более 12 000 компонентов для сборки вашего идеального ПК</p>
+</section>
+
+
+<!-- Catalog Container -->
+<section class="catalog-container">
+    <!-- Filters Sidebar -->
+    <aside class="filters-sidebar">
+        <div class="filters-header">
+            <h3 class="filters-title">ФИЛЬТРЫ</h3>
+            <button class="filters-reset" onclick="resetFilters()">СБРОСИТЬ</button>
+        </div>
+
+        <!-- Search -->
+        <div class="filter-section">
+            <label class="filter-label">Поиск</label>
+            <input type="text" class="filter-search" placeholder="Название компонента...">
+        </div>
+
+        <!-- Category -->
+        <div class="filter-section">
+            <label class="filter-label">Категория</label>
+            <div class="filter-checkboxes">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="category" value="cpu">
+                    <span class="checkmark"></span>Процессоры
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="category" value="gpu">
+                    <span class="checkmark"></span>Видеокарты
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="category" value="mobo">
+                    <span class="checkmark"></span>Материнские платы
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="category" value="ram">
+                    <span class="checkmark"></span>Оперативная память
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="category" value="ssd">
+                    <span class="checkmark"></span>SSD накопители
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="category" value="psu">
+                    <span class="checkmark"></span>Блоки питания
+                </label>
+            </div>
+        </div>
+
+        <!-- Brand -->
+        <div class="filter-section">
+            <label class="filter-label">Производитель</label>
+            <div class="filter-checkboxes">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="brand" value="nvidia">
+                    <span class="checkmark"></span>NVIDIA
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="brand" value="amd">
+                    <span class="checkmark"></span>AMD
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="brand" value="intel">
+                    <span class="checkmark"></span>Intel
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" name="brand" value="asus">
+                    <span class="checkmark"></span>ASUS
+                </label>
+            </div>
+        </div>
+
+        <!-- Price -->
+        <div class="filter-section">
+            <label class="filter-label">Цена, ₽</label>
+            <div class="price-inputs">
+                <input type="number" class="price-from" placeholder="От">
+                <span class="price-separator">—</span>
+                <input type="number" class="price-to" placeholder="До">
+            </div>
+            <input type="range" class="price-range" min="0" max="200000" step="1000" value="200000">
+        </div>
+
+        <!-- Apply Button -->
+        <button class="filter-apply-btn" onclick="applyFilters()">ПРИМЕНИТЬ</button>
+    </aside>
+
+    <!-- Components Wrapper -->
+    <div class="components-wrapper">
+        <!-- Toolbar -->
+        <div class="components-toolbar">
+            <span class="components-count">Найдено: <strong>{{ total_count }}</strong></span>
+            <div class="components-sort">
+                <label>Сортировать:</label>
+                <select class="sort-select">
+                    <option value="popular">По популярности</option>
+                    <option value="price_asc">По цене (возрастание)</option>
+                    <option value="price_desc">По цене (убывание)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Components Grid -->
+        <section class="components-section">
+            <div class="components-grid">
+                {% for component in components %}
+                <div class="component-card fade-in">
+                    <div class="component-image">
+                        <div class="image-placeholder">{{ component.manufacturer|first }}</div>
+                        {% if component.is_hit %}<div class="component-badge">HIT</div>{% endif %}
+                        {% if not component.in_stock %}<div class="out-of-stock">НЕТ В НАЛИЧИИ</div>{% endif %}
+                    </div>
+                    <div class="component-info">
+                        <h3 class="component-name">{{ component.name }}</h3>
+                        <p class="component-category">{{ component.category }}</p>
+                        <p class="component-manufacturer">{{ component.manufacturer }}</p>
+                    </div>
+                    <div class="component-price">
+                        <span class="price-value">{{ component.price|floatformat:0 }} ₽</span>
+                        {% if component.in_stock %}
+                        <button class="add-to-cart-btn" onclick="addToCart('{{ component.name }}')">В СБОРКУ</button>
+                        {% else %}
+                        <button class="add-to-cart-btn disabled" disabled>ОЖИДАЕТСЯ</button>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Pagination -->
+        <section class="pagination-section">
+            <div class="pagination">
+                <a class="page-link">← Назад</a>
+                <a class="page-link active">1</a>
+                <a class="page-link">2</a>
+                <a class="page-link">3</a>
+                <a class="page-link">...</a>
+                <a class="page-link">10</a>
+                <a class="page-link">Вперёд →</a>
+            </div>
+        </section>
+    </div>
+</section>
+
+<script>
+    function addToCart(name) { alert('✅ "' + name + '" добавлен в сборку!'); }
+    function resetFilters() {
+        document.querySelectorAll('.filter-checkboxes input').forEach(cb => cb.checked = false);
+        document.querySelectorAll('.price-from, .price-to, .filter-search').forEach(i => i.value = '');
+        alert('Фильтры сброшены');
+    }
+    function applyFilters() { alert('Фильтры применены!'); }
+</script>
+{% endblock %}
