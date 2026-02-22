@@ -5,5 +5,6 @@ app_name = 'core'
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('configurator/', views.configurator_view, name='configurator'),
     path('components/', views.components, name='components'),
 ]

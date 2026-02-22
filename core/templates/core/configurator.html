@@ -1,0 +1,117 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}SpecBox | Конфигуратор ПК{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'core/css/style_configurator.css' %}">
+{% endblock %}
+
+{% block content %}
+    <h1 class="page-title">Конфигуратор ПК</h1>
+
+    <div class="configurator-container">
+        <div class="block-title">
+            <h2>Обязательные комплектующие</h2>
+            <span class="status">0/7</span>
+        </div>
+
+        <div class="component-list">
+            <div class="component-item" data-component="processor">
+                <div class="component-content">
+                    <div class="component-icon">P</div>
+                    <div class="component-name">Процессор</div>
+                    <div class="component-required">Обязательно</div>
+                </div>
+                <button class="btn" data-action="add">Выбрать</button>
+            </div>
+
+            <div class="component-item" data-component="motherboard">
+                <div class="component-content">
+                    <div class="component-icon">M</div>
+                    <div class="component-name">Мат. плата</div>
+                    <div class="component-required">Обязательно</div>
+                </div>
+                <button class="btn" data-action="add">Выбрать</button>
+            </div>
+
+            <div class="component-item" data-component="power-supply">
+                <div class="component-content">
+                    <div class="component-icon">PSU</div>
+                    <div class="component-name">Блок питания</div>
+                    <div class="component-required">Обязательно</div>
+                </div>
+                <button class="btn" data-action="add">Выбрать</button>
+            </div>
+
+            <div class="component-item" data-component="case">
+                <div class="component-content">
+                    <div class="component-icon">C</div>
+                    <div class="component-name">Корпус</div>
+                    <div class="component-required">Обязательно</div>
+                </div>
+                <button class="btn" data-action="add">Выбрать</button>
+            </div>
+
+            <div class="component-item" data-component="graphics-card">
+                <div class="component-content">
+                    <div class="component-icon">V</div>
+                    <div class="component-name">Видеокарта</div>
+                </div>
+                <button class="btn btn-primary" data-action="add">Выбрать</button>
+            </div>
+
+            <div class="component-item" data-component="cpu-cooler">
+                <div class="component-content">
+                    <div class="component-icon">CO</div>
+                    <div class="component-name">Охлаждение процессора</div>
+                    <div class="component-required">Обязательно</div>
+                </div>
+                <button class="btn" data-action="add">Выбрать</button>
+            </div>
+
+            <div class="component-item" data-component="ram">
+                <div class="component-content">
+                    <div class="component-icon">RAM</div>
+                    <div class="component-name">Оперативная память</div>
+                    <div class="component-required">Обязательно</div>
+                </div>
+                <button class="btn" data-action="add">Выбрать</button>
+            </div>
+
+            <div class="component-item" data-component="storage">
+                <div class="component-content">
+                    <div class="component-icon">ST</div>
+                    <div class="component-name">Накопители</div>
+                    <div class="component-required">Обязательно</div>
+                </div>
+                <button class="btn" data-action="add">Выбрать</button>
+            </div>
+
+            <div class="component-item" data-component="sound-card">
+                <div class="component-content">
+                    <div class="component-icon">SC</div>
+                    <div class="component-name">Звуковая карта</div>
+                </div>
+                <button class="btn" data-action="add">Выбрать</button>
+            </div>
+
+            <div class="component-item" data-component="additional-details">
+                <div class="component-content">
+                    <div class="component-icon">AD</div>
+                    <div class="component-name">Доп. детали</div>
+                </div>
+                <button class="btn" data-action="add">Выбрать</button>
+            </div>
+        </div>
+
+        <div class="config-controls">
+            <button class="btn btn-lg">Назад</button>
+            <button class="btn btn-lg btn-primary">Далее</button>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'core/js/configurator.js' %}"></script>
+{% endblock %}

@@ -5,6 +5,11 @@ def index(request):
     """Главная страница SpecBox"""
     return render(request, 'core/index.html')
 
+def configurator_view(request):
+    """
+    Представление для страницы конфигуратора ПК
+    """
+    return render(request, 'core/configurator.html')
 
 def components(request):
     """Страница комплектующих"""
