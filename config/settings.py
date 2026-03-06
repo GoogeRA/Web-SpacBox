@@ -90,15 +90,27 @@ USE_TZ = True
 
 
 # Статические файлы
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [
     BASE_DIR / 'core' / 'static',
 ]
 
 # Медиа файлы
-MEDIA_URL = 'media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 # Поле по умолчанию
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# config/settings.py
+# URL для входа при использовании @login_required
+LOGIN_URL = '/accounts/login/'  # если используете кастомный login
+# или:
+# LOGIN_URL = '/accounts/login/'  # если используете встроенный
+
+# Куда перенаправить после успешного входа
+LOGIN_REDIRECT_URL = 'core:profile'
+
+# Куда перенаправить после выхода
+LOGOUT_REDIRECT_URL = 'core:index'

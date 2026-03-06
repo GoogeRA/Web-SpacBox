@@ -1,0 +1,360 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}SpecBox | Личный кабинет{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/style_profile.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Заголовок страницы -->
+<div class="page-header">
+</div>
+
+<!-- Основной контейнер -->
+<div class="profile-container">
+    <!-- Боковая панель навигации -->
+    <aside class="profile-sidebar">
+        <!-- Информация о пользователе -->
+        <div class="user-info-card">
+            <div class="user-avatar">
+                <span class="avatar-placeholder">{{ user_data.username|first|upper }}</span>
+            </div>
+            <div class="user-details">
+                <h3 class="user-name">{{ user_data.username }}</h3>
+                <p class="user-email">{{ user_data.email }}</p>
+                <span class="user-status">
+                    <span class="status-dot"></span>
+                    Активен
+                </span>
+            </div>
+        </div>
+
+        <!-- Навигация -->
+        <nav class="profile-nav">
+            <a href="#profile" class="nav-item active">
+                <span class="nav-icon">👤</span>
+                <span class="nav-text">Профиль</span>
+            </a>
+            <a href="#builds" class="nav-item">
+                <span class="nav-icon">🖥️</span>
+                <span class="nav-text">Мои сборки</span>
+                <span class="nav-badge">{{ saved_builds_count }}</span>
+            </a>
+            <a href="#orders" class="nav-item">
+                <span class="nav-icon">📦</span>
+                <span class="nav-text">Заказы</span>
+                <span class="nav-badge">{{ orders_count }}</span>
+            </a>
+            <a href="#favorites" class="nav-item">
+                <span class="nav-icon">❤️</span>
+                <span class="nav-text">Избранное</span>
+                <span class="nav-badge">{{ favorites_count }}</span>
+            </a>
+            <a href="#notifications" class="nav-item">
+                <span class="nav-icon">🔔</span>
+                <span class="nav-text">Уведомления</span>
+                {% if unread_notifications %}
+                <span class="nav-badge notification">{{ unread_notifications }}</span>
+                {% endif %}
+            </a>
+            <a href="#settings" class="nav-item">
+                <span class="nav-icon">⚙️</span>
+                <span class="nav-text">Настройки</span>
+            </a>
+        </nav>
+
+        <!-- Кнопка действия -->
+        <div class="profile-actions">
+            <a href="{% url 'core:configurator' %}" class="btn btn-primary btn-full">
+                <span class="btn-icon">+</span>
+                Новая сборка
+            </a>
+        </div>
+    </aside>
+
+    <!-- Основной контент -->
+    <main class="profile-content">
+        <!-- Секция: Профиль -->
+        <section id="profile" class="profile-section active">
+            <div class="section-header">
+                <h2 class="section-title">Информация о профиле</h2>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <label class="info-label">Имя пользователя</label>
+                    <p class="info-value">{{ user_data.username }}</p>
+                </div>
+                <div class="info-card">
+                    <label class="info-label">Email</label>
+                    <p class="info-value">{{ user_data.email }}</p>
+                </div>
+                <div class="info-card">
+                    <label class="info-label">Телефон</label>
+                    <p class="info-value">{{ user_data.phone }}</p>
+                </div>
+                <div class="info-card">
+                    <label class="info-label">Город</label>
+                    <p class="info-value">{{ user_data.city }}</p>
+                </div>
+                <div class="info-card">
+                    <label class="info-label">Дата регистрации</label>
+                    <p class="info-value">{{ user_data.registered }}</p>
+                </div>
+                <div class="info-card">
+                    <label class="info-label">Последний вход</label>
+                    <p class="info-value">{{ user_data.last_login }}</p>
+                </div>
+                <div class="info-card">
+                    <label class="info-label">Статус</label>
+                    <p class="info-value">
+                        <span class="status-badge status-active">Активен</span>
+                    </p>
+                </div>
+                <div class="info-card">
+                    <label class="info-label">Сборок сохранено</label>
+                    <p class="info-value">{{ saved_builds_count }}</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Секция: Мои сборки -->
+        <section id="builds" class="profile-section">
+            <div class="section-header">
+                <h2 class="section-title">Сохранённые сборки</h2>
+                <a href="{% url 'core:configurator' %}" class="btn btn-primary">
+                    <span class="btn-icon">+</span>
+                    Новая сборка
+                </a>
+            </div>
+
+            {% if saved_builds %}
+            <div class="builds-grid">
+                {% for build in saved_builds %}
+                <div class="build-card">
+                    <div class="build-header">
+                        <h3 class="build-name">{{ build.name }}</h3>
+                        <span class="build-date">{{ build.created_at }}</span>
+                    </div>
+                    <div class="build-components">
+                        <div class="component-row">
+                            <span class="component-type">CPU:</span>
+                            <span class="component-value">{{ build.cpu }}</span>
+                        </div>
+                        <div class="component-row">
+                            <span class="component-type">GPU:</span>
+                            <span class="component-value">{{ build.gpu }}</span>
+                        </div>
+                        <div class="component-row">
+                            <span class="component-type">RAM:</span>
+                            <span class="component-value">{{ build.ram }}</span>
+                        </div>
+                    </div>
+                    <div class="build-footer">
+                        <span class="build-total">
+                            <span class="total-label">Итого:</span>
+                            <span class="total-price">{{ build.total_price|floatformat:0 }} ₽</span>
+                        </span>
+                        <div class="build-actions">
+                            <a href="{% url 'core:configurator' %}" class="btn btn-sm">Просмотр</a>
+                            <button class="btn btn-sm btn-delete" onclick="deleteBuild({{ build.id }})">Удалить</button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">🖥️</div>
+                <h3>Нет сохранённых сборок</h3>
+                <p>Создайте свою первую конфигурацию в конфигураторе</p>
+                <a href="{% url 'core:configurator' %}" class="btn btn-primary">Перейти в конфигуратор</a>
+            </div>
+            {% endif %}
+        </section>
+
+        <!-- Секция: Заказы -->
+        <section id="orders" class="profile-section">
+            <div class="section-header">
+                <h2 class="section-title">История заказов</h2>
+            </div>
+
+            {% if orders %}
+            <div class="orders-table-wrapper">
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>№ Заказа</th>
+                            <th>Дата</th>
+                            <th>Статус</th>
+                            <th>Сумма</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td class="order-id">#{{ order.id }}</td>
+                            <td>{{ order.created_at }}</td>
+                            <td>
+                                <span class="status-badge status-{{ order.status }}">
+                                    {{ order.status_display }}
+                                </span>
+                            </td>
+                            <td class="order-price">{{ order.total|floatformat:0 }} ₽</td>
+                            <td>
+                                <a href="#" class="btn btn-sm">Детали</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">📦</div>
+                <h3>Нет заказов</h3>
+                <p>Оформите свой первый заказ из собранной конфигурации</p>
+            </div>
+            {% endif %}
+        </section>
+
+        <!-- Секция: Избранное -->
+        <section id="favorites" class="profile-section">
+            <div class="section-header">
+                <h2 class="section-title">Избранные компоненты</h2>
+            </div>
+
+            {% if favorites %}
+            <div class="components-grid">
+                {% for item in favorites %}
+                <div class="component-card">
+                    <div class="component-image">
+                        <span class="image-placeholder">{{ item.component.manufacturer|first }}</span>
+                        {% if item.component.in_stock %}
+                        <span class="component-badge">В наличии</span>
+                        {% else %}
+                        <span class="out-of-stock">Нет в наличии</span>
+                        {% endif %}
+                    </div>
+                    <div class="component-info">
+                        <h4 class="component-name">{{ item.component.name }}</h4>
+                        <p class="component-category">{{ item.component.category }}</p>
+                        <p class="component-manufacturer">{{ item.component.manufacturer }}</p>
+                    </div>
+                    <div class="component-price">
+                        <span class="price-value">{{ item.component.price|floatformat:0 }} ₽</span>
+                        <button class="btn btn-sm btn-remove" onclick="removeFavorite({{ item.id }})">✕</button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">❤️</div>
+                <h3>Нет избранных компонентов</h3>
+                <p>Добавляйте компоненты в избранное для быстрого доступа</p>
+                <a href="{% url 'core:components' %}" class="btn btn-primary">Перейти в каталог</a>
+            </div>
+            {% endif %}
+        </section>
+
+        <!-- Секция: Уведомления -->
+        <section id="notifications" class="profile-section">
+            <div class="section-header">
+                <h2 class="section-title">Уведомления</h2>
+                <button class="btn btn-sm" onclick="markAllRead()">Отметить все как прочитанные</button>
+            </div>
+
+            {% if notifications %}
+            <div class="notifications-list">
+                {% for notification in notifications %}
+                <div class="notification-item {% if not notification.is_read %}unread{% endif %}" id="notification-{{ notification.id }}">
+                    <div class="notification-icon">
+                        {% if notification.type == 'price' %}💰{% elif notification.type == 'stock' %}📦{% elif notification.type == 'order' %}📋{% else %}📢{% endif %}
+                    </div>
+                    <div class="notification-content">
+                        <p class="notification-message">{{ notification.message }}</p>
+                        <span class="notification-time">{{ notification.created_at }}</span>
+                    </div>
+                    <button class="notification-close" onclick="closeNotification({{ notification.id }})">✕</button>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">🔔</div>
+                <h3>Нет новых уведомлений</h3>
+                <p>Все уведомления прочитаны</p>
+            </div>
+            {% endif %}
+        </section>
+
+        <!-- Секция: Настройки -->
+        <section id="settings" class="profile-section">
+            <div class="section-header">
+                <h2 class="section-title">Настройки аккаунта</h2>
+            </div>
+
+            <form class="settings-form" method="post">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label class="form-label">Имя пользователя</label>
+                    <input type="text" name="username" class="form-control" value="{{ user_data.username }}">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control" value="{{ user_data.email }}">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Телефон</label>
+                    <input type="tel" name="phone" class="form-control" value="{{ user_data.phone }}" placeholder="+7 (___) ___-__-__">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Город</label>
+                    <input type="text" name="city" class="form-control" value="{{ user_data.city }}" placeholder="Москва">
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="email_notifications" checked>
+                        <span class="checkmark"></span>
+                        Email уведомления о скидках
+                    </label>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="price_alerts" checked>
+                        <span class="checkmark"></span>
+                        Уведомления об изменении цен
+                    </label>
+                </div>
+
+                <div class="form-group checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="stock_alerts" checked>
+                        <span class="checkmark"></span>
+                        Уведомления о появлении в наличии
+                    </label>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-lg">Сохранить изменения</button>
+                    <button type="reset" class="btn btn-lg">Сбросить</button>
+                </div>
+            </form>
+        </section>
+    </main>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/profile.js' %}"></script>
+{% endblock %}

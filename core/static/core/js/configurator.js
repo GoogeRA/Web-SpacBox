@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Для необязательных компонентов
                 if (componentItem.classList.contains('selected')) {
                     componentItem.classList.remove('selected');
-                    button.textContent = 'Добавить';
+                    button.textContent = 'Выбрать';
                     button.classList.remove('btn-primary');
                     button.classList.add('btn');
                     toggleComponent(component);
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
-
+    //Добавить
     // Инициализация
     updateStatus();
 });

@@ -5,12 +5,13 @@
 /* Page Header */
 .page-header {
     text-align: center;
-    padding: 40px 0 30px;
+    padding: 20px 0 30px;
 }
 
 .page-title {
     font-size: 4rem;
     font-weight: 800;
+    text-align: center;
     color: #ffffff;
     background: linear-gradient(to right, #ffffff, #e0e0ff);
     -webkit-background-clip: text;

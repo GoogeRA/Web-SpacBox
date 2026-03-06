@@ -79,10 +79,11 @@ body {
     background: radial-gradient(circle, #ff5eda 0%, transparent 70%);
 }
 
+
 /* ===== HEADER ===== */
 .site-header {
     width: 95%;
-    max-width: 1200px;
+    max-width: 12000px;
     background: rgba(20, 20, 40, 0.85);
     border: 2px solid rgba(157, 78, 221, 0.6);
     border-radius: 16px;
@@ -98,26 +99,26 @@ body {
 
 .site-title {
     color: #ffffff;
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     font-weight: 700;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
     text-transform: uppercase;
 }
 
 .site-title::before {
     content: "";
     display: inline-block;
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
     background: #10b981;
     border-radius: 50%;
     margin-right: 12px;
-    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.8);
 }
 
 .nav-menu {
     display: flex;
-    gap: 25px;
+    gap: 30px;                      /* ← Расстояние между ссылками */
 }
 
 .nav-link {
@@ -125,14 +126,33 @@ body {
     text-decoration: none;
     font-weight: 500;
     font-size: 1.05rem;
-    padding: 8px 12px;
+    padding: 10px 15px;
     transition: all 0.3s ease;
-    border-radius: 8px;
+    border-radius: 0;               /* ← Убираем скругления кнопок */
+    position: relative;
 }
 
 .nav-link:hover, .nav-link.active {
     color: #ffffff;
-    background: rgba(157, 78, 221, 0.25);
+    background: rgba(157, 78, 221, 0.2);
+}
+
+/* Подчёркивание при наведении */
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: 80%;
+    height: 2px;
+    background: #9d4edd;
+    transition: transform 0.3s ease;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    transform: translateX(-50%) scaleX(1);
 }
 
 .site-controls {
@@ -153,10 +173,11 @@ body {
 .control-btn.maximize:hover { background: #2ecc40; border-color: #1a8c26; }
 
 /* ===== MAIN CONTENT ===== */
+
 .main-content {
     width: 95%;
     max-width: 1200px;
-    margin: 0 auto;
+    margin: 100px auto 40px;  /* ← Отступ сверху 100px для фиксированного header */
     position: relative;
     z-index: 5;
 }
@@ -219,5 +240,63 @@ body {
     .nav-link {
         font-size: 0.95rem;
         padding: 6px 10px;
+    }
+}
+/* ===== AUTH BUTTONS ===== */
+.auth-buttons {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.btn-auth {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-login {
+    background: transparent;
+    color: #9d4edd;
+    border: 2px solid #9d4edd;
+}
+
+.btn-login:hover {
+    background: rgba(157, 78, 221, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(157, 78, 221, 0.3);
+}
+
+.btn-register {
+    background: linear-gradient(135deg, #9d4edd 0%, #7e3cc5 100%);
+    color: #ffffff;
+    border: 2px solid #9d4edd;
+}
+
+.btn-register:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(157, 78, 221, 0.5);
+    background: linear-gradient(135deg, #a75ee6 0%, #8a4bcf 100%);
+}
+
+/* Адаптивность для кнопок */
+@media (max-width: 768px) {
+    .auth-buttons {
+        flex-direction: column;
+        width: 100%;
+        margin-top: 15px;
+    }
+
+    .btn-auth {
+        width: 100%;
+        justify-content: center;
     }
 }
