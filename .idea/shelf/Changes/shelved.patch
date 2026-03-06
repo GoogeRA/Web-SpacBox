@@ -1,0 +1,2543 @@
+Index: core/static/core/js/configurator.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>document.addEventListener('DOMContentLoaded', () => {\r\n    // Обработка добавления компонентов\r\n    const componentItems = document.querySelectorAll('.component-item');\r\n    const addButtons = document.querySelectorAll('.btn');\r\n    const statusElement = document.querySelector('.status');\r\n    const requiredComponents = ['processor', 'motherboard', 'power-supply', 'case', 'cpu-cooler', 'ram', 'storage'];\r\n    let selectedComponents = [];\r\n\r\n    // Обновление статуса\r\n    function updateStatus() {\r\n        const selectedRequired = selectedComponents.filter(component =>\r\n            requiredComponents.includes(component)\r\n        ).length;\r\n\r\n        statusElement.textContent = `${selectedRequired}/${requiredComponents.length}`;\r\n\r\n        // Проверка, все ли обязательные компоненты выбраны\r\n        if (selectedRequired === requiredComponents.length) {\r\n            document.querySelector('.btn-lg.btn-primary').style.backgroundColor =\r\n                'linear-gradient(135deg, #5a43a0 0%, #4a338c 100%)';\r\n            document.querySelector('.btn-lg.btn-primary').style.cursor = 'pointer';\r\n        } else {\r\n            document.querySelector('.btn-lg.btn-primary').style.backgroundColor =\r\n                'linear-gradient(135deg, #7d66c5 0%, #6a55b2 100%)';\r\n            document.querySelector('.btn-lg.btn-primary').style.cursor = 'not-allowed';\r\n        }\r\n    }\r\n\r\n    // Добавление/удаление компонента\r\n    function toggleComponent(component) {\r\n        const index = selectedComponents.indexOf(component);\r\n        if (index === -1) {\r\n            selectedComponents.push(component);\r\n        } else {\r\n            selectedComponents.splice(index, 1);\r\n        }\r\n\r\n        updateStatus();\r\n    }\r\n\r\n    // Обработчики кнопок\r\n    addButtons.forEach(button => {\r\n        button.addEventListener('click', () => {\r\n            const componentItem = button.closest('.component-item');\r\n            const component = componentItem.getAttribute('data-component');\r\n\r\n            // Если это обязательный компонент\r\n            if (requiredComponents.includes(component)) {\r\n                if (selectedComponents.includes(component)) {\r\n                    // Удаляем компонент\r\n                    componentItem.classList.remove('selected');\r\n                    button.textContent = 'Выбрать';\r\n                    button.classList.remove('btn-primary');\r\n                    button.classList.add('btn');\r\n                    toggleComponent(component);\r\n                } else {\r\n                    // Добавляем компонент\r\n                    componentItem.classList.add('selected');\r\n                    button.textContent = 'Убрать';\r\n                    button.classList.remove('btn');\r\n                    button.classList.add('btn-primary');\r\n                    toggleComponent(component);\r\n                }\r\n            } else {\r\n                // Для необязательных компонентов\r\n                if (componentItem.classList.contains('selected')) {\r\n                    componentItem.classList.remove('selected');\r\n                    button.textContent = 'Добавить';\r\n                    button.classList.remove('btn-primary');\r\n                    button.classList.add('btn');\r\n                    toggleComponent(component);\r\n                } else {\r\n                    componentItem.classList.add('selected');\r\n                    button.textContent = 'Убрать';\r\n                    button.classList.remove('btn');\r\n                    button.classList.add('btn-primary');\r\n                    toggleComponent(component);\r\n                }\r\n            }\r\n        });\r\n    });\r\n\r\n    // Инициализация\r\n    updateStatus();\r\n});
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/core/static/core/js/configurator.js b/core/static/core/js/configurator.js
+--- a/core/static/core/js/configurator.js	(revision c8cc95290d77865eda1097af267a2e681e0b698f)
++++ b/core/static/core/js/configurator.js	(date 1772255566406)
+@@ -65,7 +65,7 @@
+                 // Для необязательных компонентов
+                 if (componentItem.classList.contains('selected')) {
+                     componentItem.classList.remove('selected');
+-                    button.textContent = 'Добавить';
++                    button.textContent = 'Выбрать';
+                     button.classList.remove('btn-primary');
+                     button.classList.add('btn');
+                     toggleComponent(component);
+@@ -79,7 +79,7 @@
+             }
+         });
+     });
+-
++    //Добавить
+     // Инициализация
+     updateStatus();
+ });
+\ No newline at end of file
+Index: core/urls.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.urls import path\r\nfrom . import views\r\n\r\napp_name = 'core'\r\n\r\nurlpatterns = [\r\n    path('', views.index, name='index'),\r\n    path('configurator/', views.configurator_view, name='configurator'),\r\n    path('components/', views.components, name='components'),\r\n]
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/core/urls.py b/core/urls.py
+--- a/core/urls.py	(revision c8cc95290d77865eda1097af267a2e681e0b698f)
++++ b/core/urls.py	(date 1772818384976)
+@@ -7,4 +7,7 @@
+     path('', views.index, name='index'),
+     path('configurator/', views.configurator_view, name='configurator'),
+     path('components/', views.components, name='components'),
++    path('profile/', views.profile_view, name='profile'),
++    path('registration/login', views.login_view, name='login'),
++    path('register/', views.register_view, name='register')
+ ]
+\ No newline at end of file
+Index: core/templates/core/profile.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/core/templates/core/profile.html b/core/templates/core/profile.html
+new file mode 100644
+--- /dev/null	(date 1772264599230)
++++ b/core/templates/core/profile.html	(date 1772264599230)
+@@ -0,0 +1,360 @@
++{% extends 'core/base.html' %}
++{% load static %}
++
++{% block title %}SpecBox | Личный кабинет{% endblock %}
++
++{% block extra_css %}
++<link rel="stylesheet" href="{% static 'core/css/style_profile.css' %}">
++{% endblock %}
++
++{% block content %}
++<!-- Заголовок страницы -->
++<div class="page-header">
++</div>
++
++<!-- Основной контейнер -->
++<div class="profile-container">
++    <!-- Боковая панель навигации -->
++    <aside class="profile-sidebar">
++        <!-- Информация о пользователе -->
++        <div class="user-info-card">
++            <div class="user-avatar">
++                <span class="avatar-placeholder">{{ user_data.username|first|upper }}</span>
++            </div>
++            <div class="user-details">
++                <h3 class="user-name">{{ user_data.username }}</h3>
++                <p class="user-email">{{ user_data.email }}</p>
++                <span class="user-status">
++                    <span class="status-dot"></span>
++                    Активен
++                </span>
++            </div>
++        </div>
++
++        <!-- Навигация -->
++        <nav class="profile-nav">
++            <a href="#profile" class="nav-item active">
++                <span class="nav-icon">👤</span>
++                <span class="nav-text">Профиль</span>
++            </a>
++            <a href="#builds" class="nav-item">
++                <span class="nav-icon">🖥️</span>
++                <span class="nav-text">Мои сборки</span>
++                <span class="nav-badge">{{ saved_builds_count }}</span>
++            </a>
++            <a href="#orders" class="nav-item">
++                <span class="nav-icon">📦</span>
++                <span class="nav-text">Заказы</span>
++                <span class="nav-badge">{{ orders_count }}</span>
++            </a>
++            <a href="#favorites" class="nav-item">
++                <span class="nav-icon">❤️</span>
++                <span class="nav-text">Избранное</span>
++                <span class="nav-badge">{{ favorites_count }}</span>
++            </a>
++            <a href="#notifications" class="nav-item">
++                <span class="nav-icon">🔔</span>
++                <span class="nav-text">Уведомления</span>
++                {% if unread_notifications %}
++                <span class="nav-badge notification">{{ unread_notifications }}</span>
++                {% endif %}
++            </a>
++            <a href="#settings" class="nav-item">
++                <span class="nav-icon">⚙️</span>
++                <span class="nav-text">Настройки</span>
++            </a>
++        </nav>
++
++        <!-- Кнопка действия -->
++        <div class="profile-actions">
++            <a href="{% url 'core:configurator' %}" class="btn btn-primary btn-full">
++                <span class="btn-icon">+</span>
++                Новая сборка
++            </a>
++        </div>
++    </aside>
++
++    <!-- Основной контент -->
++    <main class="profile-content">
++        <!-- Секция: Профиль -->
++        <section id="profile" class="profile-section active">
++            <div class="section-header">
++                <h2 class="section-title">Информация о профиле</h2>
++            </div>
++
++            <div class="info-grid">
++                <div class="info-card">
++                    <label class="info-label">Имя пользователя</label>
++                    <p class="info-value">{{ user_data.username }}</p>
++                </div>
++                <div class="info-card">
++                    <label class="info-label">Email</label>
++                    <p class="info-value">{{ user_data.email }}</p>
++                </div>
++                <div class="info-card">
++                    <label class="info-label">Телефон</label>
++                    <p class="info-value">{{ user_data.phone }}</p>
++                </div>
++                <div class="info-card">
++                    <label class="info-label">Город</label>
++                    <p class="info-value">{{ user_data.city }}</p>
++                </div>
++                <div class="info-card">
++                    <label class="info-label">Дата регистрации</label>
++                    <p class="info-value">{{ user_data.registered }}</p>
++                </div>
++                <div class="info-card">
++                    <label class="info-label">Последний вход</label>
++                    <p class="info-value">{{ user_data.last_login }}</p>
++                </div>
++                <div class="info-card">
++                    <label class="info-label">Статус</label>
++                    <p class="info-value">
++                        <span class="status-badge status-active">Активен</span>
++                    </p>
++                </div>
++                <div class="info-card">
++                    <label class="info-label">Сборок сохранено</label>
++                    <p class="info-value">{{ saved_builds_count }}</p>
++                </div>
++            </div>
++        </section>
++
++        <!-- Секция: Мои сборки -->
++        <section id="builds" class="profile-section">
++            <div class="section-header">
++                <h2 class="section-title">Сохранённые сборки</h2>
++                <a href="{% url 'core:configurator' %}" class="btn btn-primary">
++                    <span class="btn-icon">+</span>
++                    Новая сборка
++                </a>
++            </div>
++
++            {% if saved_builds %}
++            <div class="builds-grid">
++                {% for build in saved_builds %}
++                <div class="build-card">
++                    <div class="build-header">
++                        <h3 class="build-name">{{ build.name }}</h3>
++                        <span class="build-date">{{ build.created_at }}</span>
++                    </div>
++                    <div class="build-components">
++                        <div class="component-row">
++                            <span class="component-type">CPU:</span>
++                            <span class="component-value">{{ build.cpu }}</span>
++                        </div>
++                        <div class="component-row">
++                            <span class="component-type">GPU:</span>
++                            <span class="component-value">{{ build.gpu }}</span>
++                        </div>
++                        <div class="component-row">
++                            <span class="component-type">RAM:</span>
++                            <span class="component-value">{{ build.ram }}</span>
++                        </div>
++                    </div>
++                    <div class="build-footer">
++                        <span class="build-total">
++                            <span class="total-label">Итого:</span>
++                            <span class="total-price">{{ build.total_price|floatformat:0 }} ₽</span>
++                        </span>
++                        <div class="build-actions">
++                            <a href="{% url 'core:configurator' %}" class="btn btn-sm">Просмотр</a>
++                            <button class="btn btn-sm btn-delete" onclick="deleteBuild({{ build.id }})">Удалить</button>
++                        </div>
++                    </div>
++                </div>
++                {% endfor %}
++            </div>
++            {% else %}
++            <div class="empty-state">
++                <div class="empty-icon">🖥️</div>
++                <h3>Нет сохранённых сборок</h3>
++                <p>Создайте свою первую конфигурацию в конфигураторе</p>
++                <a href="{% url 'core:configurator' %}" class="btn btn-primary">Перейти в конфигуратор</a>
++            </div>
++            {% endif %}
++        </section>
++
++        <!-- Секция: Заказы -->
++        <section id="orders" class="profile-section">
++            <div class="section-header">
++                <h2 class="section-title">История заказов</h2>
++            </div>
++
++            {% if orders %}
++            <div class="orders-table-wrapper">
++                <table class="orders-table">
++                    <thead>
++                        <tr>
++                            <th>№ Заказа</th>
++                            <th>Дата</th>
++                            <th>Статус</th>
++                            <th>Сумма</th>
++                            <th>Действия</th>
++                        </tr>
++                    </thead>
++                    <tbody>
++                        {% for order in orders %}
++                        <tr>
++                            <td class="order-id">#{{ order.id }}</td>
++                            <td>{{ order.created_at }}</td>
++                            <td>
++                                <span class="status-badge status-{{ order.status }}">
++                                    {{ order.status_display }}
++                                </span>
++                            </td>
++                            <td class="order-price">{{ order.total|floatformat:0 }} ₽</td>
++                            <td>
++                                <a href="#" class="btn btn-sm">Детали</a>
++                            </td>
++                        </tr>
++                        {% endfor %}
++                    </tbody>
++                </table>
++            </div>
++            {% else %}
++            <div class="empty-state">
++                <div class="empty-icon">📦</div>
++                <h3>Нет заказов</h3>
++                <p>Оформите свой первый заказ из собранной конфигурации</p>
++            </div>
++            {% endif %}
++        </section>
++
++        <!-- Секция: Избранное -->
++        <section id="favorites" class="profile-section">
++            <div class="section-header">
++                <h2 class="section-title">Избранные компоненты</h2>
++            </div>
++
++            {% if favorites %}
++            <div class="components-grid">
++                {% for item in favorites %}
++                <div class="component-card">
++                    <div class="component-image">
++                        <span class="image-placeholder">{{ item.component.manufacturer|first }}</span>
++                        {% if item.component.in_stock %}
++                        <span class="component-badge">В наличии</span>
++                        {% else %}
++                        <span class="out-of-stock">Нет в наличии</span>
++                        {% endif %}
++                    </div>
++                    <div class="component-info">
++                        <h4 class="component-name">{{ item.component.name }}</h4>
++                        <p class="component-category">{{ item.component.category }}</p>
++                        <p class="component-manufacturer">{{ item.component.manufacturer }}</p>
++                    </div>
++                    <div class="component-price">
++                        <span class="price-value">{{ item.component.price|floatformat:0 }} ₽</span>
++                        <button class="btn btn-sm btn-remove" onclick="removeFavorite({{ item.id }})">✕</button>
++                    </div>
++                </div>
++                {% endfor %}
++            </div>
++            {% else %}
++            <div class="empty-state">
++                <div class="empty-icon">❤️</div>
++                <h3>Нет избранных компонентов</h3>
++                <p>Добавляйте компоненты в избранное для быстрого доступа</p>
++                <a href="{% url 'core:components' %}" class="btn btn-primary">Перейти в каталог</a>
++            </div>
++            {% endif %}
++        </section>
++
++        <!-- Секция: Уведомления -->
++        <section id="notifications" class="profile-section">
++            <div class="section-header">
++                <h2 class="section-title">Уведомления</h2>
++                <button class="btn btn-sm" onclick="markAllRead()">Отметить все как прочитанные</button>
++            </div>
++
++            {% if notifications %}
++            <div class="notifications-list">
++                {% for notification in notifications %}
++                <div class="notification-item {% if not notification.is_read %}unread{% endif %}" id="notification-{{ notification.id }}">
++                    <div class="notification-icon">
++                        {% if notification.type == 'price' %}💰{% elif notification.type == 'stock' %}📦{% elif notification.type == 'order' %}📋{% else %}📢{% endif %}
++                    </div>
++                    <div class="notification-content">
++                        <p class="notification-message">{{ notification.message }}</p>
++                        <span class="notification-time">{{ notification.created_at }}</span>
++                    </div>
++                    <button class="notification-close" onclick="closeNotification({{ notification.id }})">✕</button>
++                </div>
++                {% endfor %}
++            </div>
++            {% else %}
++            <div class="empty-state">
++                <div class="empty-icon">🔔</div>
++                <h3>Нет новых уведомлений</h3>
++                <p>Все уведомления прочитаны</p>
++            </div>
++            {% endif %}
++        </section>
++
++        <!-- Секция: Настройки -->
++        <section id="settings" class="profile-section">
++            <div class="section-header">
++                <h2 class="section-title">Настройки аккаунта</h2>
++            </div>
++
++            <form class="settings-form" method="post">
++                {% csrf_token %}
++
++                <div class="form-group">
++                    <label class="form-label">Имя пользователя</label>
++                    <input type="text" name="username" class="form-control" value="{{ user_data.username }}">
++                </div>
++
++                <div class="form-group">
++                    <label class="form-label">Email</label>
++                    <input type="email" name="email" class="form-control" value="{{ user_data.email }}">
++                </div>
++
++                <div class="form-group">
++                    <label class="form-label">Телефон</label>
++                    <input type="tel" name="phone" class="form-control" value="{{ user_data.phone }}" placeholder="+7 (___) ___-__-__">
++                </div>
++
++                <div class="form-group">
++                    <label class="form-label">Город</label>
++                    <input type="text" name="city" class="form-control" value="{{ user_data.city }}" placeholder="Москва">
++                </div>
++
++                <div class="form-group checkbox-group">
++                    <label class="checkbox-label">
++                        <input type="checkbox" name="email_notifications" checked>
++                        <span class="checkmark"></span>
++                        Email уведомления о скидках
++                    </label>
++                </div>
++
++                <div class="form-group checkbox-group">
++                    <label class="checkbox-label">
++                        <input type="checkbox" name="price_alerts" checked>
++                        <span class="checkmark"></span>
++                        Уведомления об изменении цен
++                    </label>
++                </div>
++
++                <div class="form-group checkbox-group">
++                    <label class="checkbox-label">
++                        <input type="checkbox" name="stock_alerts" checked>
++                        <span class="checkmark"></span>
++                        Уведомления о появлении в наличии
++                    </label>
++                </div>
++
++                <div class="form-actions">
++                    <button type="submit" class="btn btn-primary btn-lg">Сохранить изменения</button>
++                    <button type="reset" class="btn btn-lg">Сбросить</button>
++                </div>
++            </form>
++        </section>
++    </main>
++</div>
++{% endblock %}
++
++{% block extra_js %}
++<script src="{% static 'js/profile.js' %}"></script>
++{% endblock %}
+\ No newline at end of file
+Index: core/static/core/css/style_profile.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/core/static/core/css/style_profile.css b/core/static/core/css/style_profile.css
+new file mode 100644
+--- /dev/null	(date 1772809453205)
++++ b/core/static/core/css/style_profile.css	(date 1772809453205)
+@@ -0,0 +1,921 @@
++/* ========================================
++PROFILE.CSS - СТИЛИ ЛИЧНОГО КАБИНЕТА
++======================================== */
++
++/* Page Header */
++.page-header {
++    text-align: center;
++    padding: 20px 0 30px;
++}
++
++.page-title {
++    font-size: 4rem;
++    font-weight: 800;
++    color: #ffffff;
++    background: linear-gradient(to right, #ffffff, #e0e0ff);
++    -webkit-background-clip: text;
++    -webkit-text-fill-color: transparent;
++    background-clip: text;
++    margin-bottom: 10px;
++}
++
++.page-subtitle {
++    font-size: 1.4rem;
++    color: #b0b0d0;
++    font-weight: 300;
++}
++
++/* В начало файла style_profile.css */
++.profile-container {
++    display: flex;
++    gap: 30px;
++    margin: 40px 0;
++    align-items: flex-start;
++    padding-top: 20px;  /* ← Дополнительный отступ */
++}
++
++/* Sidebar */
++.profile-sidebar {
++    width: 320px;
++    flex-shrink: 0;
++    background: rgba(25, 25, 50, 0.75);
++    border: 1px solid rgba(157, 78, 221, 0.3);
++    border-radius: 16px;
++    padding: 25px;
++    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
++    position: sticky;
++    top: 100px;
++    max-height: calc(100vh - 120px);
++    overflow-y: auto;
++}
++
++.profile-sidebar::-webkit-scrollbar {
++    width: 6px;
++}
++
++.profile-sidebar::-webkit-scrollbar-track {
++    background: rgba(157, 78, 221, 0.1);
++    border-radius: 3px;
++}
++
++.profile-sidebar::-webkit-scrollbar-thumb {
++    background: rgba(157, 78, 221, 0.5);
++    border-radius: 3px;
++}
++
++/* User Info Card */
++.user-info-card {
++    background: rgba(35, 35, 70, 0.65);
++    border: 1px solid rgba(157, 78, 221, 0.25);
++    border-radius: 12px;
++    padding: 20px;
++    margin-bottom: 25px;
++    display: flex;
++    align-items: center;
++    gap: 15px;
++}
++
++.user-avatar {
++    width: 60px;
++    height: 60px;
++    border-radius: 50%;
++    background: linear-gradient(135deg, #9d4edd 0%, #7e3cc5 100%);
++    display: flex;
++    align-items: center;
++    justify-content: center;
++    flex-shrink: 0;
++    border: 2px solid rgba(157, 78, 221, 0.5);
++}
++
++.avatar-placeholder {
++    font-size: 1.8rem;
++    font-weight: 700;
++    color: #ffffff;
++}
++
++.user-details {
++    flex: 1;
++    min-width: 0;
++}
++
++.user-name {
++    font-size: 1.2rem;
++    color: #ffffff;
++    font-weight: 700;
++    margin: 0 0 5px;
++    white-space: nowrap;
++    overflow: hidden;
++    text-overflow: ellipsis;
++}
++
++.user-email {
++    font-size: 0.9rem;
++    color: #b0b0d0;
++    margin: 0 0 8px;
++    white-space: nowrap;
++    overflow: hidden;
++    text-overflow: ellipsis;
++}
++
++.user-status {
++    display: inline-flex;
++    align-items: center;
++    gap: 6px;
++    font-size: 0.85rem;
++    color: #10b981;
++    font-weight: 500;
++}
++
++.status-dot {
++    width: 8px;
++    height: 8px;
++    background: #10b981;
++    border-radius: 50%;
++    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
++    animation: pulse 2s infinite;
++}
++
++/* Profile Navigation */
++.profile-nav {
++    display: flex;
++    flex-direction: column;
++    gap: 8px;
++    margin-bottom: 25px;
++}
++
++.nav-item {
++    display: flex;
++    align-items: center;
++    gap: 12px;
++    padding: 12px 15px;
++    color: #c5c5e0;
++    text-decoration: none;
++    border-radius: 10px;
++    transition: all 0.3s ease;
++    font-weight: 500;
++    font-size: 1rem;
++}
++
++.nav-item:hover {
++    background: rgba(157, 78, 221, 0.15);
++    color: #ffffff;
++}
++
++.nav-item.active {
++    background: linear-gradient(135deg, rgba(157, 78, 221, 0.25) 0%, rgba(126, 60, 197, 0.25) 100%);
++    color: #ffffff;
++    border: 1px solid rgba(157, 78, 221, 0.4);
++}
++
++.nav-icon {
++    font-size: 1.2rem;
++    width: 24px;
++    text-align: center;
++}
++
++.nav-text {
++    flex: 1;
++}
++
++.nav-badge {
++    background: rgba(157, 78, 221, 0.3);
++    color: #e0e0ff;
++    font-size: 0.8rem;
++    font-weight: 600;
++    padding: 3px 8px;
++    border-radius: 12px;
++    min-width: 24px;
++    text-align: center;
++}
++
++.nav-badge.notification {
++    background: linear-gradient(135deg, #ff5252 0%, #ff1a1a 100%);
++    color: #ffffff;
++    animation: pulse-badge 2s infinite;
++}
++
++/* Profile Actions */
++.profile-actions {
++    padding-top: 20px;
++    border-top: 1px solid rgba(157, 78, 221, 0.2);
++}
++
++/* Profile Content */
++.profile-content {
++    flex: 1;
++    min-width: 0;
++    background: rgba(25, 25, 50, 0.75);
++    border: 1px solid rgba(157, 78, 221, 0.3);
++    border-radius: 16px;
++    padding: 30px;
++    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
++}
++
++/* Profile Sections */
++.profile-section {
++    display: none;
++    animation: fadeInUp 0.5s ease-out forwards;
++}
++
++.profile-section.active {
++    display: block;
++}
++
++/* Section Header */
++.section-header {
++    display: flex;
++    justify-content: space-between;
++    align-items: center;
++    margin-bottom: 30px;
++    padding-bottom: 20px;
++    border-bottom: 1px solid rgba(157, 78, 221, 0.3);
++}
++
++.section-title {
++    font-size: 2rem;
++    color: #ffffff;
++    font-weight: 700;
++    margin: 0;
++}
++
++/* Buttons */
++.btn {
++    display: inline-flex;
++    align-items: center;
++    justify-content: center;
++    gap: 8px;
++    padding: 12px 24px;
++    border-radius: 10px;
++    font-weight: 600;
++    font-size: 1rem;
++    text-decoration: none;
++    cursor: pointer;
++    transition: all 0.3s ease;
++    border: none;
++    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
++}
++
++.btn-primary {
++    background: linear-gradient(135deg, #9d4edd 0%, #7e3cc5 100%);
++    color: #ffffff;
++    box-shadow: 0 4px 15px rgba(157, 78, 221, 0.4);
++}
++
++.btn-primary:hover {
++    transform: translateY(-2px);
++    box-shadow: 0 8px 25px rgba(157, 78, 221, 0.6);
++}
++
++.btn-full {
++    width: 100%;
++}
++
++.btn-sm {
++    padding: 8px 16px;
++    font-size: 0.9rem;
++}
++
++.btn-lg {
++    padding: 14px 30px;
++    font-size: 1.1rem;
++}
++
++.btn-delete {
++    background: rgba(255, 82, 82, 0.15);
++    color: #ff5252;
++    border: 1px solid rgba(255, 82, 82, 0.3);
++}
++
++.btn-delete:hover {
++    background: rgba(255, 82, 82, 0.25);
++}
++
++.btn-remove {
++    background: rgba(255, 82, 82, 0.15);
++    color: #ff5252;
++    border: 1px solid rgba(255, 82, 82, 0.3);
++    padding: 6px 12px;
++}
++
++.btn-remove:hover {
++    background: rgba(255, 82, 82, 0.25);
++}
++
++.btn-icon {
++    font-size: 1.1rem;
++}
++
++/* Info Grid */
++.info-grid {
++    display: grid;
++    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
++    gap: 20px;
++}
++
++.info-card {
++    background: rgba(35, 35, 70, 0.65);
++    border: 1px solid rgba(157, 78, 221, 0.2);
++    border-radius: 12px;
++    padding: 20px;
++}
++
++.info-label {
++    font-size: 0.9rem;
++    color: #b0b0d0;
++    margin-bottom: 8px;
++    font-weight: 500;
++    text-transform: uppercase;
++    letter-spacing: 0.5px;
++}
++
++.info-value {
++    font-size: 1.1rem;
++    color: #ffffff;
++    font-weight: 600;
++    margin: 0;
++}
++
++/* Status Badges */
++.status-badge {
++    display: inline-block;
++    padding: 5px 12px;
++    border-radius: 20px;
++    font-size: 0.85rem;
++    font-weight: 600;
++}
++
++.status-active, .status-completed {
++    background: rgba(16, 185, 129, 0.2);
++    color: #10b981;
++    border: 1px solid rgba(16, 185, 129, 0.3);
++}
++
++.status-processing, .status-pending, .status-shipped {
++    background: rgba(255, 204, 0, 0.2);
++    color: #ffcc00;
++    border: 1px solid rgba(255, 204, 0, 0.3);
++}
++
++.status-cancelled {
++    background: rgba(255, 82, 82, 0.2);
++    color: #ff5252;
++    border: 1px solid rgba(255, 82, 82, 0.3);
++}
++
++/* Builds Grid */
++.builds-grid {
++    display: grid;
++    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
++    gap: 25px;
++}
++
++.build-card {
++    background: rgba(35, 35, 70, 0.65);
++    border: 1px solid rgba(157, 78, 221, 0.25);
++    border-radius: 16px;
++    padding: 20px;
++    transition: all 0.4s ease;
++}
++
++.build-card:hover {
++    transform: translateY(-5px);
++    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 25px rgba(157, 78, 221, 0.15);
++    border-color: rgba(157, 78, 221, 0.45);
++}
++
++.build-header {
++    display: flex;
++    justify-content: space-between;
++    align-items: center;
++    margin-bottom: 15px;
++    padding-bottom: 15px;
++    border-bottom: 1px solid rgba(157, 78, 221, 0.2);
++}
++
++.build-name {
++    font-size: 1.2rem;
++    color: #ffffff;
++    font-weight: 700;
++    margin: 0;
++}
++
++.build-date {
++    font-size: 0.9rem;
++    color: #b0b0d0;
++}
++
++.build-components {
++    margin-bottom: 20px;
++}
++
++.component-row {
++    display: flex;
++    gap: 10px;
++    margin-bottom: 8px;
++    font-size: 0.95rem;
++}
++
++.component-type {
++    color: #9d4edd;
++    font-weight: 600;
++    min-width: 50px;
++}
++
++.component-value {
++    color: #c5c5e0;
++    flex: 1;
++}
++
++.build-footer {
++    display: flex;
++    justify-content: space-between;
++    align-items: center;
++    padding-top: 15px;
++    border-top: 1px solid rgba(157, 78, 221, 0.2);
++}
++
++.build-total {
++    display: flex;
++    flex-direction: column;
++}
++
++.total-label {
++    font-size: 0.85rem;
++    color: #b0b0d0;
++}
++
++.total-price {
++    font-size: 1.4rem;
++    color: #10b981;
++    font-weight: 700;
++}
++
++.build-actions {
++    display: flex;
++    gap: 10px;
++}
++
++/* Orders Table */
++.orders-table-wrapper {
++    overflow-x: auto;
++}
++
++.orders-table {
++    width: 100%;
++    border-collapse: collapse;
++}
++
++.orders-table th,
++.orders-table td {
++    padding: 15px;
++    text-align: left;
++    border-bottom: 1px solid rgba(157, 78, 221, 0.2);
++}
++
++.orders-table th {
++    color: #9d4edd;
++    font-weight: 600;
++    text-transform: uppercase;
++    font-size: 0.85rem;
++    letter-spacing: 0.5px;
++}
++
++.orders-table td {
++    color: #c5c5e0;
++    font-size: 0.95rem;
++}
++
++.order-id {
++    font-weight: 700;
++    color: #ffffff;
++}
++
++.order-price {
++    font-weight: 700;
++    color: #10b981;
++}
++
++/* Component Cards (Favorites) */
++.components-grid {
++    display: grid;
++    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
++    gap: 25px;
++}
++
++.component-card {
++    background: rgba(35, 35, 70, 0.65);
++    border: 1px solid rgba(157, 78, 221, 0.25);
++    border-radius: 16px;
++    overflow: hidden;
++    transition: all 0.4s ease;
++    display: flex;
++    flex-direction: column;
++}
++
++.component-card:hover {
++    transform: translateY(-8px);
++    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 25px rgba(157, 78, 221, 0.15);
++    border-color: rgba(157, 78, 221, 0.45);
++}
++
++.component-image {
++    position: relative;
++    height: 160px;
++    background: rgba(20, 20, 40, 0.8);
++    display: flex;
++    align-items: center;
++    justify-content: center;
++}
++
++.image-placeholder {
++    width: 80px;
++    height: 80px;
++    background: linear-gradient(135deg, rgba(157, 78, 221, 0.3) 0%, rgba(99, 102, 241, 0.3) 100%);
++    border-radius: 50%;
++    display: flex;
++    align-items: center;
++    justify-content: center;
++    font-size: 2rem;
++    font-weight: 700;
++    color: #ffffff;
++    border: 3px solid rgba(157, 78, 221, 0.5);
++}
++
++.component-badge {
++    position: absolute;
++    top: 10px;
++    left: 10px;
++    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
++    color: #ffffff;
++    padding: 5px 10px;
++    border-radius: 5px;
++    font-size: 0.7rem;
++    font-weight: 700;
++}
++
++.out-of-stock {
++    position: absolute;
++    top: 10px;
++    right: 10px;
++    background: rgba(255, 82, 82, 0.9);
++    color: #ffffff;
++    padding: 5px 10px;
++    border-radius: 5px;
++    font-size: 0.7rem;
++    font-weight: 600;
++}
++
++.component-info {
++    padding: 18px;
++    flex-grow: 1;
++}
++
++.component-name {
++    font-size: 1.1rem;
++    color: #ffffff;
++    font-weight: 700;
++    margin-bottom: 6px;
++    line-height: 1.4;
++}
++
++.component-category {
++    font-size: 0.85rem;
++    color: #9d4edd;
++    font-weight: 500;
++    margin-bottom: 4px;
++}
++
++.component-manufacturer {
++    font-size: 0.8rem;
++    color: #6a6a8a;
++}
++
++.component-price {
++    padding: 18px;
++    border-top: 1px solid rgba(157, 78, 221, 0.2);
++    display: flex;
++    justify-content: space-between;
++    align-items: center;
++    background: rgba(20, 20, 40, 0.5);
++}
++
++.price-value {
++    font-size: 1.3rem;
++    color: #10b981;
++    font-weight: 700;
++}
++
++/* Notifications */
++.notifications-list {
++    display: flex;
++    flex-direction: column;
++    gap: 15px;
++}
++
++.notification-item {
++    display: flex;
++    align-items: flex-start;
++    gap: 15px;
++    background: rgba(35, 35, 70, 0.65);
++    border: 1px solid rgba(157, 78, 221, 0.2);
++    border-radius: 12px;
++    padding: 18px;
++    transition: all 0.3s ease;
++}
++
++.notification-item.unread {
++    border-color: rgba(157, 78, 221, 0.5);
++    background: rgba(157, 78, 221, 0.1);
++}
++
++.notification-item:hover {
++    transform: translateX(5px);
++    border-color: rgba(157, 78, 221, 0.4);
++}
++
++.notification-icon {
++    font-size: 1.8rem;
++    flex-shrink: 0;
++}
++
++.notification-content {
++    flex: 1;
++}
++
++.notification-message {
++    color: #e0e0ff;
++    font-size: 1rem;
++    margin: 0 0 8px;
++}
++
++.notification-time {
++    color: #6a6a8a;
++    font-size: 0.85rem;
++}
++
++.notification-close {
++    background: transparent;
++    border: none;
++    color: #6a6a8a;
++    cursor: pointer;
++    font-size: 1.2rem;
++    padding: 5px;
++    transition: color 0.3s ease;
++}
++
++.notification-close:hover {
++    color: #ff5252;
++}
++
++/* Settings Form */
++.settings-form {
++    max-width: 600px;
++}
++
++.form-group {
++    margin-bottom: 25px;
++}
++
++.form-label {
++    display: block;
++    color: #c5c5e0;
++    font-size: 0.95rem;
++    font-weight: 600;
++    margin-bottom: 10px;
++}
++
++.form-control {
++    width: 100%;
++    background: rgba(30, 30, 60, 0.8);
++    border: 1px solid rgba(157, 78, 221, 0.3);
++    border-radius: 10px;
++    padding: 14px 18px;
++    color: #e0e0ff;
++    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
++    font-size: 1rem;
++    outline: none;
++    transition: all 0.3s ease;
++}
++
++.form-control:focus {
++    border-color: #9d4edd;
++    box-shadow: 0 0 0 3px rgba(157, 78, 221, 0.2);
++    background: rgba(35, 35, 70, 0.9);
++}
++
++.form-control::placeholder {
++    color: #6a6a8a;
++}
++
++.checkbox-group {
++    margin-top: 15px;
++}
++
++.checkbox-label {
++    display: flex;
++    align-items: center;
++    gap: 12px;
++    color: #c5c5e0;
++    font-size: 1rem;
++    cursor: pointer;
++    position: relative;
++    padding-left: 32px;
++    margin-bottom: 15px;
++}
++
++.checkbox-label input {
++    position: absolute;
++    opacity: 0;
++    cursor: pointer;
++}
++
++.checkmark {
++    position: absolute;
++    left: 0;
++    top: 50%;
++    transform: translateY(-50%);
++    height: 20px;
++    width: 20px;
++    background: rgba(30, 30, 60, 0.8);
++    border: 1px solid rgba(157, 78, 221, 0.4);
++    border-radius: 5px;
++    transition: all 0.3s ease;
++}
++
++.checkbox-label:hover .checkmark {
++    border-color: #9d4edd;
++}
++
++.checkbox-label input:checked ~ .checkmark {
++    background: linear-gradient(135deg, #9d4edd 0%, #7e3cc5 100%);
++    border-color: #9d4edd;
++}
++
++.checkmark:after {
++    content: "";
++    position: absolute;
++    display: none;
++    left: 7px;
++    top: 3px;
++    width: 5px;
++    height: 10px;
++    border: solid white;
++    border-width: 0 2px 2px 0;
++    transform: rotate(45deg);
++}
++
++.checkbox-label input:checked ~ .checkmark:after {
++    display: block;
++}
++
++.form-actions {
++    display: flex;
++    gap: 15px;
++    margin-top: 35px;
++}
++
++/* Empty State */
++.empty-state {
++    text-align: center;
++    padding: 60px 20px;
++}
++
++.empty-icon {
++    font-size: 4rem;
++    margin-bottom: 20px;
++    opacity: 0.5;
++}
++
++.empty-state h3 {
++    font-size: 1.6rem;
++    color: #ffffff;
++    margin-bottom: 10px;
++}
++
++.empty-state p {
++    color: #b0b0d0;
++    margin-bottom: 25px;
++    font-size: 1.1rem;
++}
++
++/* Animations */
++@keyframes fadeInUp {
++    from {
++        opacity: 0;
++        transform: translateY(20px);
++    }
++    to {
++        opacity: 1;
++        transform: translateY(0);
++    }
++}
++
++@keyframes pulse {
++    0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(16, 185, 129, 0.6); }
++    50% { opacity: 0.7; box-shadow: 0 0 12px rgba(16, 185, 129, 0.9); }
++}
++
++@keyframes pulse-badge {
++    0%, 100% { transform: scale(1); }
++    50% { transform: scale(1.1); }
++}
++
++/* Responsive */
++@media (max-width: 1024px) {
++    .profile-container {
++        flex-direction: column;
++    }
++
++    .profile-sidebar {
++        width: 100%;
++        position: relative;
++        top: 0;
++        max-height: none;
++    }
++
++    .profile-content {
++        padding: 20px;
++    }
++}
++
++@media (max-width: 768px) {
++    .page-title {
++        font-size: 2.8rem;
++    }
++
++    .page-subtitle {
++        font-size: 1.1rem;
++    }
++
++    .section-header {
++        flex-direction: column;
++        gap: 15px;
++        align-items: flex-start;
++    }
++
++    .section-title {
++        font-size: 1.6rem;
++    }
++
++    .info-grid {
++        grid-template-columns: 1fr;
++    }
++
++    .builds-grid {
++        grid-template-columns: 1fr;
++    }
++
++    .components-grid {
++        grid-template-columns: 1fr;
++    }
++
++    .form-actions {
++        flex-direction: column;
++    }
++
++    .btn-lg {
++        width: 100%;
++    }
++
++    .user-info-card {
++        flex-direction: column;
++        text-align: center;
++    }
++
++    .nav-item {
++        justify-content: center;
++    }
++}
++
++@media (max-width: 480px) {
++    .page-title {
++        font-size: 2.2rem;
++    }
++
++    .profile-content {
++        padding: 15px;
++    }
++
++    .build-footer {
++        flex-direction: column;
++        gap: 15px;
++        align-items: flex-start;
++    }
++
++    .build-actions {
++        width: 100%;
++    }
++
++    .build-actions .btn {
++        flex: 1;
++    }
++
++    .orders-table {
++        font-size: 0.85rem;
++    }
++
++    .orders-table th,
++    .orders-table td {
++        padding: 10px 8px;
++    }
++}
+\ No newline at end of file
+Index: core/static/core/js/profile.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/core/static/core/js/profile.js b/core/static/core/js/profile.js
+new file mode 100644
+--- /dev/null	(date 1772264235364)
++++ b/core/static/core/js/profile.js	(date 1772264235364)
+@@ -0,0 +1,105 @@
++// ========================================
++// PROFILE.JS - ФУНКЦИОНАЛ ЛИЧНОГО КАБИНЕТА
++// ========================================
++
++document.addEventListener('DOMContentLoaded', function() {
++    // Навигация по секциям
++    const navItems = document.querySelectorAll('.nav-item');
++    const sections = document.querySelectorAll('.profile-section');
++
++    navItems.forEach(item => {
++        item.addEventListener('click', function(e) {
++            e.preventDefault();
++
++            // Удаляем активный класс у всех
++            navItems.forEach(nav => nav.classList.remove('active'));
++            sections.forEach(section => section.classList.remove('active'));
++
++            // Добавляем активный класс текущему
++            this.classList.add('active');
++
++            // Показываем соответствующую секцию
++            const targetId = this.getAttribute('href').substring(1);
++            const targetSection = document.getElementById(targetId);
++            if (targetSection) {
++                targetSection.classList.add('active');
++            }
++
++            // Сохраняем в localStorage
++            localStorage.setItem('activeProfileTab', targetId);
++        });
++    });
++
++    // Восстанавливаем активную вкладку
++    const activeTab = localStorage.getItem('activeProfileTab');
++    if (activeTab) {
++        const activeNav = document.querySelector(`.nav-item[href="#${activeTab}"]`);
++        const activeSection = document.getElementById(activeTab);
++        if (activeNav && activeSection) {
++            navItems.forEach(nav => nav.classList.remove('active'));
++            sections.forEach(section => section.classList.remove('active'));
++            activeNav.classList.add('active');
++            activeSection.classList.add('active');
++        }
++    }
++
++    // Удаление сборок
++    window.deleteBuild = function(buildId) {
++        if (confirm('Вы уверены, что хотите удалить эту сборку?')) {
++            console.log('Удаление сборки:', buildId);
++            alert('Сборка удалена (демо)');
++        }
++    };
++
++    // Удаление из избранного
++    window.removeFavorite = function(favoriteId) {
++        if (confirm('Удалить компонент из избранного?')) {
++            console.log('Удаление из избранного:', favoriteId);
++            alert('Компонент удалён из избранного (демо)');
++        }
++    };
++
++    // Закрытие уведомлений
++    window.closeNotification = function(notificationId) {
++        const notification = document.getElementById(`notification-${notificationId}`);
++        if (notification) {
++            notification.style.opacity = '0';
++            notification.style.transform = 'translateX(20px)';
++            setTimeout(() => notification.remove(), 300);
++        }
++    };
++
++    // Отметить все уведомления как прочитанные
++    window.markAllRead = function() {
++        document.querySelectorAll('.notification-item.unread').forEach(item => {
++            item.classList.remove('unread');
++        });
++        alert('Все уведомления отмечены как прочитанные');
++    };
++
++    // Валидация формы настроек
++    const settingsForm = document.querySelector('.settings-form');
++    if (settingsForm) {
++        settingsForm.addEventListener('submit', function(e) {
++            e.preventDefault();
++            alert('Настройки сохранены (демо)');
++        });
++    }
++
++    // Анимация появления элементов
++    const observer = new IntersectionObserver((entries) => {
++        entries.forEach(entry => {
++            if (entry.isIntersecting) {
++                entry.target.style.opacity = '1';
++                entry.target.style.transform = 'translateY(0)';
++            }
++        });
++    }, { threshold: 0.1 });
++
++    document.querySelectorAll('.build-card, .component-card, .info-card, .notification-item').forEach(card => {
++        card.style.opacity = '0';
++        card.style.transform = 'translateY(20px)';
++        card.style.transition = 'all 0.4s ease';
++        observer.observe(card);
++    });
++});
+\ No newline at end of file
+Index: core/templates/registration/login.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/core/templates/registration/login.html b/core/templates/registration/login.html
+new file mode 100644
+--- /dev/null	(date 1772818211904)
++++ b/core/templates/registration/login.html	(date 1772818211904)
+@@ -0,0 +1,144 @@
++{% extends 'core/base.html' %}
++{% load static %}
++
++{% block title %}SpecBox | Вход{% endblock %}
++
++{% block extra_css %}
++<style>
++    .auth-container {
++        display: flex;
++        justify-content: center;
++        align-items: center;
++        min-height: 60vh;
++        padding: 40px 20px;
++    }
++
++    .auth-card {
++        background: rgba(25, 25, 50, 0.75);
++        border: 1px solid rgba(157, 78, 221, 0.3);
++        border-radius: 16px;
++        padding: 40px;
++        width: 100%;
++        max-width: 450px;
++        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
++    }
++
++    .auth-title {
++        font-size: 2rem;
++        color: #ffffff;
++        text-align: center;
++        margin-bottom: 30px;
++        font-weight: 700;
++    }
++
++    .auth-error {
++        background: rgba(255, 82, 82, 0.15);
++        border: 1px solid rgba(255, 82, 82, 0.3);
++        color: #ff5252;
++        padding: 12px 18px;
++        border-radius: 10px;
++        margin-bottom: 20px;
++    }
++
++    .auth-form {
++        display: flex;
++        flex-direction: column;
++        gap: 20px;
++    }
++
++    .form-group {
++        display: flex;
++        flex-direction: column;
++        gap: 8px;
++    }
++
++    .form-label {
++        color: #c5c5e0;
++        font-weight: 600;
++        font-size: 0.95rem;
++    }
++
++    .form-control {
++        background: rgba(30, 30, 60, 0.8);
++        border: 1px solid rgba(157, 78, 221, 0.3);
++        border-radius: 10px;
++        padding: 14px 18px;
++        color: #e0e0ff;
++        font-size: 1rem;
++        outline: none;
++        transition: all 0.3s ease;
++    }
++
++    .form-control:focus {
++        border-color: #9d4edd;
++        box-shadow: 0 0 0 3px rgba(157, 78, 221, 0.2);
++    }
++
++    .btn-submit {
++        background: linear-gradient(135deg, #9d4edd 0%, #7e3cc5 100%);
++        color: #ffffff;
++        border: none;
++        border-radius: 10px;
++        padding: 14px;
++        font-size: 1.05rem;
++        font-weight: 700;
++        cursor: pointer;
++        transition: all 0.3s ease;
++        margin-top: 10px;
++    }
++
++    .btn-submit:hover {
++        transform: translateY(-2px);
++        box-shadow: 0 8px 25px rgba(157, 78, 221, 0.5);
++    }
++
++    .auth-hint {
++        text-align: center;
++        margin-top: 25px;
++        color: #b0b0d0;
++        font-size: 0.95rem;
++    }
++
++    .auth-hint a {
++        color: #9d4edd;
++        text-decoration: none;
++        font-weight: 600;
++    }
++
++    .auth-hint a:hover {
++        text-decoration: underline;
++    }
++</style>
++{% endblock %}
++
++{% block content %}
++<div class="auth-container">
++    <div class="auth-card">
++        <h2 class="auth-title">Вход в аккаунт</h2>
++
++        {% if error %}
++        <div class="auth-error">{{ error }}</div>
++        {% endif %}
++
++        <form method="post" class="auth-form">
++            {% csrf_token %}
++
++            <div class="form-group">
++                <label class="form-label">Имя пользователя</label>
++                <input type="text" name="username" class="form-control" required autofocus>
++            </div>
++
++            <div class="form-group">
++                <label class="form-label">Пароль</label>
++                <input type="password" name="password" class="form-control" required>
++            </div>
++
++            <button type="submit" class="btn-submit">Войти</button>
++        </form>
++
++        <p class="auth-hint">
++            Нет аккаунта? <a href="{% url 'core:register' %}">Зарегистрироваться</a>
++        </p>
++    </div>
++</div>
++{% endblock %}
+\ No newline at end of file
+Index: config/settings.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\"\"\"\r\nDjango settings for config project.\r\n\r\nGenerated by 'django-admin startproject' using Django 6.0.2.\r\n\r\nFor more information on this file, see\r\nhttps://docs.djangoproject.com/en/6.0/topics/settings/\r\n\r\nFor the full list of settings and their values, see\r\nhttps://docs.djangoproject.com/en/6.0/ref/settings/\r\n\"\"\"\r\n\r\nfrom pathlib import Path\r\nimport environ\r\n\r\n# Инициализация environ\r\nenv = environ.Env()\r\nenviron.Env.read_env()\r\n\r\n# Базовая директория проекта\r\nBASE_DIR = Path(__file__).resolve().parent.parent\r\n\r\n# Секретный ключ\r\nSECRET_KEY = env('SECRET_KEY', default='django-insecure-dev-key')\r\n\r\n# Отладка\r\nDEBUG = env('DEBUG', default=True)\r\n\r\n# Разрешённые хосты\r\nALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['*'])\r\n\r\n# Приложения\r\nINSTALLED_APPS = [\r\n    'django.contrib.admin',\r\n    'django.contrib.auth',\r\n    'django.contrib.contenttypes',\r\n    'django.contrib.sessions',\r\n    'django.contrib.messages',\r\n    'django.contrib.staticfiles',\r\n    'core',\r\n]\r\n\r\n# Middleware\r\nMIDDLEWARE = [\r\n    'django.middleware.security.SecurityMiddleware',\r\n    'django.contrib.sessions.middleware.SessionMiddleware',\r\n    'django.middleware.common.CommonMiddleware',\r\n    'django.middleware.csrf.CsrfViewMiddleware',\r\n    'django.contrib.auth.middleware.AuthenticationMiddleware',\r\n    'django.contrib.messages.middleware.MessageMiddleware',\r\n    'django.middleware.clickjacking.XFrameOptionsMiddleware',\r\n]\r\n\r\n# Корневой URLconf\r\nROOT_URLCONF = 'config.urls'\r\n\r\n# Шаблоны\r\nTEMPLATES = [\r\n    {\r\n        'BACKEND': 'django.template.backends.django.DjangoTemplates',\r\n        'DIRS': [BASE_DIR / 'templates'],\r\n        'APP_DIRS': True,\r\n        'OPTIONS': {\r\n            'context_processors': [\r\n                'django.template.context_processors.debug',\r\n                'django.template.context_processors.request',\r\n                'django.contrib.auth.context_processors.auth',\r\n                'django.contrib.messages.context_processors.messages',\r\n            ],\r\n        },\r\n    },\r\n]\r\n\r\n# WSGI application\r\nWSGI_APPLICATION = 'config.wsgi.application'\r\n\r\n# База данных (SQLite для начала)\r\nDATABASES = {\r\n    'default': {\r\n        'ENGINE': 'django.db.backends.sqlite3',\r\n        'NAME': BASE_DIR / 'db.sqlite3',\r\n    }\r\n}\r\n\r\n# Язык и время\r\nLANGUAGE_CODE = 'ru-ru'\r\nTIME_ZONE = 'Europe/Moscow'\r\nUSE_I18N = True\r\nUSE_TZ = True\r\n\r\n\r\n# Статические файлы\r\nSTATIC_URL = 'static/'\r\nSTATIC_ROOT = BASE_DIR / 'staticfiles'\r\nSTATICFILES_DIRS = [\r\n    BASE_DIR / 'core' / 'static',\r\n]\r\n\r\n# Медиа файлы\r\nMEDIA_URL = 'media/'\r\nMEDIA_ROOT = BASE_DIR / 'media'\r\n\r\n# Поле по умолчанию\r\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/config/settings.py b/config/settings.py
+--- a/config/settings.py	(revision c8cc95290d77865eda1097af267a2e681e0b698f)
++++ b/config/settings.py	(date 1772264164616)
+@@ -90,15 +90,27 @@
+ 
+ 
+ # Статические файлы
+-STATIC_URL = 'static/'
++STATIC_URL = '/static/'
+ STATIC_ROOT = BASE_DIR / 'staticfiles'
+ STATICFILES_DIRS = [
+     BASE_DIR / 'core' / 'static',
+ ]
+ 
+ # Медиа файлы
+-MEDIA_URL = 'media/'
++MEDIA_URL = '/media/'
+ MEDIA_ROOT = BASE_DIR / 'media'
+ 
+ # Поле по умолчанию
+ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
++
++# config/settings.py
++# URL для входа при использовании @login_required
++LOGIN_URL = '/accounts/login/'  # если используете кастомный login
++# или:
++# LOGIN_URL = '/accounts/login/'  # если используете встроенный
++
++# Куда перенаправить после успешного входа
++LOGIN_REDIRECT_URL = 'core:profile'
++
++# Куда перенаправить после выхода
++LOGOUT_REDIRECT_URL = 'core:index'
+\ No newline at end of file
+Index: core/templates/core/components.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{% extends 'core/base.html' %}\r\n{% load static %}\r\n\r\n{% block title %}SpecBox | Комплектующие{% endblock %}\r\n\r\n{% block extra_css %}\r\n<link rel=\"stylesheet\" href=\"{% static 'core/css/style_components.css' %}\">\r\n{% endblock %}\r\n\r\n{% block content %}\r\n<!-- Page Header -->\r\n<section class=\"page-header\">\r\n    <h1 class=\"page-title\">КОМПЛЕКТУЮЩИЕ</h1>\r\n    <p class=\"page-subtitle\">Более 12 000 компонентов для сборки вашего идеального ПК</p>\r\n</section>\r\n\r\n\r\n<!-- Catalog Container -->\r\n<section class=\"catalog-container\">\r\n    <!-- Filters Sidebar -->\r\n    <aside class=\"filters-sidebar\">\r\n        <div class=\"filters-header\">\r\n            <h3 class=\"filters-title\">ФИЛЬТРЫ</h3>\r\n            <button class=\"filters-reset\" onclick=\"resetFilters()\">СБРОСИТЬ</button>\r\n        </div>\r\n\r\n        <!-- Search -->\r\n        <div class=\"filter-section\">\r\n            <label class=\"filter-label\">Поиск</label>\r\n            <input type=\"text\" class=\"filter-search\" placeholder=\"Название компонента...\">\r\n        </div>\r\n\r\n        <!-- Category -->\r\n        <div class=\"filter-section\">\r\n            <label class=\"filter-label\">Категория</label>\r\n            <div class=\"filter-checkboxes\">\r\n                <label class=\"checkbox-label\">\r\n                    <input type=\"checkbox\" name=\"category\" value=\"cpu\">\r\n                    <span class=\"checkmark\"></span>Процессоры\r\n                </label>\r\n                <label class=\"checkbox-label\">\r\n                    <input type=\"checkbox\" name=\"category\" value=\"gpu\">\r\n                    <span class=\"checkmark\"></span>Видеокарты\r\n                </label>\r\n                <label class=\"checkbox-label\">\r\n                    <input type=\"checkbox\" name=\"category\" value=\"mobo\">\r\n                    <span class=\"checkmark\"></span>Материнские платы\r\n                </label>\r\n                <label class=\"checkbox-label\">\r\n                    <input type=\"checkbox\" name=\"category\" value=\"ram\">\r\n                    <span class=\"checkmark\"></span>Оперативная память\r\n                </label>\r\n                <label class=\"checkbox-label\">\r\n                    <input type=\"checkbox\" name=\"category\" value=\"ssd\">\r\n                    <span class=\"checkmark\"></span>SSD накопители\r\n                </label>\r\n                <label class=\"checkbox-label\">\r\n                    <input type=\"checkbox\" name=\"category\" value=\"psu\">\r\n                    <span class=\"checkmark\"></span>Блоки питания\r\n                </label>\r\n            </div>\r\n        </div>\r\n\r\n        <!-- Brand -->\r\n        <div class=\"filter-section\">\r\n            <label class=\"filter-label\">Производитель</label>\r\n            <div class=\"filter-checkboxes\">\r\n                <label class=\"checkbox-label\">\r\n                    <input type=\"checkbox\" name=\"brand\" value=\"nvidia\">\r\n                    <span class=\"checkmark\"></span>NVIDIA\r\n                </label>\r\n                <label class=\"checkbox-label\">\r\n                    <input type=\"checkbox\" name=\"brand\" value=\"amd\">\r\n                    <span class=\"checkmark\"></span>AMD\r\n                </label>\r\n                <label class=\"checkbox-label\">\r\n                    <input type=\"checkbox\" name=\"brand\" value=\"intel\">\r\n                    <span class=\"checkmark\"></span>Intel\r\n                </label>\r\n                <label class=\"checkbox-label\">\r\n                    <input type=\"checkbox\" name=\"brand\" value=\"asus\">\r\n                    <span class=\"checkmark\"></span>ASUS\r\n                </label>\r\n            </div>\r\n        </div>\r\n\r\n        <!-- Price -->\r\n        <div class=\"filter-section\">\r\n            <label class=\"filter-label\">Цена, ₽</label>\r\n            <div class=\"price-inputs\">\r\n                <input type=\"number\" class=\"price-from\" placeholder=\"От\">\r\n                <span class=\"price-separator\">—</span>\r\n                <input type=\"number\" class=\"price-to\" placeholder=\"До\">\r\n            </div>\r\n            <input type=\"range\" class=\"price-range\" min=\"0\" max=\"200000\" step=\"1000\" value=\"200000\">\r\n        </div>\r\n\r\n        <!-- Apply Button -->\r\n        <button class=\"filter-apply-btn\" onclick=\"applyFilters()\">ПРИМЕНИТЬ</button>\r\n    </aside>\r\n\r\n    <!-- Components Wrapper -->\r\n    <div class=\"components-wrapper\">\r\n        <!-- Toolbar -->\r\n        <div class=\"components-toolbar\">\r\n            <span class=\"components-count\">Найдено: <strong>{{ total_count }}</strong></span>\r\n            <div class=\"components-sort\">\r\n                <label>Сортировать:</label>\r\n                <select class=\"sort-select\">\r\n                    <option value=\"popular\">По популярности</option>\r\n                    <option value=\"price_asc\">По цене (возрастание)</option>\r\n                    <option value=\"price_desc\">По цене (убывание)</option>\r\n                </select>\r\n            </div>\r\n        </div>\r\n\r\n        <!-- Components Grid -->\r\n        <section class=\"components-section\">\r\n            <div class=\"components-grid\">\r\n                {% for component in components %}\r\n                <div class=\"component-card fade-in\">\r\n                    <div class=\"component-image\">\r\n                        <div class=\"image-placeholder\">{{ component.manufacturer|first }}</div>\r\n                        {% if component.is_hit %}<div class=\"component-badge\">HIT</div>{% endif %}\r\n                        {% if not component.in_stock %}<div class=\"out-of-stock\">НЕТ В НАЛИЧИИ</div>{% endif %}\r\n                    </div>\r\n                    <div class=\"component-info\">\r\n                        <h3 class=\"component-name\">{{ component.name }}</h3>\r\n                        <p class=\"component-category\">{{ component.category }}</p>\r\n                        <p class=\"component-manufacturer\">{{ component.manufacturer }}</p>\r\n                    </div>\r\n                    <div class=\"component-price\">\r\n                        <span class=\"price-value\">{{ component.price|floatformat:0 }} ₽</span>\r\n                        {% if component.in_stock %}\r\n                        <button class=\"add-to-cart-btn\" onclick=\"addToCart('{{ component.name }}')\">В СБОРКУ</button>\r\n                        {% else %}\r\n                        <button class=\"add-to-cart-btn disabled\" disabled>ОЖИДАЕТСЯ</button>\r\n                        {% endif %}\r\n                    </div>\r\n                </div>\r\n                {% endfor %}\r\n            </div>\r\n        </section>\r\n\r\n        <!-- Pagination -->\r\n        <section class=\"pagination-section\">\r\n            <div class=\"pagination\">\r\n                <a class=\"page-link\">← Назад</a>\r\n                <a class=\"page-link active\">1</a>\r\n                <a class=\"page-link\">2</a>\r\n                <a class=\"page-link\">3</a>\r\n                <a class=\"page-link\">...</a>\r\n                <a class=\"page-link\">10</a>\r\n                <a class=\"page-link\">Вперёд →</a>\r\n            </div>\r\n        </section>\r\n    </div>\r\n</section>\r\n\r\n<script>\r\n    function addToCart(name) { alert('✅ \"' + name + '\" добавлен в сборку!'); }\r\n    function resetFilters() {\r\n        document.querySelectorAll('.filter-checkboxes input').forEach(cb => cb.checked = false);\r\n        document.querySelectorAll('.price-from, .price-to, .filter-search').forEach(i => i.value = '');\r\n        alert('Фильтры сброшены');\r\n    }\r\n    function applyFilters() { alert('Фильтры применены!'); }\r\n</script>\r\n{% endblock %}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/core/templates/core/components.html b/core/templates/core/components.html
+--- a/core/templates/core/components.html	(revision c8cc95290d77865eda1097af267a2e681e0b698f)
++++ b/core/templates/core/components.html	(date 1772804785401)
+@@ -14,7 +14,6 @@
+     <p class="page-subtitle">Более 12 000 компонентов для сборки вашего идеального ПК</p>
+ </section>
+ 
+-
+ <!-- Catalog Container -->
+ <section class="catalog-container">
+     <!-- Filters Sidebar -->
+Index: config/urls.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.contrib import admin\r\nfrom django.urls import path, include\r\nfrom django.conf import settings\r\nfrom django.conf.urls.static import static\r\n\r\nurlpatterns = [\r\n    path('admin/', admin.site.urls),\r\n    path('', include('core.urls')),\r\n]\r\n\r\nif settings.DEBUG:\r\n    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)\r\n    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/config/urls.py b/config/urls.py
+--- a/config/urls.py	(revision c8cc95290d77865eda1097af267a2e681e0b698f)
++++ b/config/urls.py	(date 1772262899744)
+@@ -5,7 +5,7 @@
+ 
+ urlpatterns = [
+     path('admin/', admin.site.urls),
+-    path('', include('core.urls')),
++    path('', include('core.urls', namespace='core')),
+ ]
+ 
+ if settings.DEBUG:
+Index: core/static/core/css/style_components.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>/* ========================================\r\n   COMPONENTS.CSS - СТИЛИ СТРАНИЦЫ КОМПЛЕКТУЮЩИХ\r\n   ======================================== */\r\n\r\n/* Page Header */\r\n.page-header {\r\n    text-align: center;\r\n    padding: 40px 0 30px;\r\n}\r\n\r\n.page-title {\r\n    font-size: 4rem;\r\n    font-weight: 800;\r\n    color: #ffffff;\r\n    background: linear-gradient(to right, #ffffff, #e0e0ff);\r\n    -webkit-background-clip: text;\r\n    -webkit-text-fill-color: transparent;\r\n    background-clip: text;\r\n    margin-bottom: 10px;\r\n}\r\n\r\n.page-subtitle {\r\n    font-size: 1.4rem;\r\n    color: #b0b0d0;\r\n    font-weight: 300;\r\n}\r\n\r\n/* Catalog Container */\r\n.catalog-container {\r\n    display: flex;\r\n    gap: 30px;\r\n    margin: 40px 0;\r\n    align-items: flex-start;\r\n}\r\n\r\n/* Left Sidebar Filters */\r\n.filters-sidebar {\r\n    width: 280px;\r\n    flex-shrink: 0;\r\n    background: rgba(25, 25, 50, 0.75);\r\n    border: 1px solid rgba(157, 78, 221, 0.3);\r\n    border-radius: 16px;\r\n    padding: 25px;\r\n    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);\r\n    position: sticky;\r\n    top: 100px;\r\n    max-height: calc(100vh - 120px);\r\n    overflow-y: auto;\r\n}\r\n\r\n.filters-sidebar::-webkit-scrollbar {\r\n    width: 6px;\r\n}\r\n\r\n.filters-sidebar::-webkit-scrollbar-track {\r\n    background: rgba(157, 78, 221, 0.1);\r\n    border-radius: 3px;\r\n}\r\n\r\n.filters-sidebar::-webkit-scrollbar-thumb {\r\n    background: rgba(157, 78, 221, 0.5);\r\n    border-radius: 3px;\r\n}\r\n\r\n.filters-header {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n    margin-bottom: 25px;\r\n    padding-bottom: 15px;\r\n    border-bottom: 1px solid rgba(157, 78, 221, 0.3);\r\n}\r\n\r\n.filters-title {\r\n    font-size: 1.3rem;\r\n    color: #ffffff;\r\n    font-weight: 700;\r\n    letter-spacing: 1px;\r\n}\r\n\r\n.filters-reset {\r\n    background: transparent;\r\n    border: 1px solid rgba(157, 78, 221, 0.4);\r\n    color: #9d4edd;\r\n    padding: 6px 12px;\r\n    border-radius: 6px;\r\n    font-size: 0.8rem;\r\n    cursor: pointer;\r\n    transition: all 0.3s ease;\r\n    text-transform: uppercase;\r\n    font-weight: 600;\r\n}\r\n\r\n.filters-reset:hover {\r\n    background: rgba(157, 78, 221, 0.2);\r\n    border-color: #9d4edd;\r\n}\r\n\r\n.filter-section {\r\n    margin-bottom: 25px;\r\n    padding-bottom: 20px;\r\n    border-bottom: 1px solid rgba(157, 78, 221, 0.15);\r\n}\r\n\r\n.filter-section:last-of-type {\r\n    border-bottom: none;\r\n}\r\n\r\n.filter-label {\r\n    display: block;\r\n    color: #c5c5e0;\r\n    font-size: 0.95rem;\r\n    font-weight: 600;\r\n    margin-bottom: 12px;\r\n    text-transform: uppercase;\r\n    letter-spacing: 0.5px;\r\n}\r\n\r\n.filter-search {\r\n    width: 100%;\r\n    background: rgba(30, 30, 60, 0.8);\r\n    border: 1px solid rgba(157, 78, 221, 0.3);\r\n    border-radius: 10px;\r\n    padding: 12px 15px;\r\n    color: #e0e0ff;\r\n    font-size: 0.95rem;\r\n    outline: none;\r\n    transition: all 0.3s ease;\r\n}\r\n\r\n.filter-search:focus {\r\n    border-color: #9d4edd;\r\n    box-shadow: 0 0 0 3px rgba(157, 78, 221, 0.2);\r\n}\r\n\r\n.filter-search::placeholder {\r\n    color: #6a6a8a;\r\n}\r\n\r\n.filter-checkboxes {\r\n    display: flex;\r\n    flex-direction: column;\r\n    gap: 10px;\r\n}\r\n\r\n.checkbox-label {\r\n    display: flex;\r\n    align-items: center;\r\n    gap: 10px;\r\n    color: #b0b0d0;\r\n    font-size: 0.95rem;\r\n    cursor: pointer;\r\n    position: relative;\r\n    padding-left: 28px;\r\n}\r\n\r\n.checkbox-label:hover {\r\n    color: #ffffff;\r\n}\r\n\r\n.checkbox-label input {\r\n    position: absolute;\r\n    opacity: 0;\r\n    cursor: pointer;\r\n}\r\n\r\n.checkmark {\r\n    position: absolute;\r\n    left: 0;\r\n    top: 50%;\r\n    transform: translateY(-50%);\r\n    height: 18px;\r\n    width: 18px;\r\n    background: rgba(30, 30, 60, 0.8);\r\n    border: 1px solid rgba(157, 78, 221, 0.4);\r\n    border-radius: 4px;\r\n    transition: all 0.3s ease;\r\n}\r\n\r\n.checkbox-label:hover .checkmark {\r\n    border-color: #9d4edd;\r\n}\r\n\r\n.checkbox-label input:checked ~ .checkmark {\r\n    background: linear-gradient(135deg, #9d4edd 0%, #7e3cc5 100%);\r\n    border-color: #9d4edd;\r\n}\r\n\r\n.checkmark:after {\r\n    content: \"\";\r\n    position: absolute;\r\n    display: none;\r\n    left: 6px;\r\n    top: 3px;\r\n    width: 4px;\r\n    height: 8px;\r\n    border: solid white;\r\n    border-width: 0 2px 2px 0;\r\n    transform: rotate(45deg);\r\n}\r\n\r\n.checkbox-label input:checked ~ .checkmark:after {\r\n    display: block;\r\n}\r\n\r\n.price-inputs {\r\n    display: flex;\r\n    align-items: center;\r\n    gap: 10px;\r\n    margin-bottom: 15px;\r\n}\r\n\r\n.price-from, .price-to {\r\n    flex: 1;\r\n    background: rgba(30, 30, 60, 0.8);\r\n    border: 1px solid rgba(157, 78, 221, 0.3);\r\n    border-radius: 8px;\r\n    padding: 10px 12px;\r\n    color: #e0e0ff;\r\n    font-size: 0.9rem;\r\n    outline: none;\r\n}\r\n\r\n.price-from:focus, .price-to:focus {\r\n    border-color: #9d4edd;\r\n    box-shadow: 0 0 0 3px rgba(157, 78, 221, 0.2);\r\n}\r\n\r\n.price-separator {\r\n    color: #6a6a8a;\r\n}\r\n\r\n.price-range {\r\n    width: 100%;\r\n    height: 6px;\r\n    border-radius: 3px;\r\n    background: rgba(30, 30, 60, 0.8);\r\n    outline: none;\r\n    -webkit-appearance: none;\r\n}\r\n\r\n.price-range::-webkit-slider-thumb {\r\n    -webkit-appearance: none;\r\n    width: 18px;\r\n    height: 18px;\r\n    border-radius: 50%;\r\n    background: linear-gradient(135deg, #9d4edd 0%, #7e3cc5 100%);\r\n    cursor: pointer;\r\n    box-shadow: 0 0 10px rgba(157, 78, 221, 0.5);\r\n}\r\n\r\n.filter-apply-btn {\r\n    width: 100%;\r\n    background: linear-gradient(135deg, #9d4edd 0%, #7e3cc5 100%);\r\n    color: #ffffff;\r\n    border: none;\r\n    border-radius: 10px;\r\n    padding: 14px 25px;\r\n    font-size: 1rem;\r\n    font-weight: 700;\r\n    cursor: pointer;\r\n    transition: all 0.3s ease;\r\n    text-transform: uppercase;\r\n    letter-spacing: 1px;\r\n}\r\n\r\n.filter-apply-btn:hover {\r\n    transform: translateY(-2px);\r\n    box-shadow: 0 8px 25px rgba(157, 78, 221, 0.45);\r\n}\r\n\r\n/* Components Wrapper */\r\n.components-wrapper {\r\n    flex: 1;\r\n    min-width: 0;\r\n}\r\n\r\n.components-toolbar {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n    background: rgba(25, 25, 50, 0.75);\r\n    border: 1px solid rgba(157, 78, 221, 0.3);\r\n    border-radius: 12px;\r\n    padding: 15px 25px;\r\n    margin-bottom: 25px;\r\n}\r\n\r\n.components-count {\r\n    color: #b0b0d0;\r\n    font-size: 1rem;\r\n}\r\n\r\n.components-count strong {\r\n    color: #9d4edd;\r\n}\r\n\r\n.components-sort {\r\n    display: flex;\r\n    align-items: center;\r\n    gap: 12px;\r\n}\r\n\r\n.components-sort label {\r\n    color: #c5c5e0;\r\n    font-size: 0.95rem;\r\n}\r\n\r\n.sort-select {\r\n    background: rgba(30, 30, 60, 0.8);\r\n    border: 1px solid rgba(157, 78, 221, 0.3);\r\n    border-radius: 8px;\r\n    padding: 10px 15px;\r\n    color: #e0e0ff;\r\n    font-size: 0.95rem;\r\n    outline: none;\r\n    cursor: pointer;\r\n}\r\n\r\n.sort-select:focus {\r\n    border-color: #9d4edd;\r\n}\r\n\r\n.sort-select option {\r\n    background: #1a1a2e;\r\n    color: #e0e0ff;\r\n}\r\n\r\n/* Components Grid */\r\n.components-grid {\r\n    display: grid;\r\n    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));\r\n    gap: 25px;\r\n}\r\n\r\n.component-card {\r\n    background: rgba(35, 35, 70, 0.65);\r\n    border: 1px solid rgba(157, 78, 221, 0.25);\r\n    border-radius: 16px;\r\n    overflow: hidden;\r\n    transition: all 0.4s ease;\r\n    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);\r\n    display: flex;\r\n    flex-direction: column;\r\n}\r\n\r\n.component-card:hover {\r\n    transform: translateY(-8px);\r\n    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 25px rgba(157, 78, 221, 0.15);\r\n    border-color: rgba(157, 78, 221, 0.45);\r\n}\r\n\r\n.component-image {\r\n    position: relative;\r\n    height: 180px;\r\n    background: rgba(20, 20, 40, 0.8);\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\r\n}\r\n\r\n.image-placeholder {\r\n    width: 100px;\r\n    height: 100px;\r\n    background: linear-gradient(135deg, rgba(157, 78, 221, 0.3) 0%, rgba(99, 102, 241, 0.3) 100%);\r\n    border-radius: 50%;\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\r\n    font-size: 2.5rem;\r\n    font-weight: 700;\r\n    color: #ffffff;\r\n    border: 3px solid rgba(157, 78, 221, 0.5);\r\n}\r\n\r\n.out-of-stock {\r\n    position: absolute;\r\n    top: 10px;\r\n    right: 10px;\r\n    background: rgba(255, 82, 82, 0.9);\r\n    color: #ffffff;\r\n    padding: 5px 10px;\r\n    border-radius: 5px;\r\n    font-size: 0.7rem;\r\n    font-weight: 600;\r\n}\r\n\r\n.component-badge {\r\n    position: absolute;\r\n    top: 10px;\r\n    left: 10px;\r\n    background: linear-gradient(135deg, #10b981 0%, #059669 100%);\r\n    color: #ffffff;\r\n    padding: 5px 10px;\r\n    border-radius: 5px;\r\n    font-size: 0.7rem;\r\n    font-weight: 700;\r\n}\r\n\r\n.component-info {\r\n    padding: 18px;\r\n    flex-grow: 1;\r\n}\r\n\r\n.component-name {\r\n    font-size: 1.2rem;\r\n    color: #ffffff;\r\n    font-weight: 700;\r\n    margin-bottom: 6px;\r\n    line-height: 1.4;\r\n}\r\n\r\n.component-category {\r\n    font-size: 0.9rem;\r\n    color: #9d4edd;\r\n    font-weight: 500;\r\n    margin-bottom: 4px;\r\n}\r\n\r\n.component-manufacturer {\r\n    font-size: 0.85rem;\r\n    color: #6a6a8a;\r\n}\r\n\r\n.component-price {\r\n    padding: 18px;\r\n    border-top: 1px solid rgba(157, 78, 221, 0.2);\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n    background: rgba(20, 20, 40, 0.5);\r\n}\r\n\r\n.price-value {\r\n    font-size: 1.4rem;\r\n    color: #10b981;\r\n    font-weight: 700;\r\n}\r\n\r\n.add-to-cart-btn {\r\n    background: linear-gradient(135deg, #9d4edd 0%, #7e3cc5 100%);\r\n    color: #ffffff;\r\n    border: none;\r\n    border-radius: 8px;\r\n    padding: 10px 18px;\r\n    font-size: 0.85rem;\r\n    font-weight: 600;\r\n    cursor: pointer;\r\n    transition: all 0.3s ease;\r\n    text-transform: uppercase;\r\n}\r\n\r\n.add-to-cart-btn:hover {\r\n    transform: translateY(-2px);\r\n    box-shadow: 0 6px 20px rgba(157, 78, 221, 0.4);\r\n}\r\n\r\n.add-to-cart-btn.disabled {\r\n    background: rgba(100, 100, 100, 0.5);\r\n    cursor: not-allowed;\r\n    opacity: 0.6;\r\n}\r\n\r\n.add-to-cart-btn.disabled:hover {\r\n    transform: none;\r\n    box-shadow: none;\r\n}\r\n\r\n/* Pagination */\r\n.pagination-section {\r\n    margin: 40px 0 60px;\r\n}\r\n\r\n.pagination {\r\n    display: flex;\r\n    justify-content: center;\r\n    gap: 10px;\r\n    flex-wrap: wrap;\r\n}\r\n\r\n.page-link {\r\n    background: rgba(35, 35, 70, 0.65);\r\n    border: 1px solid rgba(157, 78, 221, 0.25);\r\n    color: #c5c5e0;\r\n    padding: 12px 20px;\r\n    border-radius: 10px;\r\n    text-decoration: none;\r\n    font-weight: 500;\r\n    transition: all 0.3s ease;\r\n    cursor: pointer;\r\n}\r\n\r\n.page-link:hover, .page-link.active {\r\n    background: linear-gradient(135deg, #9d4edd 0%, #7e3cc5 100%);\r\n    color: #ffffff;\r\n    border-color: #9d4edd;\r\n}\r\n\r\n/* Responsive */\r\n@media (max-width: 1024px) {\r\n    .catalog-container {\r\n        flex-direction: column;\r\n    }\r\n\r\n    .filters-sidebar {\r\n        width: 100%;\r\n        position: relative;\r\n        top: 0;\r\n        max-height: none;\r\n    }\r\n}\r\n\r\n@media (max-width: 768px) {\r\n    .page-title {\r\n        font-size: 2.8rem;\r\n    }\r\n\r\n    .page-subtitle {\r\n        font-size: 1.1rem;\r\n    }\r\n\r\n    .components-toolbar {\r\n        flex-direction: column;\r\n        gap: 15px;\r\n        align-items: flex-start;\r\n    }\r\n\r\n    .components-sort {\r\n        width: 100%;\r\n    }\r\n\r\n    .sort-select {\r\n        flex: 1;\r\n    }\r\n\r\n    .components-grid {\r\n        grid-template-columns: 1fr;\r\n    }\r\n\r\n    .pagination {\r\n        gap: 8px;\r\n    }\r\n\r\n    .page-link {\r\n        padding: 10px 15px;\r\n        font-size: 0.9rem;\r\n    }\r\n}\r\n\r\n@media (max-width: 480px) {\r\n    .filters-sidebar {\r\n        padding: 20px;\r\n    }\r\n\r\n    .filters-header {\r\n        flex-direction: column;\r\n        gap: 10px;\r\n        align-items: flex-start;\r\n    }\r\n\r\n    .filters-reset {\r\n        width: 100%;\r\n    }\r\n\r\n    .price-inputs {\r\n        flex-direction: column;\r\n        gap: 8px;\r\n    }\r\n\r\n    .component-price {\r\n        flex-direction: column;\r\n        gap: 12px;\r\n        align-items: flex-start;\r\n    }\r\n\r\n    .add-to-cart-btn {\r\n        width: 100%;\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/core/static/core/css/style_components.css b/core/static/core/css/style_components.css
+--- a/core/static/core/css/style_components.css	(revision c8cc95290d77865eda1097af267a2e681e0b698f)
++++ b/core/static/core/css/style_components.css	(date 1772809456494)
+@@ -5,12 +5,13 @@
+ /* Page Header */
+ .page-header {
+     text-align: center;
+-    padding: 40px 0 30px;
++    padding: 20px 0 30px;
+ }
+ 
+ .page-title {
+     font-size: 4rem;
+     font-weight: 800;
++    text-align: center;
+     color: #ffffff;
+     background: linear-gradient(to right, #ffffff, #e0e0ff);
+     -webkit-background-clip: text;
+Index: core/static/core/css/style_login.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/core/static/core/css/style_login.css b/core/static/core/css/style_login.css
+new file mode 100644
+--- /dev/null	(date 1772817702676)
++++ b/core/static/core/css/style_login.css	(date 1772817702676)
+@@ -0,0 +1,53 @@
++.auth-container {
++    display: flex;
++    justify-content: center;
++    align-items: center;
++    min-height: 60vh;
++    padding: 40px 20px;
++}
++
++.auth-card {
++    background: rgba(25, 25, 50, 0.75);
++    border: 1px solid rgba(157, 78, 221, 0.3);
++    border-radius: 16px;
++    padding: 40px;
++    width: 100%;
++    max-width: 420px;
++    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
++}
++
++.auth-title {
++    font-size: 2rem;
++    color: #ffffff;
++    text-align: center;
++    margin-bottom: 30px;
++    font-weight: 700;
++}
++
++.auth-error {
++    background: rgba(255, 82, 82, 0.15);
++    border: 1px solid rgba(255, 82, 82, 0.3);
++    color: #ff5252;
++    padding: 12px 18px;
++    border-radius: 10px;
++    margin-bottom: 20px;
++}
++
++.auth-form {
++    display: flex;
++    flex-direction: column;
++    gap: 20px;
++}
++
++.auth-hint {
++    text-align: center;
++    margin-top: 25px;
++    color: #b0b0d0;
++    font-size: 0.95rem;
++}
++
++.auth-hint a {
++    color: #9d4edd;
++    text-decoration: none;
++    font-weight: 600;
++}
+\ No newline at end of file
+Index: core/static/core/css/style_base.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>/* ========================================\r\n   BASE.CSS - ОБЩИЕ СТИЛИ\r\n   ======================================== */\r\n\r\n/* ===== ГЛОБАЛЬНЫЕ СТИЛИ ===== */\r\n* {\r\n    margin: 0;\r\n    padding: 0;\r\n    box-sizing: border-box;\r\n}\r\n\r\nbody {\r\n    background: linear-gradient(135deg, #0a0a12 0%, #1a1a2e 100%);\r\n    color: #e0e0ff;\r\n    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\r\n    overflow-x: hidden;\r\n    line-height: 1.6;\r\n    min-height: 100vh;\r\n    position: relative;\r\n}\r\n\r\n/* ===== КОСМИЧЕСКИЙ ФОН ===== */\r\n.cosmic-bg {\r\n    position: fixed;\r\n    top: 0;\r\n    left: 0;\r\n    width: 100%;\r\n    height: 100%;\r\n    background: radial-gradient(\r\n        ellipse at center,\r\n        rgba(15, 15, 30, 0.9) 0%,\r\n        rgba(10, 10, 18, 0.95) 70%,\r\n        rgba(5, 5, 12, 1) 100%\r\n    );\r\n    z-index: -3;\r\n}\r\n\r\n.stars {\r\n    position: fixed;\r\n    top: 0;\r\n    left: 0;\r\n    width: 100%;\r\n    height: 100%;\r\n    z-index: -2;\r\n}\r\n\r\n.star {\r\n    position: absolute;\r\n    background: rgba(255, 255, 255, 0.8);\r\n    border-radius: 50%;\r\n    animation: twinkle 4s infinite;\r\n}\r\n\r\n@keyframes twinkle {\r\n    0%, 100% { opacity: 0.2; transform: scale(1); }\r\n    50% { opacity: 1; transform: scale(1.1); }\r\n}\r\n\r\n.nebula {\r\n    position: fixed;\r\n    border-radius: 50%;\r\n    filter: blur(60px);\r\n    z-index: -1;\r\n    opacity: 0.25;\r\n}\r\n\r\n.nebula-1 {\r\n    top: 15%; left: 10%; width: 400px; height: 400px;\r\n    background: radial-gradient(circle, #9d4edd 0%, transparent 70%);\r\n}\r\n\r\n.nebula-2 {\r\n    bottom: 10%; right: 15%; width: 350px; height: 350px;\r\n    background: radial-gradient(circle, #6366f1 0%, transparent 70%);\r\n}\r\n\r\n.nebula-3 {\r\n    top: 60%; left: 65%; width: 300px; height: 300px;\r\n    background: radial-gradient(circle, #ff5eda 0%, transparent 70%);\r\n}\r\n\r\n/* ===== HEADER ===== */\r\n.site-header {\r\n    width: 95%;\r\n    max-width: 1200px;\r\n    background: rgba(20, 20, 40, 0.85);\r\n    border: 2px solid rgba(157, 78, 221, 0.6);\r\n    border-radius: 16px;\r\n    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(157, 78, 221, 0.15);\r\n    padding: 15px 30px;\r\n    margin: 20px auto;\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n    z-index: 10;\r\n    position: relative;\r\n}\r\n\r\n.site-title {\r\n    color: #ffffff;\r\n    font-size: 1.6rem;\r\n    font-weight: 700;\r\n    letter-spacing: 1px;\r\n    text-transform: uppercase;\r\n}\r\n\r\n.site-title::before {\r\n    content: \"\";\r\n    display: inline-block;\r\n    width: 8px;\r\n    height: 8px;\r\n    background: #10b981;\r\n    border-radius: 50%;\r\n    margin-right: 12px;\r\n    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);\r\n}\r\n\r\n.nav-menu {\r\n    display: flex;\r\n    gap: 25px;\r\n}\r\n\r\n.nav-link {\r\n    color: #c5c5e0;\r\n    text-decoration: none;\r\n    font-weight: 500;\r\n    font-size: 1.05rem;\r\n    padding: 8px 12px;\r\n    transition: all 0.3s ease;\r\n    border-radius: 8px;\r\n}\r\n\r\n.nav-link:hover, .nav-link.active {\r\n    color: #ffffff;\r\n    background: rgba(157, 78, 221, 0.25);\r\n}\r\n\r\n.site-controls {\r\n    display: flex;\r\n    gap: 10px;\r\n}\r\n\r\n.control-btn {\r\n    width: 14px;\r\n    height: 14px;\r\n    border-radius: 50%;\r\n    border: 2px solid rgba(255, 255, 255, 0.3);\r\n    transition: all 0.3s ease;\r\n}\r\n\r\n.control-btn.close:hover { background: #ff5252; border-color: #ff1a1a; }\r\n.control-btn.minimize:hover { background: #ffcc00; border-color: #cc9900; }\r\n.control-btn.maximize:hover { background: #2ecc40; border-color: #1a8c26; }\r\n\r\n/* ===== MAIN CONTENT ===== */\r\n.main-content {\r\n    width: 95%;\r\n    max-width: 1200px;\r\n    margin: 0 auto;\r\n    position: relative;\r\n    z-index: 5;\r\n}\r\n\r\n/* ===== FOOTER ===== */\r\n.site-footer {\r\n    width: 95%;\r\n    max-width: 1200px;\r\n    background: rgba(15, 15, 35, 0.7);\r\n    padding: 22px 30px;\r\n    border-top: 1px solid rgba(157, 78, 221, 0.3);\r\n    border-radius: 16px;\r\n    font-size: 1.05rem;\r\n    color: #b0b0d0;\r\n    text-align: center;\r\n    margin: 0 auto 40px;\r\n    position: relative;\r\n    z-index: 10;\r\n}\r\n\r\n.status-indicator {\r\n    display: inline-block;\r\n    width: 10px;\r\n    height: 10px;\r\n    background: #10b981;\r\n    border-radius: 50%;\r\n    margin-right: 10px;\r\n    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);\r\n    animation: pulse 2s infinite;\r\n}\r\n\r\n@keyframes pulse {\r\n    0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(16, 185, 129, 0.6); }\r\n    50% { opacity: 0.7; box-shadow: 0 0 12px rgba(16, 185, 129, 0.9); }\r\n}\r\n\r\n/* ===== ANIMATIONS ===== */\r\n@keyframes fadeInUp {\r\n    from { opacity: 0; transform: translateY(30px); }\r\n    to { opacity: 1; transform: translateY(0); }\r\n}\r\n\r\n.fade-in {\r\n    animation: fadeInUp 0.8s ease-out forwards;\r\n}\r\n\r\n/* ===== RESPONSIVE ===== */\r\n@media (max-width: 768px) {\r\n    .site-header {\r\n        flex-direction: column;\r\n        gap: 15px;\r\n    }\r\n\r\n    .nav-menu {\r\n        flex-wrap: wrap;\r\n        justify-content: center;\r\n        gap: 15px;\r\n    }\r\n\r\n    .nav-link {\r\n        font-size: 0.95rem;\r\n        padding: 6px 10px;\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/core/static/core/css/style_base.css b/core/static/core/css/style_base.css
+--- a/core/static/core/css/style_base.css	(revision c8cc95290d77865eda1097af267a2e681e0b698f)
++++ b/core/static/core/css/style_base.css	(date 1772818167192)
+@@ -79,10 +79,11 @@
+     background: radial-gradient(circle, #ff5eda 0%, transparent 70%);
+ }
+ 
++
+ /* ===== HEADER ===== */
+ .site-header {
+     width: 95%;
+-    max-width: 1200px;
++    max-width: 12000px;
+     background: rgba(20, 20, 40, 0.85);
+     border: 2px solid rgba(157, 78, 221, 0.6);
+     border-radius: 16px;
+@@ -98,26 +99,26 @@
+ 
+ .site-title {
+     color: #ffffff;
+-    font-size: 1.6rem;
++    font-size: 1.8rem;
+     font-weight: 700;
+-    letter-spacing: 1px;
++    letter-spacing: 2px;
+     text-transform: uppercase;
+ }
+ 
+ .site-title::before {
+     content: "";
+     display: inline-block;
+-    width: 8px;
+-    height: 8px;
++    width: 10px;
++    height: 10px;
+     background: #10b981;
+     border-radius: 50%;
+     margin-right: 12px;
+-    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
++    box-shadow: 0 0 10px rgba(16, 185, 129, 0.8);
+ }
+ 
+ .nav-menu {
+     display: flex;
+-    gap: 25px;
++    gap: 30px;                      /* ← Расстояние между ссылками */
+ }
+ 
+ .nav-link {
+@@ -125,14 +126,33 @@
+     text-decoration: none;
+     font-weight: 500;
+     font-size: 1.05rem;
+-    padding: 8px 12px;
++    padding: 10px 15px;
+     transition: all 0.3s ease;
+-    border-radius: 8px;
++    border-radius: 0;               /* ← Убираем скругления кнопок */
++    position: relative;
+ }
+ 
+ .nav-link:hover, .nav-link.active {
+     color: #ffffff;
+-    background: rgba(157, 78, 221, 0.25);
++    background: rgba(157, 78, 221, 0.2);
++}
++
++/* Подчёркивание при наведении */
++.nav-link::after {
++    content: '';
++    position: absolute;
++    bottom: 0;
++    left: 50%;
++    transform: translateX(-50%) scaleX(0);
++    width: 80%;
++    height: 2px;
++    background: #9d4edd;
++    transition: transform 0.3s ease;
++}
++
++.nav-link:hover::after,
++.nav-link.active::after {
++    transform: translateX(-50%) scaleX(1);
+ }
+ 
+ .site-controls {
+@@ -153,10 +173,11 @@
+ .control-btn.maximize:hover { background: #2ecc40; border-color: #1a8c26; }
+ 
+ /* ===== MAIN CONTENT ===== */
++
+ .main-content {
+     width: 95%;
+     max-width: 1200px;
+-    margin: 0 auto;
++    margin: 100px auto 40px;  /* ← Отступ сверху 100px для фиксированного header */
+     position: relative;
+     z-index: 5;
+ }
+@@ -220,4 +241,62 @@
+         font-size: 0.95rem;
+         padding: 6px 10px;
+     }
++}
++/* ===== AUTH BUTTONS ===== */
++.auth-buttons {
++    display: flex;
++    gap: 12px;
++    align-items: center;
++}
++
++.btn-auth {
++    padding: 10px 20px;
++    border-radius: 8px;
++    font-weight: 600;
++    font-size: 0.95rem;
++    text-decoration: none;
++    transition: all 0.3s ease;
++    cursor: pointer;
++    border: none;
++    display: inline-flex;
++    align-items: center;
++    gap: 6px;
++}
++
++.btn-login {
++    background: transparent;
++    color: #9d4edd;
++    border: 2px solid #9d4edd;
++}
++
++.btn-login:hover {
++    background: rgba(157, 78, 221, 0.15);
++    transform: translateY(-2px);
++    box-shadow: 0 4px 12px rgba(157, 78, 221, 0.3);
++}
++
++.btn-register {
++    background: linear-gradient(135deg, #9d4edd 0%, #7e3cc5 100%);
++    color: #ffffff;
++    border: 2px solid #9d4edd;
++}
++
++.btn-register:hover {
++    transform: translateY(-2px);
++    box-shadow: 0 6px 20px rgba(157, 78, 221, 0.5);
++    background: linear-gradient(135deg, #a75ee6 0%, #8a4bcf 100%);
++}
++
++/* Адаптивность для кнопок */
++@media (max-width: 768px) {
++    .auth-buttons {
++        flex-direction: column;
++        width: 100%;
++        margin-top: 15px;
++    }
++
++    .btn-auth {
++        width: 100%;
++        justify-content: center;
++    }
+ }
+\ No newline at end of file
+Index: core/templates/core/base.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{% load static %}\r\n<!DOCTYPE html>\r\n<html lang=\"ru\">\r\n<head>\r\n    <meta charset=\"UTF-8\">\r\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\r\n    <title>{% block title %}SpecBox{% endblock %}</title>\r\n    <link rel=\"stylesheet\" href=\"{% static 'core/css/style_base.css' %}\">\r\n    {% block extra_css %}{% endblock %}\r\n</head>\r\n<body>\r\n    <!-- Космический фон -->\r\n    <div class=\"cosmic-bg\"></div>\r\n\r\n    <!-- Звёзды -->\r\n    <div class=\"stars\">\r\n        <div class=\"star\" style=\"width:1.5px;height:1.5px;top:10%;left:20%;animation-delay:0s;\"></div>\r\n        <div class=\"star\" style=\"width:2px;height:2px;top:25%;left:40%;animation-delay:0.5s;\"></div>\r\n        <div class=\"star\" style=\"width:1px;height:1px;top:40%;left:60%;animation-delay:1s;\"></div>\r\n        <div class=\"star\" style=\"width:1.5px;height:1.5px;top:55%;left:30%;animation-delay:1.5s;\"></div>\r\n        <div class=\"star\" style=\"width:2px;height:2px;top:70%;left:80%;animation-delay:2s;\"></div>\r\n        <div class=\"star\" style=\"width:1px;height:1px;top:85%;left:15%;animation-delay:2.5s;\"></div>\r\n        <div class=\"star\" style=\"width:1.5px;height:1.5px;top:5%;left:75%;animation-delay:0.3s;\"></div>\r\n        <div class=\"star\" style=\"width:1px;height:1px;top:50%;left:10%;animation-delay:1.2s;\"></div>\r\n        <div class=\"star\" style=\"width:1.5px;height:1.5px;top:30%;left:90%;animation-delay:0.8s;\"></div>\r\n        <div class=\"star\" style=\"width:2px;height:2px;top:65%;left:5%;animation-delay:1.7s;\"></div>\r\n    </div>\r\n\r\n    <!-- Туманности -->\r\n    <div class=\"nebula nebula-1\"></div>\r\n    <div class=\"nebula nebula-2\"></div>\r\n    <div class=\"nebula nebula-3\"></div>\r\n\r\n    <!-- Header -->\r\n    <header class=\"site-header\">\r\n        <div class=\"site-title\">SPECBOX</div>\r\n        <nav class=\"nav-menu\">\r\n            <a href=\"/\" class=\"nav-link\" onclick=\"location.href='/'\">Главная</a>\r\n            <a href=\"#\" class=\"nav-link\">Сравнение</a>\r\n            <a href=\"/configurator/\" class=\"nav-link\"onclick=\"location.href='/configurator/'\">Конфигуратор</a>\r\n            <a href=\"/components/\" class=\"nav-link\" onclick=\"location.href='/components/'\">Компоненты</a>\r\n            <a href=\"#\" class=\"nav-link\">Новости</a>\r\n            <a href=\"#\" class=\"nav-link\">О проекте</a>\r\n        </nav>\r\n        <div class=\"site-controls\">\r\n            <div class=\"control-btn close\"></div>\r\n            <div class=\"control-btn minimize\"></div>\r\n            <div class=\"control-btn maximize\"></div>\r\n        </div>\r\n    </header>\r\n\r\n    <!-- Main Content -->\r\n    <main class=\"main-content\">\r\n        {% block content %}{% endblock %}\r\n    </main>\r\n\r\n    <!-- Footer -->\r\n    <footer class=\"site-footer\">\r\n        <span class=\"status-indicator\"></span>\r\n        <span>SPECBOX | Сравнение цен • Проверка совместимости • Горячие предложения | © 2026</span>\r\n    </footer>\r\n\r\n    <script src=\"{% static 'core/js/main.js' %}\"></script>\r\n    {% block extra_js %}{% endblock %}\r\n</body>\r\n</html>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/core/templates/core/base.html b/core/templates/core/base.html
+--- a/core/templates/core/base.html	(revision c8cc95290d77865eda1097af267a2e681e0b698f)
++++ b/core/templates/core/base.html	(date 1772819602880)
+@@ -37,11 +37,19 @@
+         <nav class="nav-menu">
+             <a href="/" class="nav-link" onclick="location.href='/'">Главная</a>
+             <a href="#" class="nav-link">Сравнение</a>
+-            <a href="/configurator/" class="nav-link"onclick="location.href='/configurator/'">Конфигуратор</a>
++            <a href="/configurator/" class="nav-link" onclick="location.href='/configurator/'">Конфигуратор</a>
+             <a href="/components/" class="nav-link" onclick="location.href='/components/'">Компоненты</a>
+             <a href="#" class="nav-link">Новости</a>
+             <a href="#" class="nav-link">О проекте</a>
++            <a href="/profile/" class="nav-link" onclick="location.href='/profile/'">Личный кабинет</a>
+         </nav>
++
++        <!-- Кнопки входа/регистрации -->
++        <div class="auth-buttons">
++            <a href="/registration/login" class="btn-auth btn-login">Войти</a>
++            <a href="{% url 'core:register' %}" class="btn-auth btn-register">Регистрация</a>
++        </div>
++
+         <div class="site-controls">
+             <div class="control-btn close"></div>
+             <div class="control-btn minimize"></div>
+Index: core/views.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.shortcuts import render\r\n\r\n\r\ndef index(request):\r\n    \"\"\"Главная страница SpecBox\"\"\"\r\n    return render(request, 'core/index.html')\r\n\r\ndef configurator_view(request):\r\n    \"\"\"\r\n    Представление для страницы конфигуратора ПК\r\n    \"\"\"\r\n    return render(request, 'core/configurator.html')\r\n\r\ndef components(request):\r\n    \"\"\"Страница комплектующих\"\"\"\r\n    components_list = [\r\n        {\r\n            'id': 1,\r\n            'name': 'NVIDIA GeForce RTX 4090',\r\n            'category': 'Видеокарты',\r\n            'price': 189990,\r\n            'manufacturer': 'NVIDIA',\r\n            'in_stock': True,\r\n            'is_hit': True,\r\n        },\r\n        {\r\n            'id': 2,\r\n            'name': 'AMD Ryzen 9 7950X',\r\n            'category': 'Процессоры',\r\n            'price': 54990,\r\n            'manufacturer': 'AMD',\r\n            'in_stock': True,\r\n            'is_hit': True,\r\n        },\r\n        {\r\n            'id': 3,\r\n            'name': 'Intel Core i9-14900K',\r\n            'category': 'Процессоры',\r\n            'price': 59990,\r\n            'manufacturer': 'Intel',\r\n            'in_stock': True,\r\n            'is_hit': False,\r\n        },\r\n        {\r\n            'id': 4,\r\n            'name': 'Kingston Fury 32GB DDR5',\r\n            'category': 'Оперативная память',\r\n            'price': 14990,\r\n            'manufacturer': 'Kingston',\r\n            'in_stock': True,\r\n            'is_hit': False,\r\n        },\r\n        {\r\n            'id': 5,\r\n            'name': 'Samsung 990 PRO 2TB',\r\n            'category': 'SSD накопители',\r\n            'price': 19990,\r\n            'manufacturer': 'Samsung',\r\n            'in_stock': True,\r\n            'is_hit': True,\r\n        },\r\n        {\r\n            'id': 6,\r\n            'name': 'ASUS ROG MAXIMUS Z790',\r\n            'category': 'Материнские платы',\r\n            'price': 64990,\r\n            'manufacturer': 'ASUS',\r\n            'in_stock': False,\r\n            'is_hit': False,\r\n        },\r\n        {\r\n            'id': 7,\r\n            'name': 'NZXT Kraken Elite 360',\r\n            'category': 'Охлаждение',\r\n            'price': 24990,\r\n            'manufacturer': 'NZXT',\r\n            'in_stock': True,\r\n            'is_hit': False,\r\n        },\r\n        {\r\n            'id': 8,\r\n            'name': 'Seasonic PRIME TX-1000',\r\n            'category': 'Блоки питания',\r\n            'price': 29990,\r\n            'manufacturer': 'Seasonic',\r\n            'in_stock': True,\r\n            'is_hit': False,\r\n        },\r\n    ]\r\n\r\n    context = {\r\n        'components': components_list,\r\n        'total_count': len(components_list),\r\n    }\r\n\r\n    return render(request, 'core/components.html', context)
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/core/views.py b/core/views.py
+--- a/core/views.py	(revision c8cc95290d77865eda1097af267a2e681e0b698f)
++++ b/core/views.py	(date 1772820062245)
+@@ -1,16 +1,53 @@
+-from django.shortcuts import render
++from django.contrib.auth import authenticate, login
++from django.shortcuts import render, redirect
++from django.contrib.auth.models import User
+ 
+ 
+ def index(request):
+     """Главная страница SpecBox"""
+     return render(request, 'core/index.html')
+ 
++
+ def configurator_view(request):
+-    """
+-    Представление для страницы конфигуратора ПК
+-    """
++    """Представление для страницы конфигуратора ПК"""
+     return render(request, 'core/configurator.html')
+ 
++
++def login_view(request):
++    if request.method == 'POST':
++        username = request.POST.get('username')
++        password = request.POST.get('password')
++        user = authenticate(request, username=username, password=password)
++
++        if user is not None:
++            login(request, user)
++            return redirect('core:profile')  # Перенаправление в ЛК
++        else:
++            return render(request, 'registration/login.html', {'error': 'Неверный логин или пароль'})
++
++    return render(request, 'registration/login.html')
++
++
++def register_view(request):
++    """Страница регистрации"""
++    if request.method == 'POST':
++        username = request.POST.get('username')
++        email = request.POST.get('email')
++        password = request.POST.get('password')
++        password_confirm = request.POST.get('password_confirm')
++
++        if password != password_confirm:
++            return render(request, 'core/register.html', {'error': 'Пароли не совпадают'})
++
++        if User.objects.filter(username=username).exists():
++            return render(request, 'core/register.html', {'error': 'Пользователь уже существует'})
++
++        user = User.objects.create_user(username=username, email=email, password=password)
++        login(request, user)
++        return redirect('core:profile')
++
++    return render(request, 'core/register.html')
++
+ def components(request):
+     """Страница комплектующих"""
+     components_list = [
+@@ -93,4 +130,149 @@
+         'total_count': len(components_list),
+     }
+ 
+-    return render(request, 'core/components.html', context)
+\ No newline at end of file
++    return render(request, 'core/components.html', context)
++
++
++def profile_view(request):
++    """
++    Личный кабинет пользователя (без авторизации)
++    Демо-данные для тестирования интерфейса
++    """
++    # Демо-данные сборок
++    saved_builds = [
++        {
++            'id': 1,
++            'name': 'Игровой ПК 2026',
++            'created_at': '28.01.2026',
++            'cpu': 'AMD Ryzen 9 7950X',
++            'gpu': 'NVIDIA GeForce RTX 4090',
++            'ram': '32GB DDR5',
++            'total_price': 350000,
++        },
++        {
++            'id': 2,
++            'name': 'Рабочая станция',
++            'created_at': '25.01.2026',
++            'cpu': 'Intel Core i9-14900K',
++            'gpu': 'NVIDIA GeForce RTX 4070',
++            'ram': '64GB DDR5',
++            'total_price': 280000,
++        },
++        {
++            'id': 3,
++            'name': 'Бюджетный гейминг',
++            'created_at': '20.01.2026',
++            'cpu': 'AMD Ryzen 5 7600X',
++            'gpu': 'NVIDIA GeForce RTX 4060',
++            'ram': '16GB DDR5',
++            'total_price': 120000,
++        },
++    ]
++
++    # Демо-данные заказов
++    orders = [
++        {
++            'id': 1001,
++            'created_at': '27.01.2026',
++            'status': 'completed',
++            'status_display': 'Выполнен',
++            'total': 350000,
++        },
++        {
++            'id': 1002,
++            'created_at': '28.01.2026',
++            'status': 'processing',
++            'status_display': 'В обработке',
++            'total': 125000,
++        },
++        {
++            'id': 1003,
++            'created_at': '26.01.2026',
++            'status': 'shipped',
++            'status_display': 'Отправлен',
++            'total': 89000,
++        },
++    ]
++
++    # Демо-данные избранного
++    favorites = [
++        {
++            'id': 1,
++            'component': {
++                'name': 'NVIDIA GeForce RTX 4090',
++                'category': 'Видеокарты',
++                'manufacturer': 'NVIDIA',
++                'price': 189990,
++                'in_stock': True,
++            }
++        },
++        {
++            'id': 2,
++            'component': {
++                'name': 'AMD Ryzen 9 7950X',
++                'category': 'Процессоры',
++                'manufacturer': 'AMD',
++                'price': 54990,
++                'in_stock': True,
++            }
++        },
++        {
++            'id': 3,
++            'component': {
++                'name': 'Samsung 990 PRO 2TB',
++                'category': 'SSD накопители',
++                'manufacturer': 'Samsung',
++                'price': 19990,
++                'in_stock': True,
++            }
++        },
++    ]
++
++    # Демо-данные уведомлений
++    notifications = [
++        {
++            'id': 1,
++            'message': 'Цена на NVIDIA GeForce RTX 4090 снизилась на 5%',
++            'type': 'price',
++            'created_at': '2 часа назад',
++            'is_read': False,
++        },
++        {
++            'id': 2,
++            'message': 'Компонент ASUS ROG MAXIMUS Z790 появился в наличии',
++            'type': 'stock',
++            'created_at': '5 часов назад',
++            'is_read': True,
++        },
++        {
++            'id': 3,
++            'message': 'Ваш заказ #1001 готов к выдаче',
++            'type': 'order',
++            'created_at': '1 день назад',
++            'is_read': True,
++        },
++    ]
++
++    # Демо-данные пользователя
++    user_data = {
++        'username': 'Gamer2026',
++        'email': 'gamer@example.com',
++        'phone': '+7 (999) 123-45-67',
++        'city': 'Москва',
++        'registered': '15.12.2025',
++        'last_login': '28.01.2026 14:30',
++    }
++
++    context = {
++        'user_data': user_data,
++        'saved_builds': saved_builds,
++        'saved_builds_count': len(saved_builds),
++        'orders': orders,
++        'orders_count': len(orders),
++        'favorites': favorites,
++        'favorites_count': len(favorites),
++        'notifications': notifications,
++        'unread_notifications': len([n for n in notifications if not n['is_read']]),
++    }
++
++    return render(request, 'core/profile.html', context)
+\ No newline at end of file
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"7b458448-4ad1-42e5-8df6-ed4ef850cdd3\" name=\"Changes\" comment=\"Главная и Компоненты.\">\r\n      <change afterPath=\"$PROJECT_DIR$/core/static/core/css/style_configurator.css\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/core/static/core/js/configurator.js\" afterDir=\"false\" />\r\n      <change afterPath=\"$PROJECT_DIR$/core/templates/core/configurator.html\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/config/settings.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/config/settings.py\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/core/templates/core/base.html\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/core/templates/core/base.html\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/core/urls.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/core/urls.py\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/core/views.py\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/core/views.py\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Python Script\" />\r\n        <option value=\"HTML File\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"PUSH_TAGS\">\r\n      <GitPushTagMode>\r\n        <option name=\"argument\" value=\"--tags\" />\r\n        <option name=\"title\" value=\"All\" />\r\n      </GitPushTagMode>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\">{\r\n  &quot;lastFilter&quot;: {\r\n    &quot;state&quot;: &quot;OPEN&quot;,\r\n    &quot;assignee&quot;: &quot;GoogeRA&quot;\r\n  }\r\n}</component>\r\n  <component name=\"GithubPullRequestsUISettings\">{\r\n  &quot;selectedUrlAndAccountId&quot;: {\r\n    &quot;url&quot;: &quot;https://github.com/GoogeRA/Web-SpacBox.git&quot;,\r\n    &quot;accountId&quot;: &quot;ac7f553e-7f68-498f-aa79-9deeb0c778df&quot;\r\n  }\r\n}</component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 0\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"39mlrGEJMOiBg9lf9xQnkwI4A5R\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\r\n  &quot;keyToString&quot;: {\r\n    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,\r\n    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,\r\n    &quot;Python.apps.executor&quot;: &quot;Run&quot;,\r\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,\r\n    &quot;git-widget-placeholder&quot;: &quot;master&quot;\r\n  }\r\n}</component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"bundled-python-sdk-7bb8055f9097-cbfc7b97e6b2-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-252.28238.29\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"7b458448-4ad1-42e5-8df6-ed4ef850cdd3\" name=\"Changes\" comment=\"\" />\r\n      <created>1771309324079</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1771309324079</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"Главная и Компоненты.\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1771352713011</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1771352713011</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"Главная и Компоненты.\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1771352777486</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1771352777486</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"3\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"Главная и Компоненты.\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"Главная и Компоненты.\" />\r\n  </component>\r\n  <component name=\"XDebuggerManager\">\r\n    <breakpoint-manager>\r\n      <breakpoints>\r\n        <line-breakpoint enabled=\"true\" suspend=\"THREAD\" type=\"python-line\">\r\n          <url>file://$PROJECT_DIR$/main.py</url>\r\n          <line>8</line>\r\n          <option name=\"timeStamp\" value=\"1\" />\r\n        </line-breakpoint>\r\n      </breakpoints>\r\n    </breakpoint-manager>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision c8cc95290d77865eda1097af267a2e681e0b698f)
++++ b/.idea/workspace.xml	(date 1772820294612)
+@@ -4,15 +4,25 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="7b458448-4ad1-42e5-8df6-ed4ef850cdd3" name="Changes" comment="Главная и Компоненты.">
+-      <change afterPath="$PROJECT_DIR$/core/static/core/css/style_configurator.css" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/core/static/core/js/configurator.js" afterDir="false" />
+-      <change afterPath="$PROJECT_DIR$/core/templates/core/configurator.html" afterDir="false" />
++    <list default="true" id="7b458448-4ad1-42e5-8df6-ed4ef850cdd3" name="Changes" comment="Страница конфигуратора">
++      <change afterPath="$PROJECT_DIR$/core/static/core/css/style_login.css" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/core/static/core/css/style_profile.css" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/core/static/core/js/profile.js" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/core/templates/core/profile.html" afterDir="false" />
++      <change afterPath="$PROJECT_DIR$/core/templates/registration/login.html" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/config/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/config/settings.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/config/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/config/urls.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/core/static/core/css/style_base.css" beforeDir="false" afterPath="$PROJECT_DIR$/core/static/core/css/style_base.css" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/core/static/core/css/style_components.css" beforeDir="false" afterPath="$PROJECT_DIR$/core/static/core/css/style_components.css" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/core/static/core/css/style_configurator.css" beforeDir="false" afterPath="$PROJECT_DIR$/core/static/core/css/style_configurator.css" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/core/static/core/js/configurator.js" beforeDir="false" afterPath="$PROJECT_DIR$/core/static/core/js/configurator.js" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/core/templates/core/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/core/templates/core/base.html" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/core/templates/core/components.html" beforeDir="false" afterPath="$PROJECT_DIR$/core/templates/core/components.html" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/core/templates/core/configurator.html" beforeDir="false" afterPath="$PROJECT_DIR$/core/templates/core/configurator.html" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/core/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/urls.py" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/core/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/views.py" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -98,12 +108,21 @@
+       <option name="project" value="LOCAL" />
+       <updated>1771352777486</updated>
+     </task>
+-    <option name="localTasksCounter" value="3" />
++    <task id="LOCAL-00003" summary="Страница конфигуратора">
++      <option name="closed" value="true" />
++      <created>1771786200719</created>
++      <option name="number" value="00003" />
++      <option name="presentableId" value="LOCAL-00003" />
++      <option name="project" value="LOCAL" />
++      <updated>1771786200719</updated>
++    </task>
++    <option name="localTasksCounter" value="4" />
+     <servers />
+   </component>
+   <component name="VcsManagerConfiguration">
+     <MESSAGE value="Главная и Компоненты." />
+-    <option name="LAST_COMMIT_MESSAGE" value="Главная и Компоненты." />
++    <MESSAGE value="Страница конфигуратора" />
++    <option name="LAST_COMMIT_MESSAGE" value="Страница конфигуратора" />
+   </component>
+   <component name="XDebuggerManager">
+     <breakpoint-manager>
+Index: core/templates/core/configurator.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{% extends 'core/base.html' %}\r\n{% load static %}\r\n\r\n{% block title %}SpecBox | Конфигуратор ПК{% endblock %}\r\n\r\n{% block extra_css %}\r\n    <link rel=\"stylesheet\" href=\"{% static 'core/css/style_configurator.css' %}\">\r\n{% endblock %}\r\n\r\n{% block content %}\r\n    <h1 class=\"page-title\">Конфигуратор ПК</h1>\r\n\r\n    <div class=\"configurator-container\">\r\n        <div class=\"block-title\">\r\n            <h2>Обязательные комплектующие</h2>\r\n            <span class=\"status\">0/7</span>\r\n        </div>\r\n\r\n        <div class=\"component-list\">\r\n            <div class=\"component-item\" data-component=\"processor\">\r\n                <div class=\"component-content\">\r\n                    <div class=\"component-icon\">P</div>\r\n                    <div class=\"component-name\">Процессор</div>\r\n                    <div class=\"component-required\">Обязательно</div>\r\n                </div>\r\n                <button class=\"btn\" data-action=\"add\">Выбрать</button>\r\n            </div>\r\n\r\n            <div class=\"component-item\" data-component=\"motherboard\">\r\n                <div class=\"component-content\">\r\n                    <div class=\"component-icon\">M</div>\r\n                    <div class=\"component-name\">Мат. плата</div>\r\n                    <div class=\"component-required\">Обязательно</div>\r\n                </div>\r\n                <button class=\"btn\" data-action=\"add\">Выбрать</button>\r\n            </div>\r\n\r\n            <div class=\"component-item\" data-component=\"power-supply\">\r\n                <div class=\"component-content\">\r\n                    <div class=\"component-icon\">PSU</div>\r\n                    <div class=\"component-name\">Блок питания</div>\r\n                    <div class=\"component-required\">Обязательно</div>\r\n                </div>\r\n                <button class=\"btn\" data-action=\"add\">Выбрать</button>\r\n            </div>\r\n\r\n            <div class=\"component-item\" data-component=\"case\">\r\n                <div class=\"component-content\">\r\n                    <div class=\"component-icon\">C</div>\r\n                    <div class=\"component-name\">Корпус</div>\r\n                    <div class=\"component-required\">Обязательно</div>\r\n                </div>\r\n                <button class=\"btn\" data-action=\"add\">Выбрать</button>\r\n            </div>\r\n\r\n            <div class=\"component-item\" data-component=\"graphics-card\">\r\n                <div class=\"component-content\">\r\n                    <div class=\"component-icon\">V</div>\r\n                    <div class=\"component-name\">Видеокарта</div>\r\n                </div>\r\n                <button class=\"btn btn-primary\" data-action=\"add\">Выбрать</button>\r\n            </div>\r\n\r\n            <div class=\"component-item\" data-component=\"cpu-cooler\">\r\n                <div class=\"component-content\">\r\n                    <div class=\"component-icon\">CO</div>\r\n                    <div class=\"component-name\">Охлаждение процессора</div>\r\n                    <div class=\"component-required\">Обязательно</div>\r\n                </div>\r\n                <button class=\"btn\" data-action=\"add\">Выбрать</button>\r\n            </div>\r\n\r\n            <div class=\"component-item\" data-component=\"ram\">\r\n                <div class=\"component-content\">\r\n                    <div class=\"component-icon\">RAM</div>\r\n                    <div class=\"component-name\">Оперативная память</div>\r\n                    <div class=\"component-required\">Обязательно</div>\r\n                </div>\r\n                <button class=\"btn\" data-action=\"add\">Выбрать</button>\r\n            </div>\r\n\r\n            <div class=\"component-item\" data-component=\"storage\">\r\n                <div class=\"component-content\">\r\n                    <div class=\"component-icon\">ST</div>\r\n                    <div class=\"component-name\">Накопители</div>\r\n                    <div class=\"component-required\">Обязательно</div>\r\n                </div>\r\n                <button class=\"btn\" data-action=\"add\">Выбрать</button>\r\n            </div>\r\n\r\n            <div class=\"component-item\" data-component=\"sound-card\">\r\n                <div class=\"component-content\">\r\n                    <div class=\"component-icon\">SC</div>\r\n                    <div class=\"component-name\">Звуковая карта</div>\r\n                </div>\r\n                <button class=\"btn\" data-action=\"add\">Выбрать</button>\r\n            </div>\r\n\r\n            <div class=\"component-item\" data-component=\"additional-details\">\r\n                <div class=\"component-content\">\r\n                    <div class=\"component-icon\">AD</div>\r\n                    <div class=\"component-name\">Доп. детали</div>\r\n                </div>\r\n                <button class=\"btn\" data-action=\"add\">Выбрать</button>\r\n            </div>\r\n        </div>\r\n\r\n        <div class=\"config-controls\">\r\n            <button class=\"btn btn-lg\">Назад</button>\r\n            <button class=\"btn btn-lg btn-primary\">Далее</button>\r\n        </div>\r\n    </div>\r\n{% endblock %}\r\n\r\n{% block extra_js %}\r\n    <script src=\"{% static 'core/js/configurator.js' %}\"></script>\r\n{% endblock %}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/core/templates/core/configurator.html b/core/templates/core/configurator.html
+--- a/core/templates/core/configurator.html	(revision c8cc95290d77865eda1097af267a2e681e0b698f)
++++ b/core/templates/core/configurator.html	(date 1772809602783)
+@@ -8,7 +8,7 @@
+ {% endblock %}
+ 
+ {% block content %}
+-    <h1 class="page-title">Конфигуратор ПК</h1>
++    <h1 class="page-title">КОНФИГУРАТОР ПК</h1>
+ 
+     <div class="configurator-container">
+         <div class="block-title">
+@@ -114,4 +114,5 @@
+ 
+ {% block extra_js %}
+     <script src="{% static 'core/js/configurator.js' %}"></script>
+-{% endblock %}
+\ No newline at end of file
++{% endblock %}
++
+Index: core/static/core/css/style_configurator.css
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>* {\r\n    margin: 0;\r\n    padding: 0;\r\n    box-sizing: border-box;\r\n    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\r\n}\r\n\r\nbody {\r\n    background: linear-gradient(135deg, #0a0a12 0%, #1a1a2e 100%);\r\n    color: #e0e0ff;\r\n    min-height: 100vh;\r\n    display: flex;\r\n    flex-direction: column;\r\n    align-items: center;\r\n    justify-content: center;\r\n    padding: 20px;\r\n    overflow-x: hidden;\r\n    position: relative;\r\n}\r\n\r\n/* Космический фон */\r\n.cosmic-bg {\r\n    position: fixed;\r\n    top: 0;\r\n    left: 0;\r\n    width: 100%;\r\n    height: 100%;\r\n    background: radial-gradient(\r\n        ellipse at center,\r\n        rgba(15, 15, 30, 0.9) 0%,\r\n        rgba(10, 10, 18, 0.95) 70%,\r\n        rgba(5, 5, 12, 1) 100%\r\n    );\r\n    z-index: -3;\r\n}\r\n\r\n.stars {\r\n    position: fixed;\r\n    top: 0;\r\n    left: 0;\r\n    width: 100%;\r\n    height: 100%;\r\n    z-index: -2;\r\n}\r\n\r\n.star {\r\n    position: absolute;\r\n    background: rgba(255, 255, 255, 0.8);\r\n    border-radius: 50%;\r\n    animation: twinkle 4s infinite;\r\n}\r\n\r\n@keyframes twinkle {\r\n    0%, 100% { opacity: 0.2; transform: scale(1); }\r\n    50% { opacity: 1; transform: scale(1.1); }\r\n}\r\n\r\n.nebula {\r\n    position: fixed;\r\n    border-radius: 50%;\r\n    filter: blur(60px);\r\n    z-index: -1;\r\n    opacity: 0.25;\r\n}\r\n\r\n.nebula-1 {\r\n    top: 15%; left: 10%; width: 400px; height: 400px;\r\n    background: radial-gradient(circle, #9d4edd 0%, transparent 70%);\r\n}\r\n\r\n.nebula-2 {\r\n    bottom: 10%; right: 15%; width: 350px; height: 350px;\r\n    background: radial-gradient(circle, #6366f1 0%, transparent 70%);\r\n}\r\n\r\n.nebula-3 {\r\n    top: 60%; left: 65%; width: 300px; height: 300px;\r\n    background: radial-gradient(circle, #ff5eda 0%, transparent 70%);\r\n}\r\n\r\n/* Заголовок сайта */\r\n.site-header {\r\n    width: 100%;\r\n    max-width: 1200px;\r\n    background: rgba(20, 20, 40, 0.85);\r\n    border: 2px solid rgba(157, 78, 221, 0.6);\r\n    border-radius: 16px;\r\n    padding: 15px 30px;\r\n    margin: 0 auto 30px;\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n    box-shadow:\r\n        0 10px 30px rgba(0, 0, 0, 0.5),\r\n        inset 0 0 20px rgba(157, 78, 221, 0.15);\r\n    position: relative;\r\n    z-index: 10;\r\n}\r\n\r\n.site-title {\r\n    color: #ffffff;\r\n    font-size: 1.6rem;\r\n    font-weight: 700;\r\n    letter-spacing: 1px;\r\n    text-transform: uppercase;\r\n    display: flex;\r\n    align-items: center;\r\n}\r\n\r\n.site-title::before {\r\n    content: \"\";\r\n    display: inline-block;\r\n    width: 8px;\r\n    height: 8px;\r\n    background: #10b981;\r\n    border-radius: 50%;\r\n    margin-right: 12px;\r\n    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);\r\n}\r\n\r\n/* Навигационное меню */\r\n.nav-menu {\r\n    display: flex;\r\n    gap: 25px;\r\n    margin: 0 20px;\r\n}\r\n\r\n.nav-link {\r\n    color: #c5c5e0;\r\n    text-decoration: none;\r\n    font-weight: 500;\r\n    font-size: 1.05rem;\r\n    position: relative;\r\n    padding: 8px 12px;\r\n    transition: all 0.3s ease;\r\n    border-radius: 8px;\r\n}\r\n\r\n.nav-link:hover {\r\n    color: #ffffff;\r\n    background: rgba(157, 78, 221, 0.15);\r\n}\r\n\r\n.nav-link.active {\r\n    color: #ffffff;\r\n    background: rgba(157, 78, 221, 0.25);\r\n    font-weight: 600;\r\n    box-shadow: 0 0 15px rgba(157, 78, 221, 0.3);\r\n}\r\n\r\n.nav-link::after {\r\n    content: '';\r\n    position: absolute;\r\n    bottom: 3px;\r\n    left: 50%;\r\n    transform: translateX(-50%) scaleX(0);\r\n    width: 80%;\r\n    height: 2px;\r\n    background: #9d4edd;\r\n    transition: transform 0.3s ease;\r\n    border-radius: 2px;\r\n}\r\n\r\n.nav-link:hover::after,\r\n.nav-link.active::after {\r\n    transform: translateX(-50%) scaleX(1);\r\n}\r\n\r\n/* Системные кнопки */\r\n.site-controls {\r\n    display: flex;\r\n    gap: 10px;\r\n}\r\n\r\n.control-btn {\r\n    width: 14px;\r\n    height: 14px;\r\n    border-radius: 50%;\r\n    border: 1px solid rgba(255, 255, 255, 0.3);\r\n    transition: all 0.3s ease;\r\n}\r\n\r\n.control-btn.close:hover { background: #ff5252; border-color: #ff1a1a; }\r\n.control-btn.minimize:hover { background: #ffcc00; border-color: #cc9900; }\r\n.control-btn.maximize:hover { background: #2ecc40; border-color: #1a8c26; }\r\n\r\n/* Основной контент */\r\n.main-content {\r\n    width: 100%;\r\n    max-width: 1200px;\r\n    margin: 0 auto;\r\n    position: relative;\r\n    z-index: 5;\r\n}\r\n\r\n/* Заголовок страницы */\r\n.page-title {\r\n    font-size: 2.2rem;\r\n    font-weight: 800;\r\n    letter-spacing: -1px;\r\n    margin: 0 0 25px;\r\n    color: #ffffff;\r\n    text-align: center;\r\n    position: relative;\r\n}\r\n\r\n.page-title::after {\r\n    content: '';\r\n    position: absolute;\r\n    bottom: -15px;\r\n    left: 50%;\r\n    transform: translateX(-50%);\r\n    width: 100px;\r\n    height: 4px;\r\n    background: linear-gradient(90deg, transparent, #9d4edd, transparent);\r\n    border-radius: 2px;\r\n}\r\n\r\n/* Блок конфигуратора */\r\n.configurator-container {\r\n    background: rgba(25, 25, 50, 0.75);\r\n    border-radius: 16px;\r\n    padding: 25px;\r\n    border: 1px solid rgba(157, 78, 221, 0.3);\r\n    box-shadow:\r\n        0 10px 30px rgba(0, 0, 0, 0.35),\r\n        inset 0 0 15px rgba(157, 78, 221, 0.08);\r\n    margin-bottom: 30px;\r\n}\r\n\r\n/* Заголовок блока */\r\n.block-title {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n    margin-bottom: 20px;\r\n    padding-bottom: 15px;\r\n    border-bottom: 1px solid rgba(157, 78, 221, 0.3);\r\n}\r\n\r\n.block-title h2 {\r\n    font-size: 1.6rem;\r\n    color: #ffffff;\r\n    font-weight: 600;\r\n}\r\n\r\n.block-title .status {\r\n    background: rgba(157, 78, 221, 0.15);\r\n    color: #9d4edd;\r\n    border: 1px solid rgba(157, 78, 221, 0.3);\r\n    border-radius: 8px;\r\n    padding: 5px 12px;\r\n    font-size: 0.95rem;\r\n    font-weight: 500;\r\n}\r\n\r\n/* Список компонентов - вертикальный */\r\n.component-list {\r\n    display: flex;\r\n    flex-direction: column;\r\n    gap: 15px;\r\n}\r\n\r\n.component-item {\r\n    background: rgba(35, 35, 70, 0.65);\r\n    border: 1px solid rgba(157, 78, 221, 0.2);\r\n    border-radius: 10px;\r\n    padding: 18px;\r\n    transition: all 0.3s ease;\r\n    cursor: pointer;\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n}\r\n\r\n.component-item:hover {\r\n    transform: translateY(-3px);\r\n    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);\r\n    border-color: rgba(157, 78, 221, 0.4);\r\n}\r\n\r\n.component-item.selected {\r\n    border-color: #10b981;\r\n    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);\r\n    background: rgba(20, 40, 30, 0.7);\r\n}\r\n\r\n.component-content {\r\n    display: flex;\r\n    align-items: center;\r\n    gap: 15px;\r\n}\r\n\r\n.component-icon {\r\n    width: 28px;\r\n    height: 28px;\r\n    background: #e8e1f5;\r\n    border-radius: 8px;\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\r\n    color: #7d66c5;\r\n    font-weight: bold;\r\n    font-size: 1.2rem;\r\n}\r\n\r\n.component-name {\r\n    color: #ffffff;\r\n    font-size: 1.2rem;\r\n    font-weight: 600;\r\n}\r\n\r\n.component-required {\r\n    background: #f0f0f7;\r\n    color: #7d66c5;\r\n    border-radius: 6px;\r\n    padding: 4px 10px;\r\n    font-size: 0.9rem;\r\n    font-weight: 500;\r\n    margin-left: 10px;\r\n}\r\n\r\n.btn {\r\n    flex: 0;\r\n    background: #f0f0f7;\r\n    color: #7d66c5;\r\n    border: 1px solid #e0e0e0;\r\n    border-radius: 6px;\r\n    padding: 10px;\r\n    font-weight: 500;\r\n    cursor: pointer;\r\n    transition: all 0.2s ease;\r\n    font-size: 0.95rem;\r\n    text-align: center;\r\n    min-height: 45px;\r\n    display: flex;\r\n    align-items: center;\r\n    justify-content: center;\r\n    text-decoration: none;\r\n    text-transform: uppercase;\r\n    min-width: 100px;\r\n}\r\n\r\n.btn:hover {\r\n    background: #e8e1f5;\r\n    color: #4a4a6a;\r\n}\r\n\r\n.btn:active {\r\n    background: #d8d0f0;\r\n    transform: translateY(1px);\r\n}\r\n\r\n.btn-primary {\r\n    background: linear-gradient(135deg, #7d66c5 0%, #6a55b2 100%);\r\n    color: #ffffff;\r\n    border: none;\r\n}\r\n\r\n.btn-primary:hover {\r\n    background: linear-gradient(135deg, #8b76d0 0%, #7865c0 100%);\r\n}\r\n\r\n/* Нижняя панель управления */\r\n.config-controls {\r\n    display: flex;\r\n    gap: 20px;\r\n    margin-top: 30px;\r\n    justify-content: center;\r\n}\r\n\r\n.btn-lg {\r\n    padding: 12px 25px;\r\n    font-size: 1.1rem;\r\n    min-width: 180px;\r\n}\r\n\r\n/* Футер сайта */\r\n.site-footer {\r\n    width: 100%;\r\n    max-width: 1200px;\r\n    background: rgba(15, 15, 35, 0.7);\r\n    padding: 15px 30px;\r\n    border-top: 1px solid rgba(157, 78, 221, 0.3);\r\n    border-radius: 12px;\r\n    font-size: 1.05rem;\r\n    color: #666;\r\n    text-align: center;\r\n    margin: 40px auto 0;\r\n    position: relative;\r\n    z-index: 10;\r\n    margin-top: 20px;\r\n    font-weight: 300;\r\n}\r\n\r\n.status-indicator {\r\n    display: inline-block;\r\n    width: 10px;\r\n    height: 10px;\r\n    background: #7d66c5;\r\n    border-radius: 50%;\r\n    margin-right: 10px;\r\n    box-shadow: 0 0 8px rgba(125, 102, 197, 0.6);\r\n    animation: pulse 2s infinite;\r\n}\r\n\r\n@keyframes pulse {\r\n    0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(125, 102, 197, 0.6); }\r\n    50% { opacity: 0.7; box-shadow: 0 0 12px rgba(125, 102, 197, 0.9); }\r\n}\r\n\r\n/* Адаптивность */\r\n@media (max-width: 768px) {\r\n    .page-title {\r\n        font-size: 1.8rem;\r\n    }\r\n\r\n    .block-title h2 {\r\n        font-size: 1.4rem;\r\n    }\r\n\r\n    .component-name {\r\n        font-size: 1.1rem;\r\n    }\r\n\r\n    .component-icon {\r\n        width: 24px;\r\n        height: 24px;\r\n        font-size: 1rem;\r\n    }\r\n\r\n    .btn {\r\n        padding: 8px;\r\n        font-size: 0.9rem;\r\n    }\r\n}\r\n\r\n@media (max-width: 480px) {\r\n    .page-title {\r\n        font-size: 1.6rem;\r\n    }\r\n\r\n    .btn-lg {\r\n        padding: 10px 20px;\r\n        font-size: 1rem;\r\n        min-width: 160px;\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/core/static/core/css/style_configurator.css b/core/static/core/css/style_configurator.css
+--- a/core/static/core/css/style_configurator.css	(revision c8cc95290d77865eda1097af267a2e681e0b698f)
++++ b/core/static/core/css/style_configurator.css	(date 1772809455159)
+@@ -1,219 +1,20 @@
+-* {
+-    margin: 0;
+-    padding: 0;
+-    box-sizing: border-box;
+-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+-}
+-
+-body {
+-    background: linear-gradient(135deg, #0a0a12 0%, #1a1a2e 100%);
+-    color: #e0e0ff;
+-    min-height: 100vh;
+-    display: flex;
+-    flex-direction: column;
+-    align-items: center;
+-    justify-content: center;
+-    padding: 20px;
+-    overflow-x: hidden;
+-    position: relative;
+-}
+-
+-/* Космический фон */
+-.cosmic-bg {
+-    position: fixed;
+-    top: 0;
+-    left: 0;
+-    width: 100%;
+-    height: 100%;
+-    background: radial-gradient(
+-        ellipse at center,
+-        rgba(15, 15, 30, 0.9) 0%,
+-        rgba(10, 10, 18, 0.95) 70%,
+-        rgba(5, 5, 12, 1) 100%
+-    );
+-    z-index: -3;
+-}
+-
+-.stars {
+-    position: fixed;
+-    top: 0;
+-    left: 0;
+-    width: 100%;
+-    height: 100%;
+-    z-index: -2;
+-}
+-
+-.star {
+-    position: absolute;
+-    background: rgba(255, 255, 255, 0.8);
+-    border-radius: 50%;
+-    animation: twinkle 4s infinite;
+-}
+-
+-@keyframes twinkle {
+-    0%, 100% { opacity: 0.2; transform: scale(1); }
+-    50% { opacity: 1; transform: scale(1.1); }
+-}
+-
+-.nebula {
+-    position: fixed;
+-    border-radius: 50%;
+-    filter: blur(60px);
+-    z-index: -1;
+-    opacity: 0.25;
+-}
+-
+-.nebula-1 {
+-    top: 15%; left: 10%; width: 400px; height: 400px;
+-    background: radial-gradient(circle, #9d4edd 0%, transparent 70%);
+-}
+-
+-.nebula-2 {
+-    bottom: 10%; right: 15%; width: 350px; height: 350px;
+-    background: radial-gradient(circle, #6366f1 0%, transparent 70%);
+-}
+-
+-.nebula-3 {
+-    top: 60%; left: 65%; width: 300px; height: 300px;
+-    background: radial-gradient(circle, #ff5eda 0%, transparent 70%);
+-}
+-
+-/* Заголовок сайта */
+-.site-header {
+-    width: 100%;
+-    max-width: 1200px;
+-    background: rgba(20, 20, 40, 0.85);
+-    border: 2px solid rgba(157, 78, 221, 0.6);
+-    border-radius: 16px;
+-    padding: 15px 30px;
+-    margin: 0 auto 30px;
+-    display: flex;
+-    justify-content: space-between;
+-    align-items: center;
+-    box-shadow:
+-        0 10px 30px rgba(0, 0, 0, 0.5),
+-        inset 0 0 20px rgba(157, 78, 221, 0.15);
+-    position: relative;
+-    z-index: 10;
+-}
+-
+-.site-title {
+-    color: #ffffff;
+-    font-size: 1.6rem;
+-    font-weight: 700;
+-    letter-spacing: 1px;
+-    text-transform: uppercase;
+-    display: flex;
+-    align-items: center;
+-}
+-
+-.site-title::before {
+-    content: "";
+-    display: inline-block;
+-    width: 8px;
+-    height: 8px;
+-    background: #10b981;
+-    border-radius: 50%;
+-    margin-right: 12px;
+-    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+-}
+ 
+-/* Навигационное меню */
+-.nav-menu {
+-    display: flex;
+-    gap: 25px;
+-    margin: 0 20px;
++/* Page Header */
++.page-header {
++    text-align: center;
++    padding: 20px 0 30px;
+ }
+ 
+-.nav-link {
+-    color: #c5c5e0;
+-    text-decoration: none;
+-    font-weight: 500;
+-    font-size: 1.05rem;
+-    position: relative;
+-    padding: 8px 12px;
+-    transition: all 0.3s ease;
+-    border-radius: 8px;
+-}
+-
+-.nav-link:hover {
+-    color: #ffffff;
+-    background: rgba(157, 78, 221, 0.15);
+-}
+-
+-.nav-link.active {
+-    color: #ffffff;
+-    background: rgba(157, 78, 221, 0.25);
+-    font-weight: 600;
+-    box-shadow: 0 0 15px rgba(157, 78, 221, 0.3);
+-}
+-
+-.nav-link::after {
+-    content: '';
+-    position: absolute;
+-    bottom: 3px;
+-    left: 50%;
+-    transform: translateX(-50%) scaleX(0);
+-    width: 80%;
+-    height: 2px;
+-    background: #9d4edd;
+-    transition: transform 0.3s ease;
+-    border-radius: 2px;
+-}
+-
+-.nav-link:hover::after,
+-.nav-link.active::after {
+-    transform: translateX(-50%) scaleX(1);
+-}
+-
+-/* Системные кнопки */
+-.site-controls {
+-    display: flex;
+-    gap: 10px;
+-}
+-
+-.control-btn {
+-    width: 14px;
+-    height: 14px;
+-    border-radius: 50%;
+-    border: 1px solid rgba(255, 255, 255, 0.3);
+-    transition: all 0.3s ease;
+-}
+-
+-.control-btn.close:hover { background: #ff5252; border-color: #ff1a1a; }
+-.control-btn.minimize:hover { background: #ffcc00; border-color: #cc9900; }
+-.control-btn.maximize:hover { background: #2ecc40; border-color: #1a8c26; }
+-
+-/* Основной контент */
+-.main-content {
+-    width: 100%;
+-    max-width: 1200px;
+-    margin: 0 auto;
+-    position: relative;
+-    z-index: 5;
+-}
+-
+-/* Заголовок страницы */
+ .page-title {
+-    font-size: 2.2rem;
++    font-size: 4rem;
+     font-weight: 800;
+-    letter-spacing: -1px;
+-    margin: 0 0 25px;
++    text-align: center;
+     color: #ffffff;
+-    text-align: center;
+-    position: relative;
+-}
+-
+-.page-title::after {
+-    content: '';
+-    position: absolute;
+-    bottom: -15px;
+-    left: 50%;
+-    transform: translateX(-50%);
+-    width: 100px;
+-    height: 4px;
+-    background: linear-gradient(90deg, transparent, #9d4edd, transparent);
+-    border-radius: 2px;
++    background: linear-gradient(to right, #ffffff, #e0e0ff);
++    -webkit-background-clip: text;
++    -webkit-text-fill-color: transparent;
++    background-clip: text;
++    margin-bottom: 10px;
+ }
+ 
+ /* Блок конфигуратора */
