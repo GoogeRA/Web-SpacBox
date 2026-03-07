@@ -5,21 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7b458448-4ad1-42e5-8df6-ed4ef850cdd3" name="Changes" comment="Страница конфигуратора">
-      <change afterPath="$PROJECT_DIR$/core/static/core/css/style_login.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/static/core/css/style_profile.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/static/core/js/profile.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/templates/core/profile.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/core/templates/registration/login.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/static/core/css/style_register.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/templates/registration/register.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/config/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/config/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/static/core/css/style_base.css" beforeDir="false" afterPath="$PROJECT_DIR$/core/static/core/css/style_base.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/static/core/css/style_components.css" beforeDir="false" afterPath="$PROJECT_DIR$/core/static/core/css/style_components.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/static/core/css/style_configurator.css" beforeDir="false" afterPath="$PROJECT_DIR$/core/static/core/css/style_configurator.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/static/core/js/configurator.js" beforeDir="false" afterPath="$PROJECT_DIR$/core/static/core/js/configurator.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/templates/core/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/core/templates/core/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/templates/core/components.html" beforeDir="false" afterPath="$PROJECT_DIR$/core/templates/core/components.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/templates/core/configurator.html" beforeDir="false" afterPath="$PROJECT_DIR$/core/templates/core/configurator.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
@@ -116,7 +104,15 @@
       <option name="project" value="LOCAL" />
       <updated>1771786200719</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Страница конфигуратора">
+      <option name="closed" value="true" />
+      <created>1772824946168</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1772824946168</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">

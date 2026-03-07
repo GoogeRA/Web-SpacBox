@@ -37,16 +37,16 @@ def register_view(request):
         password_confirm = request.POST.get('password_confirm')
 
         if password != password_confirm:
-            return render(request, 'core/register.html', {'error': 'Пароли не совпадают'})
+            return render(request, 'registration/register.html', {'error': 'Пароли не совпадают'})
 
         if User.objects.filter(username=username).exists():
-            return render(request, 'core/register.html', {'error': 'Пользователь уже существует'})
+            return render(request, 'registration/register.html', {'error': 'Пользователь уже существует'})
 
         user = User.objects.create_user(username=username, email=email, password=password)
         login(request, user)
         return redirect('core:profile')
 
-    return render(request, 'core/register.html')
+    return render(request, 'registration/register.html')
 
 def components(request):
     """Страница комплектующих"""

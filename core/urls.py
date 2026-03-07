@@ -9,5 +9,5 @@ urlpatterns = [
     path('components/', views.components, name='components'),
     path('profile/', views.profile_view, name='profile'),
     path('registration/login', views.login_view, name='login'),
-    path('register/', views.register_view, name='register')
+    path('registration/register/', views.register_view, name='register')
 ]
