@@ -4,7 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7b458448-4ad1-42e5-8df6-ed4ef850cdd3" name="Changes" comment="База данных PostgreSQL, фильтрация, поиск, 100компонетов бд, авторизация" />
+    <list default="true" id="7b458448-4ad1-42e5-8df6-ed4ef850cdd3" name="Changes" comment="Главная и Компоненты.">
+      <change afterPath="$PROJECT_DIR$/core/static/core/css/style_configurator.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/static/core/js/configurator.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/core/templates/core/configurator.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/config/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/templates/core/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/core/templates/core/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/views.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -13,8 +22,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="HTML File" />
         <option value="Python Script" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -89,47 +98,12 @@
       <option name="project" value="LOCAL" />
       <updated>1771352777486</updated>
     </task>
-    <task id="LOCAL-00003" summary="Страница конфигуратора">
-      <option name="closed" value="true" />
-      <created>1771786200719</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1771786200719</updated>
-    </task>
-    <task id="LOCAL-00004" summary="Страница конфигуратора">
-      <option name="closed" value="true" />
-      <created>1772824946168</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1772824946168</updated>
-    </task>
-    <task id="LOCAL-00005" summary="Страница авторизации и регистрации (убрать дублированный код из register.html и style_register.css)">
-      <option name="closed" value="true" />
-      <created>1772870482922</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1772870482922</updated>
-    </task>
-    <task id="LOCAL-00006" summary="База данных PostgreSQL, фильтрация, поиск, 100компонетов бд, авторизация">
-      <option name="closed" value="true" />
-      <created>1773434572889</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1773434572889</updated>
-    </task>
-    <option name="localTasksCounter" value="7" />
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Главная и Компоненты." />
-    <MESSAGE value="Страница конфигуратора" />
-    <MESSAGE value="Страница авторизации и регистрации (убрать дублированный код из register.html и style_register.css)" />
-    <MESSAGE value="База данных PostgreSQL, фильтрация, поиск, 100компонетов бд, авторизация" />
-    <option name="LAST_COMMIT_MESSAGE" value="База данных PostgreSQL, фильтрация, поиск, 100компонетов бд, авторизация" />
+    <option name="LAST_COMMIT_MESSAGE" value="Главная и Компоненты." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
