@@ -1,6 +1,6 @@
-from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
+from django.db.models import Q
+from core.models import Component, Category
 
 
 def index(request):
@@ -13,15 +13,76 @@ def configurator_view(request):
     return render(request, 'core/configurator.html')
 
 
+def components(request):
+    """Страница комплектующих с фильтрами и поиском"""
+    # Базовый queryset
+    components = Component.objects.select_related('category').all()
+
+    # === ПОИСК ===
+    search_query = request.GET.get('search', '')
+    if search_query:
+        components = components.filter(
+            Q(name__icontains=search_query) |
+            Q(manufacturer__icontains=search_query)
+        )
+
+    # === КАТЕГОРИИ ===
+    selected_categories = request.GET.getlist('category')
+    if selected_categories:
+        components = components.filter(category__name__in=selected_categories)
+
+    # === БРЕНДЫ ===
+    selected_brands = request.GET.getlist('brand')
+    if selected_brands:
+        components = components.filter(manufacturer__in=selected_brands)
+
+    # === ЦЕНА ===
+    price_from = request.GET.get('price_from')
+    price_to = request.GET.get('price_to')
+
+    if price_from:
+        components = components.filter(price__gte=price_from)
+    if price_to:
+        components = components.filter(price__lte=price_to)
+
+    # === СОРТИРОВКА ===
+    sort = request.GET.get('sort', 'popular')
+    if sort == 'price_asc':
+        components = components.order_by('price')
+    elif sort == 'price_desc':
+        components = components.order_by('-price')
+    else:
+        components = components.order_by('name')  # По умолчанию
+
+    # === Получаем все категории и бренды для фильтров ===
+    # Стало (гарантированно без дубликатов):
+    categories = Category.objects.all().order_by('name').distinct()
+    brands = Component.objects.values_list('manufacturer', flat=True).distinct().order_by('manufacturer')
+
+    context = {
+        'components': components,
+        'total_count': components.count(),
+        'categories': categories,
+        'brands': brands,
+        'selected_categories': selected_categories,
+        'selected_brands': selected_brands,
+        'sort': sort,
+    }
+
+    return render(request, 'core/components.html', context)
+
+
 def login_view(request):
+    """Страница входа"""
     if request.method == 'POST':
+        from django.contrib.auth import authenticate, login
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
             login(request, user)
-            return redirect('core:profile')  # Перенаправление в ЛК
+            return redirect('core:profile')
         else:
             return render(request, 'registration/login.html', {'error': 'Неверный логин или пароль'})
 
@@ -31,6 +92,9 @@ def login_view(request):
 def register_view(request):
     """Страница регистрации"""
     if request.method == 'POST':
+        from django.contrib.auth import authenticate, login
+        from django.contrib.auth.models import User
+
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
@@ -48,97 +112,10 @@ def register_view(request):
 
     return render(request, 'registration/register.html')
 
-def components(request):
-    """Страница комплектующих"""
-    components_list = [
-        {
-            'id': 1,
-            'name': 'NVIDIA GeForce RTX 4090',
-            'category': 'Видеокарты',
-            'price': 189990,
-            'manufacturer': 'NVIDIA',
-            'in_stock': True,
-            'is_hit': True,
-        },
-        {
-            'id': 2,
-            'name': 'AMD Ryzen 9 7950X',
-            'category': 'Процессоры',
-            'price': 54990,
-            'manufacturer': 'AMD',
-            'in_stock': True,
-            'is_hit': True,
-        },
-        {
-            'id': 3,
-            'name': 'Intel Core i9-14900K',
-            'category': 'Процессоры',
-            'price': 59990,
-            'manufacturer': 'Intel',
-            'in_stock': True,
-            'is_hit': False,
-        },
-        {
-            'id': 4,
-            'name': 'Kingston Fury 32GB DDR5',
-            'category': 'Оперативная память',
-            'price': 14990,
-            'manufacturer': 'Kingston',
-            'in_stock': True,
-            'is_hit': False,
-        },
-        {
-            'id': 5,
-            'name': 'Samsung 990 PRO 2TB',
-            'category': 'SSD накопители',
-            'price': 19990,
-            'manufacturer': 'Samsung',
-            'in_stock': True,
-            'is_hit': True,
-        },
-        {
-            'id': 6,
-            'name': 'ASUS ROG MAXIMUS Z790',
-            'category': 'Материнские платы',
-            'price': 64990,
-            'manufacturer': 'ASUS',
-            'in_stock': False,
-            'is_hit': False,
-        },
-        {
-            'id': 7,
-            'name': 'NZXT Kraken Elite 360',
-            'category': 'Охлаждение',
-            'price': 24990,
-            'manufacturer': 'NZXT',
-            'in_stock': True,
-            'is_hit': False,
-        },
-        {
-            'id': 8,
-            'name': 'Seasonic PRIME TX-1000',
-            'category': 'Блоки питания',
-            'price': 29990,
-            'manufacturer': 'Seasonic',
-            'in_stock': True,
-            'is_hit': False,
-        },
-    ]
-
-    context = {
-        'components': components_list,
-        'total_count': len(components_list),
-    }
-
-    return render(request, 'core/components.html', context)
-
 
 def profile_view(request):
-    """
-    Личный кабинет пользователя (без авторизации)
-    Демо-данные для тестирования интерфейса
-    """
-    # Демо-данные сборок
+    """Личный кабинет пользователя"""
+    # Демо-данные (потом замените на реальные запросы к БД)
     saved_builds = [
         {
             'id': 1,
@@ -149,27 +126,8 @@ def profile_view(request):
             'ram': '32GB DDR5',
             'total_price': 350000,
         },
-        {
-            'id': 2,
-            'name': 'Рабочая станция',
-            'created_at': '25.01.2026',
-            'cpu': 'Intel Core i9-14900K',
-            'gpu': 'NVIDIA GeForce RTX 4070',
-            'ram': '64GB DDR5',
-            'total_price': 280000,
-        },
-        {
-            'id': 3,
-            'name': 'Бюджетный гейминг',
-            'created_at': '20.01.2026',
-            'cpu': 'AMD Ryzen 5 7600X',
-            'gpu': 'NVIDIA GeForce RTX 4060',
-            'ram': '16GB DDR5',
-            'total_price': 120000,
-        },
     ]
 
-    # Демо-данные заказов
     orders = [
         {
             'id': 1001,
@@ -178,23 +136,8 @@ def profile_view(request):
             'status_display': 'Выполнен',
             'total': 350000,
         },
-        {
-            'id': 1002,
-            'created_at': '28.01.2026',
-            'status': 'processing',
-            'status_display': 'В обработке',
-            'total': 125000,
-        },
-        {
-            'id': 1003,
-            'created_at': '26.01.2026',
-            'status': 'shipped',
-            'status_display': 'Отправлен',
-            'total': 89000,
-        },
     ]
 
-    # Демо-данные избранного
     favorites = [
         {
             'id': 1,
@@ -206,29 +149,8 @@ def profile_view(request):
                 'in_stock': True,
             }
         },
-        {
-            'id': 2,
-            'component': {
-                'name': 'AMD Ryzen 9 7950X',
-                'category': 'Процессоры',
-                'manufacturer': 'AMD',
-                'price': 54990,
-                'in_stock': True,
-            }
-        },
-        {
-            'id': 3,
-            'component': {
-                'name': 'Samsung 990 PRO 2TB',
-                'category': 'SSD накопители',
-                'manufacturer': 'Samsung',
-                'price': 19990,
-                'in_stock': True,
-            }
-        },
     ]
 
-    # Демо-данные уведомлений
     notifications = [
         {
             'id': 1,
@@ -237,23 +159,8 @@ def profile_view(request):
             'created_at': '2 часа назад',
             'is_read': False,
         },
-        {
-            'id': 2,
-            'message': 'Компонент ASUS ROG MAXIMUS Z790 появился в наличии',
-            'type': 'stock',
-            'created_at': '5 часов назад',
-            'is_read': True,
-        },
-        {
-            'id': 3,
-            'message': 'Ваш заказ #1001 готов к выдаче',
-            'type': 'order',
-            'created_at': '1 день назад',
-            'is_read': True,
-        },
     ]
 
-    # Демо-данные пользователя
     user_data = {
         'username': 'Gamer2026',
         'email': 'gamer@example.com',
