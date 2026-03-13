@@ -77,8 +77,13 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # База данных (SQLite для начала)
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'spacbox_db',
+            'USER': 'specbox_user',
+            'PASSWORD': 'Googe',      # ← Ваш пароль ХЕШИРОВАТЬ!!!!!!
+            'HOST': 'localhost',
+            'PORT': '5432',
+
     }
 }
 
