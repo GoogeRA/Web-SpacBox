@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect
 from django.db.models import Q
+from django.core.paginator import Paginator
 from core.models import Component, Category
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
 
 
 def index(request):
@@ -14,7 +17,7 @@ def configurator_view(request):
 
 
 def components(request):
-    """Страница комплектующих с фильтрами и поиском"""
+    """Страница комплектующих с фильтрами, поиском и пагинацией"""
     # Базовый queryset
     components = Component.objects.select_related('category').all()
 
@@ -52,21 +55,27 @@ def components(request):
     elif sort == 'price_desc':
         components = components.order_by('-price')
     else:
-        components = components.order_by('name')  # По умолчанию
+        components = components.order_by('name')
 
-    # === Получаем все категории и бренды для фильтров ===
-    # Стало (гарантированно без дубликатов):
+    # === ПАГИНАЦИЯ ===
+    paginator = Paginator(components, 12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    # === Категории и бренды для фильтров ===
     categories = Category.objects.all().order_by('name').distinct()
     brands = Component.objects.values_list('manufacturer', flat=True).distinct().order_by('manufacturer')
 
     context = {
-        'components': components,
-        'total_count': components.count(),
+        'components': page_obj,
+        'total_count': paginator.count,
         'categories': categories,
         'brands': brands,
         'selected_categories': selected_categories,
         'selected_brands': selected_brands,
         'sort': sort,
+        'page_obj': page_obj,
+        'paginator': paginator,
     }
 
     return render(request, 'core/components.html', context)
@@ -75,7 +84,6 @@ def components(request):
 def login_view(request):
     """Страница входа"""
     if request.method == 'POST':
-        from django.contrib.auth import authenticate, login
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
@@ -92,22 +100,44 @@ def login_view(request):
 def register_view(request):
     """Страница регистрации"""
     if request.method == 'POST':
-        from django.contrib.auth import authenticate, login
-        from django.contrib.auth.models import User
-
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
         password_confirm = request.POST.get('password_confirm')
+        terms = request.POST.get('terms')
 
         if password != password_confirm:
-            return render(request, 'registration/register.html', {'error': 'Пароли не совпадают'})
+            return render(request, 'registration/register.html', {
+                'error': 'Пароли не совпадают',
+                'username': username,
+                'email': email,
+            })
+
+        if len(password) < 8:
+            return render(request, 'registration/register.html', {
+                'error': 'Пароль должен быть минимум 8 символов',
+                'username': username,
+                'email': email,
+            })
+
+        if not terms:
+            return render(request, 'registration/register.html', {
+                'error': 'Необходимо согласиться с условиями использования',
+                'username': username,
+                'email': email,
+            })
 
         if User.objects.filter(username=username).exists():
-            return render(request, 'registration/register.html', {'error': 'Пользователь уже существует'})
+            return render(request, 'registration/register.html', {
+                'error': 'Пользователь с таким именем уже существует',
+                'username': username,
+                'email': email,
+            })
 
         user = User.objects.create_user(username=username, email=email, password=password)
+        user.save()
         login(request, user)
+
         return redirect('core:profile')
 
     return render(request, 'registration/register.html')
@@ -115,7 +145,6 @@ def register_view(request):
 
 def profile_view(request):
     """Личный кабинет пользователя"""
-    # Демо-данные (потом замените на реальные запросы к БД)
     saved_builds = [
         {
             'id': 1,
