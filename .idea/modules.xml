@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/Spasbox.iml" filepath="$PROJECT_DIR$/.idea/Spasbox.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/spasebox proj.iml" filepath="$PROJECT_DIR$/.idea/spasebox proj.iml" />
     </modules>
   </component>
 </project>
