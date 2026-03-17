@@ -1,5 +1,5 @@
 /* ========================================
-   BASE.CSS - ОБЩИЕ СТИЛИ
+   BASE.CSS - ОБЩИЕ СТИЛИ (ИСПРАВЛЕННЫЙ)
    ======================================== */
 
 /* ===== ГЛОБАЛЬНЫЕ СТИЛИ ===== */
@@ -65,119 +65,242 @@ body {
 }
 
 .nebula-1 {
-    top: 15%; left: 10%; width: 400px; height: 400px;
+    top: 15%;
+    left: 10%;
+    width: 400px;
+    height: 400px;
     background: radial-gradient(circle, #9d4edd 0%, transparent 70%);
 }
 
 .nebula-2 {
-    bottom: 10%; right: 15%; width: 350px; height: 350px;
+    bottom: 10%;
+    right: 15%;
+    width: 350px;
+    height: 350px;
     background: radial-gradient(circle, #6366f1 0%, transparent 70%);
 }
 
 .nebula-3 {
-    top: 60%; left: 65%; width: 300px; height: 300px;
+    top: 60%;
+    left: 65%;
+    width: 300px;
+    height: 300px;
     background: radial-gradient(circle, #ff5eda 0%, transparent 70%);
 }
 
-
-/* ===== HEADER ===== */
+/* ===== FIXED HEADER ===== */
 .site-header {
-    width: 95%;
-    max-width: 12000px;
-    background: rgba(20, 20, 40, 0.85);
-    border: 2px solid rgba(157, 78, 221, 0.6);
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(157, 78, 221, 0.15);
-    padding: 15px 30px;
-    margin: 20px auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, rgba(20, 20, 40, 0.98) 0%, rgba(25, 25, 50, 0.95) 100%);
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid rgba(157, 78, 221, 0.5);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 30px rgba(157, 78, 221, 0.2);
+    z-index: 1000;
+    height: 70px;
+    transition: all 0.3s ease;
+}
+
+.site-header.scrolled {
+    height: 60px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5), 0 0 20px rgba(157, 78, 221, 0.3);
+}
+
+.header-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 30px;
+    height: 100%;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    z-index: 10;
-    position: relative;
+    gap: 25px;
 }
 
-.site-title {
-    color: #ffffff;
+/* Logo */
+.header-logo {
+    flex-shrink: 0;
+    text-decoration: none;
+}
+
+.logo-text {
     font-size: 1.8rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
+    font-weight: 800;
+    background: linear-gradient(135deg, #9d4edd 0%, #c77dff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 1px;
+    color: #9d4edd; /* Fallback */
 }
 
-.site-title::before {
-    content: "";
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    background: #10b981;
-    border-radius: 50%;
-    margin-right: 12px;
-    box-shadow: 0 0 10px rgba(16, 185, 129, 0.8);
-}
-
-.nav-menu {
+/* Catalog Button */
+.catalog-btn {
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #9d4edd 0%, #7e3cc5 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
     display: flex;
-    gap: 30px;                      /* ← Расстояние между ссылками */
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    text-decoration: none; /* Важно для тега <a> */
 }
 
-.nav-link {
+.catalog-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(157, 78, 221, 0.5);
+    background: linear-gradient(135deg, #a75ee6 0%, #8a4bcf 100%);
+}
+
+/* Configurator Button (ИСПРАВЛЕНО: добавлен базовый стиль) */
+.configurator-btn {
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%); /* Зеленый оттенок для отличия */
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.configurator-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+    background: linear-gradient(135deg, #14c98f 0%, #08a87a 100%);
+}
+
+/* Search Bar */
+.header-search {
+    flex: 1;
+    max-width: 600px;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-input {
+    width: 100%;
+    background: rgba(30, 30, 60, 0.8);
+    border: 2px solid rgba(157, 78, 221, 0.3);
+    border-radius: 8px;
+    padding: 12px 50px 12px 18px;
+    color: #e0e0ff;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    border-color: #9d4edd;
+    box-shadow: 0 0 0 4px rgba(157, 78, 221, 0.2);
+    background: rgba(35, 35, 70, 0.9);
+}
+
+.search-input::placeholder {
+    color: #6a6a8a;
+}
+
+.search-btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: linear-gradient(135deg, #9d4edd 0%, #7e3cc5 100%);
+    border: none;
+    border-radius: 6px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.search-btn:hover {
+    transform: translateY(-50%) scale(1.05);
+    box-shadow: 0 4px 12px rgba(157, 78, 221, 0.4);
+}
+
+/* User Actions */
+.header-actions {
+    flex-shrink: 0;
+    display: flex;
+    gap: 5px;
+}
+
+.action-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
     color: #c5c5e0;
     text-decoration: none;
-    font-weight: 500;
-    font-size: 1.05rem;
-    padding: 10px 15px;
+    padding: 8px 12px;
+    border-radius: 8px;
     transition: all 0.3s ease;
-    border-radius: 0;               /* ← Убираем скругления кнопок */
+    position: relative;
+    min-width: 70px;
+}
+
+.action-link:hover {
+    background: rgba(157, 78, 221, 0.15);
+    color: #9d4edd;
+    transform: translateY(-2px);
+}
+
+.action-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+/* Cart Badge */
+.cart-link {
     position: relative;
 }
 
-.nav-link:hover, .nav-link.active {
-    color: #ffffff;
-    background: rgba(157, 78, 221, 0.2);
-}
-
-/* Подчёркивание при наведении */
-.nav-link::after {
-    content: '';
+.cart-badge {
     position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%) scaleX(0);
-    width: 80%;
-    height: 2px;
-    background: #9d4edd;
-    transition: transform 0.3s ease;
-}
-
-.nav-link:hover::after,
-.nav-link.active::after {
-    transform: translateX(-50%) scaleX(1);
-}
-
-.site-controls {
-    display: flex;
-    gap: 10px;
-}
-
-.control-btn {
-    width: 14px;
-    height: 14px;
+    top: 2px;
+    right: 8px;
+    background: linear-gradient(135deg, #ff5252 0%, #ff1a1a 100%);
+    color: #ffffff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(255, 82, 82, 0.5);
 }
 
-.control-btn.close:hover { background: #ff5252; border-color: #ff1a1a; }
-.control-btn.minimize:hover { background: #ffcc00; border-color: #cc9900; }
-.control-btn.maximize:hover { background: #2ecc40; border-color: #1a8c26; }
+/* Header Spacer */
+.header-spacer {
+    height: 70px;
+}
 
 /* ===== MAIN CONTENT ===== */
-
 .main-content {
     width: 95%;
-    max-width: 1200px;
-    margin: 100px auto 40px;  /* ← Отступ сверху 100px для фиксированного header */
+    max-width: 1400px;
+    margin: 40px auto;
     position: relative;
     z-index: 5;
 }
@@ -185,7 +308,7 @@ body {
 /* ===== FOOTER ===== */
 .site-footer {
     width: 95%;
-    max-width: 1200px;
+    max-width: 1400px;
     background: rgba(15, 15, 35, 0.7);
     padding: 22px 30px;
     border-top: 1px solid rgba(157, 78, 221, 0.3);
@@ -214,34 +337,6 @@ body {
     50% { opacity: 0.7; box-shadow: 0 0 12px rgba(16, 185, 129, 0.9); }
 }
 
-/* ===== ANIMATIONS ===== */
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.fade-in {
-    animation: fadeInUp 0.8s ease-out forwards;
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-    .site-header {
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .nav-menu {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 15px;
-    }
-
-    .nav-link {
-        font-size: 0.95rem;
-        padding: 6px 10px;
-    }
-}
 /* ===== AUTH BUTTONS ===== */
 .auth-buttons {
     display: flex;
@@ -287,8 +382,86 @@ body {
     background: linear-gradient(135deg, #a75ee6 0%, #8a4bcf 100%);
 }
 
-/* Адаптивность для кнопок */
+/* ===== ANIMATIONS ===== */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+    .header-container {
+        padding: 0 20px;
+        gap: 15px;
+    }
+
+    .search-input {
+        padding: 10px 45px 10px 15px;
+        font-size: 0.9rem;
+    }
+
+    .action-label {
+        display: none;
+    }
+
+    .action-link {
+        min-width: 50px;
+    }
+}
+
 @media (max-width: 768px) {
+    .site-header {
+        height: 60px;
+    }
+
+    .header-container {
+        padding: 0 15px;
+        gap: 10px;
+    }
+
+    .logo-text {
+        font-size: 1.4rem;
+    }
+
+    .catalog-btn span, .configurator-btn span {
+        display: none;
+    }
+
+    .catalog-btn, .configurator-btn {
+        padding: 10px 12px;
+    }
+
+    .header-search {
+        max-width: none;
+    }
+
+    .search-input {
+        font-size: 0.85rem;
+        padding: 8px 40px 8px 12px;
+    }
+
+    .header-spacer {
+        height: 60px;
+    }
+
+    .header-actions {
+        gap: 0;
+    }
+
+    .action-link {
+        padding: 6px 8px;
+        min-width: 45px;
+    }
+
+    .action-link svg {
+        width: 20px;
+        height: 20px;
+    }
+
     .auth-buttons {
         flex-direction: column;
         width: 100%;
@@ -299,4 +472,19 @@ body {
         width: 100%;
         justify-content: center;
     }
+
+    .main-content {
+        margin-top: 30px;
+    }
 }
+
+@media (max-width: 480px) {
+    .logo-text {
+        font-size: 1.2rem;
+    }
+
+    .search-input {
+        font-size: 0.8rem;
+    }
+}
+
