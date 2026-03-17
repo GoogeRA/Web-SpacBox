@@ -1,71 +1,62 @@
 /* ========================================
-AUTH.CSS - СТИЛИ СТРАНИЦ ВХОДА И РЕГИСТРАЦИИ
-======================================== */
-.auth-success {
-    background: rgba(16, 185, 129, 0.15);
-    border: 1px solid rgba(16, 185, 129, 0.3);
-    color: #10b981;
-    padding: 12px 18px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    font-size: 0.95rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
+   REGISTER.CSS - СТИЛИ СТРАНИЦЫ РЕГИСТРАЦИИ
+   ======================================== */
 
-/* Container */
 .auth-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 60vh;
+    min-height: calc(100vh - 200px);
     padding: 40px 20px;
+    background: linear-gradient(135deg, rgba(15, 15, 30, 0.9) 0%, rgba(10, 10, 18, 0.95) 100%);
 }
 
-/* Card */
 .auth-card {
-    background: rgba(25, 25, 50, 0.75);
-    border: 1px solid rgba(157, 78, 221, 0.3);
-    border-radius: 16px;
+    background: linear-gradient(145deg, rgba(30, 30, 60, 0.95) 0%, rgba(25, 25, 50, 0.98) 100%);
+    border: 1px solid rgba(157, 78, 221, 0.4);
+    border-radius: 20px;
     padding: 40px;
     width: 100%;
-    max-width: 450px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    max-width: 480px;
+    box-shadow:
+        0 10px 40px rgba(0, 0, 0, 0.5),
+        0 0 60px rgba(157, 78, 221, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
 }
 
-/* Title */
 .auth-title {
     font-size: 2rem;
     color: #ffffff;
     text-align: center;
     margin-bottom: 30px;
     font-weight: 700;
-    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #ffffff 0%, #c77dff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
-/* Messages */
 .auth-error {
-    background: rgba(255, 82, 82, 0.15);
-    border: 1px solid rgba(255, 82, 82, 0.3);
-    color: #ff5252;
-    padding: 12px 18px;
-    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(255, 82, 82, 0.2) 0%, rgba(255, 82, 82, 0.1) 100%);
+    border: 1px solid rgba(255, 82, 82, 0.4);
+    color: #ff8a8a;
+    padding: 14px 18px;
+    border-radius: 12px;
     margin-bottom: 20px;
     font-size: 0.95rem;
 }
 
 .auth-success {
-    background: rgba(16, 185, 129, 0.15);
-    border: 1px solid rgba(16, 185, 129, 0.3);
-    color: #10b981;
-    padding: 12px 18px;
-    border-radius: 10px;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(16, 185, 129, 0.1) 100%);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    color: #6ee7b7;
+    padding: 14px 18px;
+    border-radius: 12px;
     margin-bottom: 20px;
     font-size: 0.95rem;
 }
 
-/* Form */
 .auth-form {
     display: flex;
     flex-direction: column;
@@ -82,14 +73,16 @@ AUTH.CSS - СТИЛИ СТРАНИЦ ВХОДА И РЕГИСТРАЦИИ
     color: #c5c5e0;
     font-weight: 600;
     font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .form-control {
-    background: rgba(30, 30, 60, 0.8);
+    background: rgba(20, 20, 45, 0.8);
     border: 1px solid rgba(157, 78, 221, 0.3);
-    border-radius: 10px;
+    border-radius: 12px;
     padding: 14px 18px;
-    color: #e0e0ff;
+    color: #ffffff;
     font-size: 1rem;
     outline: none;
     transition: all 0.3s ease;
@@ -98,37 +91,44 @@ AUTH.CSS - СТИЛИ СТРАНИЦ ВХОДА И РЕГИСТРАЦИИ
 
 .form-control:focus {
     border-color: #9d4edd;
-    box-shadow: 0 0 0 3px rgba(157, 78, 221, 0.2);
-    background: rgba(35, 35, 70, 0.9);
+    box-shadow:
+        0 0 0 3px rgba(157, 78, 221, 0.25),
+        0 0 20px rgba(157, 78, 221, 0.3);
+    background: rgba(25, 25, 55, 0.9);
 }
 
 .form-control::placeholder {
     color: #6a6a8a;
 }
 
-/* Password Requirements */
+/* Требования к паролю */
 .password-requirements {
-    font-size: 0.85rem;
-    color: #b0b0d0;
-    margin-top: 5px;
+    background: rgba(157, 78, 221, 0.1);
+    border: 1px solid rgba(157, 78, 221, 0.3);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-top: 8px;
 }
 
 .password-requirements ul {
-    margin: 5px 0 0 20px;
-    color: #9d4edd;
+    margin: 0;
+    padding-left: 20px;
+    color: #b0b0d0;
+    font-size: 0.85rem;
 }
 
 .password-requirements li {
-    margin-bottom: 3px;
+    margin-bottom: 4px;
+    color: #c5c5e0;
 }
 
-/* Submit Button */
+/* Кнопка отправки */
 .btn-submit {
     background: linear-gradient(135deg, #9d4edd 0%, #7e3cc5 100%);
     color: #ffffff;
     border: none;
-    border-radius: 10px;
-    padding: 14px;
+    border-radius: 12px;
+    padding: 16px;
     font-size: 1.05rem;
     font-weight: 700;
     cursor: pointer;
@@ -136,23 +136,62 @@ AUTH.CSS - СТИЛИ СТРАНИЦ ВХОДА И РЕГИСТРАЦИИ
     margin-top: 10px;
     text-transform: uppercase;
     letter-spacing: 1px;
+    box-shadow: 0 4px 20px rgba(157, 78, 221, 0.4);
 }
 
 .btn-submit:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(157, 78, 221, 0.5);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 35px rgba(157, 78, 221, 0.6);
     background: linear-gradient(135deg, #a75ee6 0%, #8a4bcf 100%);
 }
 
 .btn-submit:active {
-    transform: translateY(1px);
-    box-shadow: 0 4px 15px rgba(157, 78, 221, 0.4);
+    transform: translateY(-1px);
 }
 
-/* Hint Text */
+/* Чекбокс условий */
+.terms-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 10px;
+    padding: 12px;
+    background: rgba(20, 20, 45, 0.5);
+    border-radius: 10px;
+}
+
+.terms-checkbox input {
+    margin-top: 3px;
+    accent-color: #9d4edd;
+    width: 18px;
+    height: 18px;
+}
+
+.terms-checkbox label {
+    color: #b0b0d0;
+    font-size: 0.9rem;
+    cursor: pointer;
+    line-height: 1.5;
+}
+
+.terms-checkbox a {
+    color: #9d4edd;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.terms-checkbox a:hover {
+    color: #c77dff;
+    text-decoration: none;
+}
+
+/* Подсказка */
 .auth-hint {
     text-align: center;
-    margin-top: 25px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(157, 78, 221, 0.2);
     color: #b0b0d0;
     font-size: 0.95rem;
 }
@@ -165,92 +204,25 @@ AUTH.CSS - СТИЛИ СТРАНИЦ ВХОДА И РЕГИСТРАЦИИ
 }
 
 .auth-hint a:hover {
-    color: #b388ff;
-    text-decoration: underline;
-}
-
-/* Terms Checkbox */
-.terms-checkbox {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.terms-checkbox input {
-    margin-top: 3px;
-    accent-color: #9d4edd;
-}
-
-.terms-checkbox label {
-    color: #b0b0d0;
-    font-size: 0.9rem;
-    cursor: pointer;
-    line-height: 1.4;
-}
-
-.terms-checkbox a {
-    color: #9d4edd;
+    color: #c77dff;
     text-decoration: none;
-    font-weight: 600;
+    text-shadow: 0 0 10px rgba(157, 78, 221, 0.5);
 }
 
-.terms-checkbox a:hover {
-    text-decoration: underline;
+/* Анимация */
+.auth-card {
+    animation: slideInUp 0.5s ease-out;
 }
 
-/* Custom Checkbox */
-.checkbox-custom {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    user-select: none;
-}
-
-.checkbox-custom input {
-    position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    height: 0;
-    width: 0;
-}
-
-.checkmark-custom {
-    height: 20px;
-    width: 20px;
-    background: rgba(30, 30, 60, 0.8);
-    border: 1px solid rgba(157, 78, 221, 0.4);
-    border-radius: 5px;
-    transition: all 0.3s ease;
-    flex-shrink: 0;
-}
-
-.checkbox-custom:hover input ~ .checkmark-custom {
-    border-color: #9d4edd;
-}
-
-.checkbox-custom input:checked ~ .checkmark-custom {
-    background: linear-gradient(135deg, #9d4edd 0%, #7e3cc5 100%);
-    border-color: #9d4edd;
-}
-
-.checkmark-custom:after {
-    content: "";
-    position: absolute;
-    display: none;
-    left: 7px;
-    top: 3px;
-    width: 5px;
-    height: 10px;
-    border: solid white;
-    border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
-}
-
-.checkbox-custom input:checked ~ .checkmark-custom:after {
-    display: block;
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Responsive */
@@ -275,7 +247,7 @@ AUTH.CSS - СТИЛИ СТРАНИЦ ВХОДА И РЕГИСТРАЦИИ
     }
 
     .btn-submit {
-        padding: 12px;
+        padding: 14px;
         font-size: 1rem;
     }
 }
@@ -291,6 +263,6 @@ AUTH.CSS - СТИЛИ СТРАНИЦ ВХОДА И РЕГИСТРАЦИИ
 
     .terms-checkbox {
         flex-direction: column;
-        gap: 5px;
+        gap: 8px;
     }
 }

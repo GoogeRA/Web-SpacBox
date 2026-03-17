@@ -4,14 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7b458448-4ad1-42e5-8df6-ed4ef850cdd3" name="Changes" comment="СЕТКА И МПИСОК ТОВАРА">
+    <list default="true" id="7b458448-4ad1-42e5-8df6-ed4ef850cdd3" name="Changes" comment="новое меню">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/static/core/css/style_base.css" beforeDir="false" afterPath="$PROJECT_DIR$/core/static/core/css/style_base.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/static/core/css/style_login.css" beforeDir="false" afterPath="$PROJECT_DIR$/core/static/core/css/style_login.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/static/core/css/style_profile.css" beforeDir="false" afterPath="$PROJECT_DIR$/core/static/core/css/style_profile.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/static/core/css/style_register.css" beforeDir="false" afterPath="$PROJECT_DIR$/core/static/core/css/style_register.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/templates/core/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/core/templates/core/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/templates/core/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/core/templates/core/profile.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/templates/registration/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/core/templates/registration/login.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/templates/registration/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/core/templates/registration/register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,6 +51,9 @@
     &quot;accountId&quot;: &quot;ac7f553e-7f68-498f-aa79-9deeb0c778df&quot;
   }
 }</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/core/views.py" root0="SKIP_HIGHLIGHTING" />
+  </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -131,14 +138,23 @@
       <option name="project" value="LOCAL" />
       <updated>1773610214620</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="новое меню">
+      <option name="closed" value="true" />
+      <created>1773759245036</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1773759245036</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Главная и Компоненты." />
     <MESSAGE value="База данных PostgreSQL, фильтрация, поиск, 100компонетов бд, авторизация" />
     <MESSAGE value="СЕТКА И МПИСОК ТОВАРА" />
-    <option name="LAST_COMMIT_MESSAGE" value="СЕТКА И МПИСОК ТОВАРА" />
+    <MESSAGE value="новое меню" />
+    <option name="LAST_COMMIT_MESSAGE" value="новое меню" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

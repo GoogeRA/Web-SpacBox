@@ -4,6 +4,7 @@
 {% block title %}SpecBox | Личный кабинет{% endblock %}
 
 {% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/style_base.css' %}">
 <link rel="stylesheet" href="{% static 'core/css/style_profile.css' %}">
 {% endblock %}
 
@@ -64,6 +65,23 @@
                 <span class="nav-text">Настройки</span>
             </a>
         </nav>
+
+                <!-- КНОПКА ВЫХОДА (НОВАЯ) -->
+        <div class="profile-actions">
+            <a href="{% url 'core:configurator' %}" class="btn btn-primary btn-full">
+                <span class="btn-icon">+</span>
+                Новая сборка
+            </a>
+
+            <!-- Кнопка выхода -->
+            <form method="post" action="{% url 'core:logout' %}" style="margin-top: 15px;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-logout btn-full">
+                    <span class="btn-icon">🚪</span>
+                    Выйти
+                </button>
+            </form>
+        </div>
 
         <!-- Кнопка действия -->
         <div class="profile-actions">
@@ -356,5 +374,7 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/profile.js' %}"></script>
+
+<script src="{% static 'core/js/profile.js' %}"></script>
+
 {% endblock %}

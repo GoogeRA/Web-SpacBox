@@ -2,8 +2,9 @@ from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.core.paginator import Paginator
 from core.models import Component, Category
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
 
 def index(request):
@@ -96,6 +97,10 @@ def login_view(request):
 
     return render(request, 'registration/login.html')
 
+def logout_view(request):
+    """Выход из аккаунта"""
+    logout(request)
+    return redirect('core:index')
 
 def register_view(request):
     """Страница регистрации"""
@@ -143,8 +148,11 @@ def register_view(request):
     return render(request, 'registration/register.html')
 
 
+@login_required(login_url='core:login')
 def profile_view(request):
     """Личный кабинет пользователя"""
+
+    # Данные сохраненных сборок (заглушка)
     saved_builds = [
         {
             'id': 1,
@@ -157,6 +165,7 @@ def profile_view(request):
         },
     ]
 
+    # Данные заказов (заглушка)
     orders = [
         {
             'id': 1001,
@@ -167,6 +176,7 @@ def profile_view(request):
         },
     ]
 
+    # Избранные товары (заглушка)
     favorites = [
         {
             'id': 1,
@@ -180,6 +190,7 @@ def profile_view(request):
         },
     ]
 
+    # Уведомления (заглушка)
     notifications = [
         {
             'id': 1,
@@ -190,13 +201,14 @@ def profile_view(request):
         },
     ]
 
+    # Данные пользователя
     user_data = {
-        'username': 'Gamer2026',
-        'email': 'gamer@example.com',
+        'username': request.user.username,
+        'email': request.user.email,
         'phone': '+7 (999) 123-45-67',
         'city': 'Москва',
         'registered': '15.12.2025',
-        'last_login': '28.01.2026 14:30',
+        'last_login': request.user.last_login.strftime('%d.%m.%Y %H:%M') if request.user.last_login else 'Неизвестно',
     }
 
     context = {

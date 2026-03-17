@@ -25,6 +25,26 @@ PROFILE.CSS - СТИЛИ ЛИЧНОГО КАБИНЕТА
     font-weight: 300;
 }
 
+/* Кнопка выхода */
+.btn-logout {
+    background: rgba(255, 82, 82, 0.15);
+    color: #ff5252;
+    border: 1px solid rgba(255, 82, 82, 0.3);
+    margin-top: 10px;
+}
+
+.btn-logout:hover {
+    background: rgba(255, 82, 82, 0.25);
+    color: #ffffff;
+    border-color: #ff5252;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 82, 82, 0.3);
+}
+
+.btn-logout .btn-icon {
+    font-size: 1rem;
+}
+
 /* В начало файла style_profile.css */
 .profile-container {
     display: flex;
