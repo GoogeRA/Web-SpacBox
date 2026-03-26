@@ -4,17 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7b458448-4ad1-42e5-8df6-ed4ef850cdd3" name="Changes" comment="новое меню">
+    <list default="true" id="7b458448-4ad1-42e5-8df6-ed4ef850cdd3" name="Changes" comment="новое меню, личный кабинет(активные кнопуи), НАСТОРОИТЬ ЦВЕТ ФОРМЫ АВТОРИЗАЦИИ И РЕГИСТРАЦИИ. Подключить бд к личному кабинету(убрать хардкод)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/static/core/css/style_base.css" beforeDir="false" afterPath="$PROJECT_DIR$/core/static/core/css/style_base.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/static/core/css/style_login.css" beforeDir="false" afterPath="$PROJECT_DIR$/core/static/core/css/style_login.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/static/core/css/style_profile.css" beforeDir="false" afterPath="$PROJECT_DIR$/core/static/core/css/style_profile.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/static/core/css/style_register.css" beforeDir="false" afterPath="$PROJECT_DIR$/core/static/core/css/style_register.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/templates/core/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/core/templates/core/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/core/static/core/css/style_configurator.css" beforeDir="false" afterPath="$PROJECT_DIR$/core/static/core/css/style_configurator.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/templates/core/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/core/templates/core/profile.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/templates/registration/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/core/templates/registration/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/templates/registration/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/core/templates/registration/register.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/core/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -146,7 +141,15 @@
       <option name="project" value="LOCAL" />
       <updated>1773759245036</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="новое меню, личный кабинет(активные кнопуи), НАСТОРОИТЬ ЦВЕТ ФОРМЫ АВТОРИЗАЦИИ И РЕГИСТРАЦИИ. Подключить бд к личному кабинету(убрать хардкод)">
+      <option name="closed" value="true" />
+      <created>1773776251271</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1773776251271</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -154,7 +157,8 @@
     <MESSAGE value="База данных PostgreSQL, фильтрация, поиск, 100компонетов бд, авторизация" />
     <MESSAGE value="СЕТКА И МПИСОК ТОВАРА" />
     <MESSAGE value="новое меню" />
-    <option name="LAST_COMMIT_MESSAGE" value="новое меню" />
+    <MESSAGE value="новое меню, личный кабинет(активные кнопуи), НАСТОРОИТЬ ЦВЕТ ФОРМЫ АВТОРИЗАЦИИ И РЕГИСТРАЦИИ. Подключить бд к личному кабинету(убрать хардкод)" />
+    <option name="LAST_COMMIT_MESSAGE" value="новое меню, личный кабинет(активные кнопуи), НАСТОРОИТЬ ЦВЕТ ФОРМЫ АВТОРИЗАЦИИ И РЕГИСТРАЦИИ. Подключить бд к личному кабинету(убрать хардкод)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

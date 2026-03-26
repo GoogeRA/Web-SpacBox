@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.db.models import Q
+from core.models import Component, Category, SavedBuild, Order, Favorite, Notification, UserProfile
 from django.core.paginator import Paginator
-from core.models import Component, Category
+from django.utils import timezone
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -152,75 +153,110 @@ def register_view(request):
 def profile_view(request):
     """Личный кабинет пользователя"""
 
-    # Данные сохраненных сборок (заглушка)
-    saved_builds = [
-        {
-            'id': 1,
-            'name': 'Игровой ПК 2026',
-            'created_at': '28.01.2026',
-            'cpu': 'AMD Ryzen 9 7950X',
-            'gpu': 'NVIDIA GeForce RTX 4090',
-            'ram': '32GB DDR5',
-            'total_price': 350000,
-        },
-    ]
+    user = request.user
 
-    # Данные заказов (заглушка)
-    orders = [
-        {
-            'id': 1001,
-            'created_at': '27.01.2026',
-            'status': 'completed',
-            'status_display': 'Выполнен',
-            'total': 350000,
-        },
-    ]
+    # Получаем или создаём профиль пользователя
+    profile, created = UserProfile.objects.get_or_create(user=user)
 
-    # Избранные товары (заглушка)
-    favorites = [
-        {
-            'id': 1,
-            'component': {
-                'name': 'NVIDIA GeForce RTX 4090',
-                'category': 'Видеокарты',
-                'manufacturer': 'NVIDIA',
-                'price': 189990,
-                'in_stock': True,
-            }
-        },
-    ]
-
-    # Уведомления (заглушка)
-    notifications = [
-        {
-            'id': 1,
-            'message': 'Цена на NVIDIA GeForce RTX 4090 снизилась на 5%',
-            'type': 'price',
-            'created_at': '2 часа назад',
-            'is_read': False,
-        },
-    ]
-
-    # Данные пользователя
+    # Данные пользователя (из БД)
     user_data = {
-        'username': request.user.username,
-        'email': request.user.email,
-        'phone': '+7 (999) 123-45-67',
-        'city': 'Москва',
-        'registered': '15.12.2025',
-        'last_login': request.user.last_login.strftime('%d.%m.%Y %H:%M') if request.user.last_login else 'Неизвестно',
+        'username': user.username,
+        'email': user.email,
+        'phone': profile.phone or 'Не указан',
+        'city': profile.city or 'Не указан',
+        'registered': user.date_joined.strftime('%d.%m.%Y'),
+        'last_login': user.last_login.strftime('%d.%m.%Y %H:%M') if user.last_login else 'Неизвестно',
     }
+
+    # Сохранённые сборки (из БД)
+    saved_builds = SavedBuild.objects.filter(user=user)[:5]  # Последние 5
+    saved_builds_data = [
+        {
+            'id': build.id,
+            'name': build.name,
+            'created_at': build.created_at.strftime('%d.%m.%Y'),
+            'cpu': build.components.get('cpu', 'Не указано'),
+            'gpu': build.components.get('gpu', 'Не указано'),
+            'ram': build.components.get('ram', 'Не указано'),
+            'total_price': build.total_price,
+        }
+        for build in saved_builds
+    ]
+
+    # Заказы (из БД)
+    orders = Order.objects.filter(user=user)[:5]  # Последние 5
+    orders_data = [
+        {
+            'id': order.order_number,
+            'created_at': order.created_at.strftime('%d.%m.%Y'),
+            'status': order.status,
+            'status_display': order.get_status_display(),
+            'total': order.total_price,
+        }
+        for order in orders
+    ]
+
+    # Избранное (из БД)
+    favorites = Favorite.objects.filter(user=user).select_related('component')[:5]
+    favorites_data = [
+        {
+            'id': fav.id,
+            'component': {
+                'name': fav.component.name,
+                'category': fav.component.category.name if fav.component.category else 'Без категории',
+                'manufacturer': fav.component.manufacturer,
+                'price': fav.component.price,
+                'in_stock': fav.component.in_stock,
+            }
+        }
+        for fav in favorites
+    ]
+
+    # Уведомления (из БД)
+    notifications = Notification.objects.filter(user=user, is_read=False)[:10]
+    notifications_data = [
+        {
+            'id': notif.id,
+            'message': notif.message,
+            'type': notif.notification_type,
+            'created_at': get_time_ago(notif.created_at),
+            'is_read': notif.is_read,
+        }
+        for notif in notifications
+    ]
 
     context = {
         'user_data': user_data,
-        'saved_builds': saved_builds,
-        'saved_builds_count': len(saved_builds),
-        'orders': orders,
-        'orders_count': len(orders),
-        'favorites': favorites,
-        'favorites_count': len(favorites),
-        'notifications': notifications,
-        'unread_notifications': len([n for n in notifications if not n['is_read']]),
+        'saved_builds': saved_builds_data,
+        'saved_builds_count': SavedBuild.objects.filter(user=user).count(),
+        'orders': orders_data,
+        'orders_count': Order.objects.filter(user=user).count(),
+        'favorites': favorites_data,
+        'favorites_count': Favorite.objects.filter(user=user).count(),
+        'notifications': notifications_data,
+        'unread_notifications': Notification.objects.filter(user=user, is_read=False).count(),
     }
 
     return render(request, 'core/profile.html', context)
+
+
+    def get_time_ago(dt):
+        """Возвращает время в формате '2 часа назад'"""
+        now = timezone.now()
+        diff = now - dt
+
+        seconds = diff.total_seconds()
+
+        if seconds < 60:
+            return 'Только что'
+        elif seconds < 3600:
+            minutes = int(seconds // 60)
+            return f'{minutes} мин. назад'
+        elif seconds < 86400:
+            hours = int(seconds // 3600)
+            return f'{hours} час. назад'
+        elif seconds < 604800:
+            days = int(seconds // 86400)
+            return f'{days} дн. назад'
+        else:
+            return dt.strftime('%d.%m.%Y')

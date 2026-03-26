@@ -306,17 +306,16 @@ body {
 }
 
 /* ===== FOOTER ===== */
+/* ===== FOOTER ===== */
 .site-footer {
-    width: 95%;
-    max-width: 1400px;
+    width: 100%;
     background: rgba(15, 15, 35, 0.7);
     padding: 22px 30px;
     border-top: 1px solid rgba(157, 78, 221, 0.3);
-    border-radius: 16px;
     font-size: 1.05rem;
     color: #b0b0d0;
     text-align: center;
-    margin: 0 auto 40px;
+    margin: 0;
     position: relative;
     z-index: 10;
 }
@@ -335,6 +334,21 @@ body {
 @keyframes pulse {
     0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(16, 185, 129, 0.6); }
     50% { opacity: 0.7; box-shadow: 0 0 12px rgba(16, 185, 129, 0.9); }
+}
+
+/* Responsive для мобильных */
+@media (max-width: 768px) {
+    .site-footer {
+        padding: 18px 20px;
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .site-footer {
+        padding: 15px 15px;
+        font-size: 0.85rem;
+    }
 }
 
 /* ===== AUTH BUTTONS ===== */
