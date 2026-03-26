@@ -4,115 +4,505 @@
 {% block title %}SpecBox | Конфигуратор ПК{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'core/css/style_configurator.css' %}">
+<link rel="stylesheet" href="{% static 'core/css/style_configurator.css' %}">
 {% endblock %}
 
 {% block content %}
+<!-- Page Header -->
+<div class="page-header fade-in">
     <h1 class="page-title">КОНФИГУРАТОР ПК</h1>
+    <p class="page-subtitle">Соберите компьютер своей мечты</p>
+</div>
 
-    <div class="configurator-container">
-        <div class="block-title">
-            <h2>Обязательные комплектующие</h2>
-            <span class="status">0/7</span>
-        </div>
+<!-- Main Wrapper -->
+<div class="config-main-wrapper">
+    <!-- Left Panel - Components -->
+    <div class="config-components-panel">
+        <div id="componentsList"></div>
+    </div>
 
-        <div class="component-list">
-            <div class="component-item" data-component="processor">
-                <div class="component-content">
-                    <div class="component-icon">P</div>
-                    <div class="component-name">Процессор</div>
-                    <div class="component-required">Обязательно</div>
-                </div>
-                <button class="btn" data-action="add">Выбрать</button>
+    <!-- Right Sidebar -->
+    <aside class="config-sidebar">
+        <!-- Total Price Card -->
+        <div class="sidebar-card">
+            <div class="sidebar-card-header">
+                <h3 class="sidebar-card-title">Общая сумма ПК</h3>
             </div>
-
-            <div class="component-item" data-component="motherboard">
-                <div class="component-content">
-                    <div class="component-icon">M</div>
-                    <div class="component-name">Мат. плата</div>
-                    <div class="component-required">Обязательно</div>
-                </div>
-                <button class="btn" data-action="add">Выбрать</button>
-            </div>
-
-            <div class="component-item" data-component="power-supply">
-                <div class="component-content">
-                    <div class="component-icon">PSU</div>
-                    <div class="component-name">Блок питания</div>
-                    <div class="component-required">Обязательно</div>
-                </div>
-                <button class="btn" data-action="add">Выбрать</button>
-            </div>
-
-            <div class="component-item" data-component="case">
-                <div class="component-content">
-                    <div class="component-icon">C</div>
-                    <div class="component-name">Корпус</div>
-                    <div class="component-required">Обязательно</div>
-                </div>
-                <button class="btn" data-action="add">Выбрать</button>
-            </div>
-
-            <div class="component-item" data-component="graphics-card">
-                <div class="component-content">
-                    <div class="component-icon">V</div>
-                    <div class="component-name">Видеокарта</div>
-                </div>
-                <button class="btn btn-primary" data-action="add">Выбрать</button>
-            </div>
-
-            <div class="component-item" data-component="cpu-cooler">
-                <div class="component-content">
-                    <div class="component-icon">CO</div>
-                    <div class="component-name">Охлаждение процессора</div>
-                    <div class="component-required">Обязательно</div>
-                </div>
-                <button class="btn" data-action="add">Выбрать</button>
-            </div>
-
-            <div class="component-item" data-component="ram">
-                <div class="component-content">
-                    <div class="component-icon">RAM</div>
-                    <div class="component-name">Оперативная память</div>
-                    <div class="component-required">Обязательно</div>
-                </div>
-                <button class="btn" data-action="add">Выбрать</button>
-            </div>
-
-            <div class="component-item" data-component="storage">
-                <div class="component-content">
-                    <div class="component-icon">ST</div>
-                    <div class="component-name">Накопители</div>
-                    <div class="component-required">Обязательно</div>
-                </div>
-                <button class="btn" data-action="add">Выбрать</button>
-            </div>
-
-            <div class="component-item" data-component="sound-card">
-                <div class="component-content">
-                    <div class="component-icon">SC</div>
-                    <div class="component-name">Звуковая карта</div>
-                </div>
-                <button class="btn" data-action="add">Выбрать</button>
-            </div>
-
-            <div class="component-item" data-component="additional-details">
-                <div class="component-content">
-                    <div class="component-icon">AD</div>
-                    <div class="component-name">Доп. детали</div>
-                </div>
-                <button class="btn" data-action="add">Выбрать</button>
+            <div class="sidebar-card-body">
+                <div class="total-items-count" id="totalItemsCount">Добавлено товаров 0 шт.</div>
+                <div class="total-price-value" id="totalPrice">0 ₽</div>
             </div>
         </div>
 
-        <div class="config-controls">
-            <button class="btn btn-lg">Назад</button>
-            <button class="btn btn-lg btn-primary">Далее</button>
+        <!-- Progress Card -->
+        <div class="sidebar-card">
+            <div class="sidebar-card-header">
+                <h3 class="sidebar-card-title">Прогресс сборки</h3>
+            </div>
+            <div class="sidebar-card-body">
+                <div class="progress-section">
+                    <div class="progress-label">Обязательные товары</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" id="requiredProgress" style="width: 0%;">
+                            <span class="progress-bar-text" id="requiredProgressText">0%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="progress-section">
+                    <div class="progress-label">Основные товары</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" id="mainProgress" style="width: 0%;">
+                            <span class="progress-bar-text" id="mainProgressText">0%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="progress-section">
+                    <div class="progress-label">Дополнительные товары</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" id="additionalProgress" style="width: 0%;">
+                            <span class="progress-bar-text" id="additionalProgressText">0%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons Card -->
+        <div class="sidebar-card">
+            <div class="sidebar-card-body">
+                <div class="action-buttons-list">
+                    <button class="action-btn" id="printBtn" disabled>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 6 2 18 2 18 9"/>
+                            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                            <rect x="6" y="14" width="12" height="8"/>
+                        </svg>
+                        Распечатать конфигурацию
+                    </button>
+                    <button class="action-btn action-btn-primary" id="consultBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                            <polyline points="22,6 12,13 2,6"/>
+                        </svg>
+                        Получить консультацию специалиста
+                    </button>
+                    <button class="action-btn" id="exportPdfBtn" disabled>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                        </svg>
+                        Экспортировать в PDF
+                    </button>
+                    <button class="action-btn" id="saveConfigBtn" disabled>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                            <polyline points="17 21 17 13 7 13 7 21"/>
+                            <polyline points="7 3 7 8 15 8"/>
+                        </svg>
+                        Сохранить конфигурацию
+                    </button>
+                </div>
+            </div>
+        </div>
+    </aside>
+</div>
+
+<!-- Component Selection Modal -->
+<div class="component-modal" id="componentModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title" id="modalTitle">Выбор компонента</h2>
+            <button class="modal-close" id="modalClose">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="component-options-grid" id="modalOptions"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" id="modalCancel">Отмена</button>
+            <button class="btn btn-primary" id="modalConfirm" disabled>Подтвердить выбор</button>
         </div>
     </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
-    <script src="{% static 'core/js/configurator.js' %}"></script>
-{% endblock %}
+<script>
+// ===== ДАННЫЕ КОМПОНЕНТОВ =====
+const componentsData = [
+    {
+        id: 'processor',
+        name: 'Процессор',
+        shortName: 'P',
+        required: true,
+        category: 'required',
+        description: 'Процессор (ЦП, CPU) — это «мозг» компьютера. Он состоит из нескольких миллионов транзисторов, сгруппированных в ядра.',
+        items: [
+            { id: 'cpu1', name: 'Intel Core i5-13400F', specs: '10 ядер, 4.6 ГГц, LGA1700', price: 18990 },
+            { id: 'cpu2', name: 'Intel Core i7-13700K', specs: '16 ядер, 5.4 ГГц, LGA1700', price: 35990 },
+            { id: 'cpu3', name: 'AMD Ryzen 5 7600X', specs: '6 ядер, 5.3 ГГц, AM5', price: 22990 },
+            { id: 'cpu4', name: 'AMD Ryzen 7 7800X3D', specs: '8 ядер, 5.0 ГГц, AM5', price: 42990 },
+            { id: 'cpu5', name: 'Intel Core i9-13900K', specs: '24 ядра, 5.8 ГГц, LGA1700', price: 54990 }
+        ]
+    },
+    {
+        id: 'motherboard',
+        name: 'Материнская плата',
+        shortName: 'M',
+        required: true,
+        category: 'required',
+        description: 'Материнская плата — это главная плата ПК, соединяющая все компоненты системного блока в одно логическое целое.',
+        items: [
+            { id: 'mb1', name: 'ASUS Prime B760M-K', specs: 'LGA1700, DDR4, mATX', price: 12990 },
+            { id: 'mb2', name: 'MSI MAG B760 Tomahawk', specs: 'LGA1700, DDR5, ATX', price: 19990 },
+            { id: 'mb3', name: 'Gigabyte B650 AORUS Elite', specs: 'AM5, DDR5, ATX', price: 21990 },
+            { id: 'mb4', name: 'ASUS ROG Strix Z790-E', specs: 'LGA1700, DDR5, ATX', price: 45990 },
+            { id: 'mb5', name: 'MSI MPG X670E Carbon', specs: 'AM5, DDR5, ATX', price: 38990 }
+        ]
+    },
+    {
+        id: 'psu',
+        name: 'Блок питания',
+        shortName: 'PSU',
+        required: true,
+        category: 'required',
+        description: 'Блок питания преобразует электричество из сети для компонентов ПК. Мощность и эффективность важны для стабильной работы.',
+        items: [
+            { id: 'psu1', name: 'Be Quiet! System Power 10 550W', specs: '80+ Bronze, модульный', price: 5990 },
+            { id: 'psu2', name: 'Corsair RM750e', specs: '750W, 80+ Gold, модульный', price: 11990 },
+            { id: 'psu3', name: 'Seasonic Focus GX-850', specs: '850W, 80+ Gold, модульный', price: 14990 },
+            { id: 'psu4', name: 'NZXT C850 Gold', specs: '850W, 80+ Gold, модульный', price: 13990 },
+            { id: 'psu5', name: 'Be Quiet! Dark Power 13 1000W', specs: '1000W, 80+ Titanium', price: 24990 }
+        ]
+    },
+    {
+        id: 'case',
+        name: 'Корпус',
+        shortName: 'C',
+        required: true,
+        category: 'main',
+        description: 'Корпус защищает компоненты и обеспечивает вентиляцию. Важны совместимость и airflow.',
+        items: [
+            { id: 'case1', name: 'NZXT H5 Flow', specs: 'ATX, закалённое стекло, 2 вентилятора', price: 8990 },
+            { id: 'case2', name: 'Fractal Design Pop Air', specs: 'ATX, RGB, 3 вентилятора', price: 9990 },
+            { id: 'case3', name: 'Lian Li O11 Dynamic', specs: 'ATX, двойное стекло', price: 12990 },
+            { id: 'case4', name: 'Corsair 4000D Airflow', specs: 'ATX, сетчатая панель', price: 10990 },
+            { id: 'case5', name: 'Be Quiet! Silent Base 802', specs: 'ATX, шумоизоляция', price: 14990 }
+        ]
+    },
+    {
+        id: 'gpu',
+        name: 'Видеокарта',
+        shortName: 'V',
+        required: false,
+        category: 'main',
+        description: 'Видеокарта (GPU) обрабатывает графические данные. Критически важна для игр и 3D-рендеринга.',
+        items: [
+            { id: 'gpu1', name: 'NVIDIA GeForce RTX 4060', specs: '8GB GDDR6, 1830 МГц', price: 32990 },
+            { id: 'gpu2', name: 'NVIDIA GeForce RTX 4070', specs: '12GB GDDR6X, 1920 МГц', price: 59990 },
+            { id: 'gpu3', name: 'AMD Radeon RX 7800 XT', specs: '16GB GDDR6, 2430 МГц', price: 54990 },
+            { id: 'gpu4', name: 'NVIDIA GeForce RTX 4080', specs: '16GB GDDR6X, 2505 МГц', price: 99990 },
+            { id: 'gpu5', name: 'AMD Radeon RX 7900 XTX', specs: '24GB GDDR6, 2500 МГц', price: 89990 }
+        ]
+    },
+    {
+        id: 'cooling',
+        name: 'Охлаждение процессора',
+        shortName: 'CO',
+        required: true,
+        category: 'required',
+        description: 'Система охлаждения отводит тепло от CPU, предотвращая перегрев.',
+        items: [
+            { id: 'cool1', name: 'DeepCool AK400', specs: 'Башенный, 120мм, 220W TDP', price: 2990 },
+            { id: 'cool2', name: 'Arctic Liquid Freezer II 280', specs: 'СЖО, 280мм, 350W TDP', price: 8990 },
+            { id: 'cool3', name: 'Noctua NH-D15', specs: 'Башенный, 2x140мм, 260W TDP', price: 10990 },
+            { id: 'cool4', name: 'Corsair H150i Elite', specs: 'СЖО, 360мм, 400W TDP', price: 16990 },
+            { id: 'cool5', name: 'Be Quiet! Dark Rock Pro 4', specs: 'Башенный, 2x135мм, 250W TDP', price: 8990 }
+        ]
+    },
+    {
+        id: 'ram',
+        name: 'Оперативная память',
+        shortName: 'RAM',
+        required: true,
+        category: 'required',
+        description: 'Оперативная память (RAM) хранит данные для работы программ.',
+        items: [
+            { id: 'ram1', name: 'Kingston FURY Beast 16GB', specs: 'DDR4-3200, 2x8GB', price: 4990 },
+            { id: 'ram2', name: 'Corsair Vengeance 32GB', specs: 'DDR4-3600, 2x16GB', price: 8990 },
+            { id: 'ram3', name: 'G.Skill Trident Z5 32GB', specs: 'DDR5-6000, 2x16GB', price: 14990 },
+            { id: 'ram4', name: 'Kingston FURY Renegade 64GB', specs: 'DDR5-6400, 2x32GB', price: 24990 },
+            { id: 'ram5', name: 'Corsair Dominator 64GB', specs: 'DDR5-6800, 2x32GB', price: 32990 }
+        ]
+    },
+    {
+        id: 'storage',
+        name: 'Накопители',
+        shortName: 'ST',
+        required: true,
+        category: 'required',
+        description: 'Накопители хранят ОС, программы и файлы. NVMe SSD обеспечивают максимальную скорость.',
+        items: [
+            { id: 'stor1', name: 'Samsung 980 PRO 1TB', specs: 'NVMe M.2, 7000/5100 МБ/с', price: 9990 },
+            { id: 'stor2', name: 'WD Black SN850X 2TB', specs: 'NVMe M.2, 7300/6600 МБ/с', price: 16990 },
+            { id: 'stor3', name: 'Crucial P5 Plus 1TB', specs: 'NVMe M.2, 6600/5000 МБ/с', price: 7990 },
+            { id: 'stor4', name: 'Seagate FireCuda 530 2TB', specs: 'NVMe M.2, 7300/6900 МБ/с', price: 18990 },
+            { id: 'stor5', name: 'Kingston KC3000 4TB', specs: 'NVMe M.2, 7000/7000 МБ/с', price: 34990 }
+        ]
+    },
+    {
+        id: 'soundcard',
+        name: 'Звуковая карта',
+        shortName: 'SC',
+        required: false,
+        category: 'additional',
+        description: 'Звуковая карта улучшает качество аудио для аудиофилов.',
+        items: [
+            { id: 'snd1', name: 'Creative Sound BlasterX AE-5', specs: 'PCIe, 122dB SNR, RGB', price: 12990 },
+            { id: 'snd2', name: 'ASUS Essence STX II', specs: 'PCIe, 124dB SNR', price: 16990 },
+            { id: 'snd3', name: 'EVGA Nu Audio', specs: 'PCIe, 120dB SNR, RGB', price: 14990 }
+        ]
+    },
+    {
+        id: 'extras',
+        name: 'Доп. детали',
+        shortName: 'AD',
+        required: false,
+        category: 'additional',
+        description: 'Дополнительные аксессуары: вентиляторы, RGB-подсветка, кабель-менеджмент.',
+        items: [
+            { id: 'ext1', name: 'Доп. вентиляторы (3 шт)', specs: '120мм, RGB, PWM', price: 2990 },
+            { id: 'ext2', name: 'Кабель-менеджмент набор', specs: 'Полный комплект', price: 1490 },
+            { id: 'ext3', name: 'RGB лента 2м', specs: 'Адресуемая, 5V', price: 1990 },
+            { id: 'ext4', name: 'Подставка для видеокарты', specs: 'Регулируемая, RGB', price: 2490 }
+        ]
+    }
+];
 
+// ===== СОСТОЯНИЕ =====
+let selectedComponents = {};
+let currentModalComponent = null;
+let tempSelection = null;
+
+// ===== DOM ЭЛЕМЕНТЫ =====
+const componentsList = document.getElementById('componentsList');
+const componentModal = document.getElementById('componentModal');
+const modalTitle = document.getElementById('modalTitle');
+const modalOptions = document.getElementById('modalOptions');
+const modalClose = document.getElementById('modalClose');
+const modalCancel = document.getElementById('modalCancel');
+const modalConfirm = document.getElementById('modalConfirm');
+const totalPriceEl = document.getElementById('totalPrice');
+const totalItemsCount = document.getElementById('totalItemsCount');
+const printBtn = document.getElementById('printBtn');
+const exportPdfBtn = document.getElementById('exportPdfBtn');
+const saveConfigBtn = document.getElementById('saveConfigBtn');
+const consultBtn = document.getElementById('consultBtn');
+
+// ===== ИНИЦИАЛИЗАЦИЯ =====
+function init() {
+    renderComponents();
+    updateSummary();
+    setupEventListeners();
+}
+
+// ===== ОТРИСОВКА КОМПОНЕНТОВ =====
+function renderComponents() {
+    componentsList.innerHTML = '';
+
+    // Обязательные
+    const requiredTitle = document.createElement('div');
+    requiredTitle.className = 'components-category-title';
+    requiredTitle.textContent = 'Обязательные комплектующие';
+    componentsList.appendChild(requiredTitle);
+
+    componentsData.filter(c => c.required).forEach(component => {
+        const section = createComponentSection(component);
+        componentsList.appendChild(section);
+        if (selectedComponents[component.id]) updateSelectedInfo(component.id);
+    });
+
+    // Основные
+    const mainTitle = document.createElement('div');
+    mainTitle.className = 'components-category-title';
+    mainTitle.textContent = 'Основные комплектующие';
+    componentsList.appendChild(mainTitle);
+
+    componentsData.filter(c => !c.required && c.category === 'main').forEach(component => {
+        const section = createComponentSection(component);
+        componentsList.appendChild(section);
+        if (selectedComponents[component.id]) updateSelectedInfo(component.id);
+    });
+
+    // Дополнительные
+    const additionalTitle = document.createElement('div');
+    additionalTitle.className = 'components-category-title';
+    additionalTitle.textContent = 'Дополнительные комплектующие';
+    componentsList.appendChild(additionalTitle);
+
+    componentsData.filter(c => c.category === 'additional').forEach(component => {
+        const section = createComponentSection(component);
+        componentsList.appendChild(section);
+        if (selectedComponents[component.id]) updateSelectedInfo(component.id);
+    });
+}
+
+function createComponentSection(component) {
+    const section = document.createElement('div');
+    section.className = 'component-section' + (selectedComponents[component.id] ? ' has-selection' : '');
+    section.innerHTML = `
+        <div class="component-section-header">
+            <div class="component-icon-box">${component.shortName}</div>
+            <div class="component-section-info">
+                <h3 class="component-section-title">
+                    ${component.name}
+                    ${component.required ? '<span class="component-required-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Обязательный шаг</span>' : ''}
+                </h3>
+                <p class="component-section-desc">${component.description}</p>
+                <button class="btn component-select-btn" data-component="${component.id}">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Выбрать
+                </button>
+                <div class="component-selected-info">
+                    <div class="selected-component-name" id="selectedName_${component.id}">-</div>
+                    <div class="selected-component-price" id="selectedPrice_${component.id}">-</div>
+                    <button class="change-btn" data-component="${component.id}">Изменить</button>
+                </div>
+            </div>
+        </div>
+    `;
+    return section;
+}
+
+function updateSelectedInfo(componentId) {
+    const item = selectedComponents[componentId];
+    const section = document.querySelector(`.component-select-btn[data-component="${componentId}"]`)?.closest('.component-section');
+
+    if (item && section) {
+        section.classList.add('has-selection');
+        document.getElementById(`selectedName_${componentId}`).textContent = item.name;
+        document.getElementById(`selectedPrice_${componentId}`).textContent = item.price.toLocaleString() + ' ₽';
+    }
+}
+
+// ===== UPDATE SUMMARY =====
+function updateSummary() {
+    let total = 0;
+    let itemCount = 0;
+
+    const categoryProgress = {
+        required: { selected: 0, total: 0 },
+        main: { selected: 0, total: 0 },
+        additional: { selected: 0, total: 0 }
+    };
+
+    componentsData.forEach(component => {
+        categoryProgress[component.category].total++;
+        if (selectedComponents[component.id]) {
+            categoryProgress[component.category].selected++;
+            total += selectedComponents[component.id].price;
+            itemCount++;
+        }
+    });
+
+    totalPriceEl.textContent = total.toLocaleString() + ' ₽';
+    totalItemsCount.textContent = `Добавлено товаров ${itemCount} шт.`;
+
+    updateProgressBar('required', categoryProgress.required);
+    updateProgressBar('main', categoryProgress.main);
+    updateProgressBar('additional', categoryProgress.additional);
+
+    const allRequired = componentsData.filter(c => c.required).every(c => selectedComponents[c.id]);
+    printBtn.disabled = !allRequired;
+    exportPdfBtn.disabled = !allRequired;
+    saveConfigBtn.disabled = !allRequired;
+}
+
+function updateProgressBar(category, data) {
+    const percent = data.total > 0 ? Math.round((data.selected / data.total) * 100) : 0;
+    const fill = document.getElementById(`${category}Progress`);
+    const text = document.getElementById(`${category}ProgressText`);
+
+    fill.style.width = percent + '%';
+    text.textContent = percent + '%';
+}
+
+// ===== MODAL FUNCTIONS =====
+function openModal(componentId) {
+    const component = componentsData.find(c => c.id === componentId);
+    currentModalComponent = componentId;
+    tempSelection = selectedComponents[componentId] || null;
+
+    modalTitle.textContent = `Выбор: ${component.name}`;
+    modalOptions.innerHTML = '';
+
+    component.items.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'component-option-card' + (tempSelection?.id === item.id ? ' selected' : '');
+        card.innerHTML = `
+            <div class="option-card-name">${item.name}</div>
+            <div class="option-card-specs">${item.specs}</div>
+            <div class="option-card-price">${item.price.toLocaleString()} ₽</div>
+        `;
+        card.addEventListener('click', () => selectOption(item.id));
+        modalOptions.appendChild(card);
+    });
+
+    modalConfirm.disabled = !tempSelection;
+    componentModal.classList.add('active');
+}
+
+function selectOption(itemId) {
+    const component = componentsData.find(c => c.id === currentModalComponent);
+    tempSelection = component.items.find(i => i.id === itemId);
+
+    document.querySelectorAll('.component-option-card').forEach(card => card.classList.remove('selected'));
+    event.currentTarget.classList.add('selected');
+
+    modalConfirm.disabled = false;
+}
+
+function confirmSelection() {
+    if (currentModalComponent && tempSelection) {
+        selectedComponents[currentModalComponent] = tempSelection;
+        renderComponents();
+        updateSummary();
+    }
+    closeModal();
+}
+
+function closeModal() {
+    componentModal.classList.remove('active');
+    currentModalComponent = null;
+    tempSelection = null;
+}
+
+// ===== EVENT LISTENERS =====
+function setupEventListeners() {
+    componentsList.addEventListener('click', (e) => {
+        const selectBtn = e.target.closest('.component-select-btn');
+        const changeBtn = e.target.closest('.change-btn');
+
+        if (selectBtn || changeBtn) {
+            openModal((selectBtn || changeBtn).dataset.component);
+        }
+    });
+
+    modalClose.addEventListener('click', closeModal);
+    modalCancel.addEventListener('click', closeModal);
+    modalConfirm.addEventListener('click', confirmSelection);
+
+    componentModal.addEventListener('click', (e) => {
+        if (e.target === componentModal) closeModal();
+    });
+
+    printBtn.addEventListener('click', () => window.print());
+    consultBtn.addEventListener('click', () => alert('Заявка отправлена! Менеджер свяжется с вами.'));
+    exportPdfBtn.addEventListener('click', () => alert('Конфигурация экспортирована в PDF'));
+    saveConfigBtn.addEventListener('click', () => alert('Конфигурация сохранена'));
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+{% endblock %}
