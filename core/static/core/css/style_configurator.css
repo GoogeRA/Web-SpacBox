@@ -540,3 +540,350 @@
         justify-content: center;
     }
 }
+/* ========================================
+MODAL NEW LAYOUT STYLES
+======================================== */
+/* Modal - увеличиваем ширину */
+.component-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.component-modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: rgba(25, 25, 50, 0.98);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 1200px;  /* Увеличил с 900px до 1200px */
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(157, 78, 221, 0.4);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.modal-layout {
+    display: flex;
+    gap: 20px;
+    height: calc(90vh - 140px);
+}
+
+/* Left Sidebar Filters - немного уже */
+.modal-filters-sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    background: rgba(30, 30, 60, 0.6);
+    border: 1px solid rgba(157, 78, 221, 0.3);
+    border-radius: 12px;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+/* Right Content Area - шире */
+.modal-components-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Toolbar */
+.components-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(30, 30, 60, 0.6);
+    border: 1px solid rgba(157, 78, 221, 0.3);
+    border-radius: 10px;
+    padding: 12px 18px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.toolbar-label {
+    color: #9d9dbf;
+    font-size: 0.9rem;
+}
+
+.sort-options {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.sort-btn {
+    background: transparent;
+    border: 1px solid rgba(157, 78, 221, 0.3);
+    color: #9d9dbf;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.sort-btn:hover {
+    background: rgba(157, 78, 221, 0.2);
+    color: #ffffff;
+}
+
+.sort-btn.active {
+    background: linear-gradient(135deg, #9d4edd 0%, #7e3cc5 100%);
+    border-color: #9d4edd;
+    color: #ffffff;
+}
+
+/* Search Bar */
+.modal-search-bar {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6a6a8a;
+}
+
+.search-input {
+    width: 100%;
+    background: rgba(30, 30, 60, 0.8);
+    border: 1px solid rgba(157, 78, 221, 0.3);
+    border-radius: 10px;
+    padding: 12px 15px 12px 45px;
+    color: #e0e0ff;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    border-color: #9d4edd;
+    box-shadow: 0 0 0 3px rgba(157, 78, 221, 0.2);
+}
+
+/* Components List Container */
+.components-list-container {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.components-list-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.components-list-container::-webkit-scrollbar-track {
+    background: rgba(157, 78, 221, 0.1);
+    border-radius: 3px;
+}
+
+.components-list-container::-webkit-scrollbar-thumb {
+    background: rgba(157, 78, 221, 0.5);
+    border-radius: 3px;
+}
+
+/* Component List Item */
+.components-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.component-list-item {
+    background: rgba(35, 35, 70, 0.6);
+    border: 2px solid rgba(157, 78, 221, 0.3);
+    border-radius: 12px;
+    padding: 18px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.component-list-item:hover {
+    border-color: #9d4edd;
+    box-shadow: 0 4px 15px rgba(157, 78, 221, 0.3);
+    transform: translateX(4px);
+}
+
+.component-list-item.selected {
+    border-color: #10b981;
+    background: rgba(20, 40, 30, 0.7);
+}
+
+.list-item-image {
+    flex-shrink: 0;
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, rgba(157, 78, 221, 0.3) 0%, rgba(99, 102, 241, 0.3) 100%);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    border: 2px solid rgba(157, 78, 221, 0.5);
+}
+
+.list-item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.list-item-name {
+    font-size: 1.15rem;
+    color: #ffffff;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.list-item-specs {
+    color: #9d9dbf;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 8px;
+}
+
+.list-item-stock {
+    font-size: 0.85rem;
+    color: #10b981;
+    font-weight: 600;
+}
+
+.list-item-stock.out-of-stock {
+    color: #ff5252;
+}
+
+.list-item-price-action {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-end;
+}
+
+.list-item-price {
+    font-size: 1.4rem;
+    color: #10b981;
+    font-weight: 700;
+}
+
+.list-item-select-btn {
+    background: linear-gradient(135deg, #9d4edd 0%, #7e3cc5 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+}
+
+.list-item-select-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(157, 78, 221, 0.4);
+}
+
+/* Responsive для модалки */
+@media (max-width: 1200px) {
+    .modal-content {
+        max-width: 1000px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .modal-layout {
+        flex-direction: column;
+        height: auto;
+        max-height: 80vh;
+    }
+
+    .modal-filters-sidebar {
+        width: 100%;
+        max-height: 250px;
+    }
+
+    .modal-content {
+        max-width: 95%;
+    }
+}
+
+
+
+
+/* Кнопки действий с выбранным компонентом */
+.selected-component-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+}
+
+.cancel-selection-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 82, 82, 0.15);
+    color: #ff5252;
+    border: 1px solid rgba(255, 82, 82, 0.3);
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cancel-selection-btn:hover {
+    background: rgba(255, 82, 82, 0.25);
+    border-color: #ff5252;
+    color: #ff6b6b;
+    transform: translateY(-1px);
+}
+
+.cancel-selection-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Адаптив для кнопок */
+@media (max-width: 480px) {
+    .selected-component-actions {
+        flex-direction: column;
+    }
+
+    .cancel-selection-btn,
+    .change-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
