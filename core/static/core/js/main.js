@@ -12,14 +12,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Обработка кнопок добавления в сборку
+       // Обработка кнопок добавления в сборку
     const addToCartBtns = document.querySelectorAll('.add-to-cart-btn');
     addToCartBtns.forEach(btn => {
         btn.addEventListener('click', function(e) {
+            e.stopPropagation(); // 🔥 Важно: не перехватывать клик ссылки
             if (!this.classList.contains('disabled')) {
-                e.preventDefault();
                 const componentName = this.closest('.component-card').querySelector('.component-name').textContent;
-                alert('✅ "' + componentName + '" добавлен в сборку!');
+                const componentId = this.getAttribute('onclick')?.match(/\d+/)?.[0];
+
+                // Интеграция с конфигуратором (если нужно)
+                if (typeof addToBuild === 'function') {
+                    addToBuild(componentId, componentName);
+                } else {
+                    alert('✅ "' + componentName + '" добавлен в сборку!');
+                }
             }
         });
     });

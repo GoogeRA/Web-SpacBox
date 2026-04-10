@@ -7,7 +7,6 @@
 <link rel="stylesheet" href="{% static 'core/css/style_components.css' %}">
 {% endblock %}
 
-
 {% block content %}
 <!-- Page Header -->
 <section class="page-header">
@@ -124,58 +123,38 @@
         <section class="components-section">
             <div class="components-grid view-grid" id="components-container">
                 {% for component in components %}
+                <!-- КАРТОЧКА ТОВАРА -->
                 <div class="component-card fade-in card-grid">
-                    <!-- Grid View -->
-                    <div class="component-grid-view">
-                        <div class="component-image">
+
+                    <!-- 1. КЛИКАБЕЛЬНАЯ ЗОНА (Картинка + Инфо) -->
+                    <a href="{% url 'core:component_detail' component.id %}" class="card-clickable-area">
+                        <!-- Изображение -->
+                        <div class="component-image-wrapper">
                             <div class="image-placeholder">{{ component.manufacturer|first }}</div>
                             {% if component.is_hit %}<div class="component-badge">HIT</div>{% endif %}
                             {% if not component.in_stock %}<div class="out-of-stock">НЕТ В НАЛИЧИИ</div>{% endif %}
                         </div>
+
+                        <!-- Информация -->
                         <div class="component-info">
                             <h3 class="component-name">{{ component.name }}</h3>
                             <p class="component-category">{{ component.category }}</p>
                             <p class="component-manufacturer">{{ component.manufacturer }}</p>
                         </div>
-                        <div class="component-price">
+                    </a>
+
+                    <!-- 2. БЛОК ЦЕНЫ И КНОПКИ (Отдельно от ссылки) -->
+                    <div class="component-action-block">
+                        <div class="price-wrapper">
                             <span class="price-value">{{ component.price|floatformat:0 }} ₽</span>
-                            {% if component.in_stock %}
-                            <button class="add-to-cart-btn" onclick="addToCart('{{ component.name }}')">В СБОРКУ</button>
-                            {% else %}
-                            <button class="add-to-cart-btn disabled" disabled>ОЖИДАЕТСЯ</button>
-                            {% endif %}
                         </div>
+                        {% if component.in_stock %}
+                        <button class="add-to-cart-btn" onclick="addToCart('{{ component.name }}', {{ component.id }})">В СБОРКУ</button>
+                        {% else %}
+                        <button class="add-to-cart-btn disabled" disabled>ОЖИДАЕТСЯ</button>
+                        {% endif %}
                     </div>
 
-                    <!-- List View -->
-                    <div class="component-list-view">
-                        <div class="list-image">
-                            <div class="image-placeholder">{{ component.manufacturer|first }}</div>
-                            {% if component.is_hit %}<div class="component-badge">HIT</div>{% endif %}
-                            {% if not component.in_stock %}<div class="out-of-stock">НЕТ В НАЛИЧИИ</div>{% endif %}
-                        </div>
-                        <div class="list-info">
-                            <h3 class="component-name">{{ component.name }}</h3>
-                            <p class="component-category">{{ component.category }}</p>
-                            <p class="component-manufacturer">{{ component.manufacturer }}</p>
-                            <p class="component-description">
-                                Артикул: #{{ component.id }} |
-                                {% if component.in_stock %}
-                                    <span class="in-stock">✓ В наличии</span>
-                                {% else %}
-                                    <span class="out-of-stock-text">✗ Ожидается</span>
-                                {% endif %}
-                            </p>
-                        </div>
-                        <div class="list-price">
-                            <span class="price-value">{{ component.price|floatformat:0 }} ₽</span>
-                            {% if component.in_stock %}
-                            <button class="add-to-cart-btn" onclick="addToCart('{{ component.name }}')">В СБОРКУ</button>
-                            {% else %}
-                            <button class="add-to-cart-btn disabled" disabled>ОЖИДАЕТСЯ</button>
-                            {% endif %}
-                        </div>
-                    </div>
                 </div>
                 {% empty %}
                 <div class="empty-state">
@@ -189,14 +168,12 @@
         {% if paginator.num_pages > 1 %}
         <section class="pagination-section">
             <div class="pagination">
-                <!-- Previous -->
                 {% if page_obj.has_previous %}
                     <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% for cat in selected_categories %}&category={{ cat }}{% endfor %}{% for brand in selected_brands %}&brand={{ brand }}{% endfor %}{% if request.GET.price_from %}&price_from={{ request.GET.price_from }}{% endif %}{% if request.GET.price_to %}&price_to={{ request.GET.price_to }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}" class="page-link">← Назад</a>
                 {% else %}
                     <span class="page-link disabled">← Назад</span>
                 {% endif %}
 
-                <!-- Page numbers -->
                 {% for num in paginator.page_range %}
                     {% if num == page_obj.number %}
                         <span class="page-link active">{{ num }}</span>
@@ -205,7 +182,6 @@
                     {% endif %}
                 {% endfor %}
 
-                <!-- Next -->
                 {% if page_obj.has_next %}
                     <a href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% for cat in selected_categories %}&category={{ cat }}{% endfor %}{% for brand in selected_brands %}&brand={{ brand }}{% endfor %}{% if request.GET.price_from %}&price_from={{ request.GET.price_from }}{% endif %}{% if request.GET.price_to %}&price_to={{ request.GET.price_to }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}" class="page-link">Вперёд →</a>
                 {% else %}
@@ -218,7 +194,7 @@
 </section>
 
 <script>
-    function addToCart(name) {
+    function addToCart(name, id) {
         alert('✅ "' + name + '" добавлен в сборку!');
     }
 
@@ -232,32 +208,17 @@
         window.location.href = url.toString();
     }
 
-    // Переключение вида: Сетка / Список
     function switchView(viewType) {
-        // Сохраняем в localStorage
         localStorage.setItem('componentsView', viewType);
-
-        // Обновляем кнопки
         document.querySelectorAll('.view-btn').forEach(btn => {
             btn.classList.remove('active');
-            if(btn.dataset.view === viewType) {
-                btn.classList.add('active');
-            }
+            if(btn.dataset.view === viewType) btn.classList.add('active');
         });
-
-        // Обновляем контейнер
         const container = document.getElementById('components-container');
         container.classList.remove('view-grid', 'view-list');
         container.classList.add('view-' + viewType);
-
-        // Обновляем карточки
-        document.querySelectorAll('.component-card').forEach(card => {
-            card.classList.remove('card-grid', 'card-list');
-            card.classList.add('card-' + viewType);
-        });
     }
 
-    // Загрузка сохранённого вида при открытии страницы
     document.addEventListener('DOMContentLoaded', function() {
         const savedView = localStorage.getItem('componentsView') || 'grid';
         switchView(savedView);

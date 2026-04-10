@@ -10,4 +10,6 @@ urlpatterns = [
     path('profile/', views.profile_view, name='profile'),
     path('registration/login', views.login_view, name='login'),
     path('registration/logout/', views.logout_view, name='logout'),
-    path('registration/register/', views.register_view, name='register')]
+    path('registration/register/', views.register_view, name='register'),
+    path('component/<int:component_id>/', views.component_detail_view, name='component_detail'),
+]
