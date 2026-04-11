@@ -1,0 +1,79 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}SpecBox | Корзина{% endblock %}
+
+{% block extra_css %}
+<!-- Если нужно, можно добавить специфичные стили, но основные уже есть -->
+<style>
+    .btn-primary {
+        background: linear-gradient(135deg, #9d4edd 0%, #7e3cc5 100%);
+        color: #fff;
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(157, 78, 221, 0.4); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .summary-card {
+        background: rgba(25, 25, 50, 0.9);
+        border: 1px solid rgba(157, 78, 221, 0.3);
+        border-radius: 16px;
+        padding: 25px;
+    }
+    .summary-title { font-size: 1.4rem; color: #fff; margin: 0 0 20px; border-bottom: 1px solid rgba(157, 78, 221, 0.2); padding-bottom: 15px; }
+    .summary-row { display: flex; justify-content: space-between; margin-bottom: 12px; color: #c5c5e0; }
+    .summary-row.total { font-size: 1.3rem; font-weight: 700; color: #fff; margin-top: 10px; }
+    .summary-value { font-weight: 600; }
+    .summary-divider { height: 1px; background: rgba(157, 78, 221, 0.2); margin: 15px 0; }
+    .btn-full { width: 100%; justify-content: center; display: flex; }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <h1 class="page-title">КОРЗИНА</h1>
+    <p class="page-subtitle">Проверьте выбранные компоненты перед оформлением заказа</p>
+</section>
+
+<div class="cart-container" style="display: grid; grid-template-columns: 1fr 380px; gap: 30px; margin: 40px 0; align-items: flex-start;">
+
+    <!-- Левая часть: Список товаров (Заполняется через JS) -->
+    <div class="cart-items-wrapper" id="cartItemsWrapper" style="background: rgba(25, 25, 50, 0.75); border: 1px solid rgba(157, 78, 221, 0.3); border-radius: 16px; padding: 25px;">
+        <!-- JS вставит сюда товары или сообщение "Пусто" -->
+    </div>
+
+    <!-- Правая часть: Итого -->
+    <aside class="cart-summary">
+        <div class="summary-card">
+            <h2 class="summary-title">Ваш заказ</h2>
+
+            <div class="summary-row">
+                <span>Товары (<span id="totalItemsCount">0</span> шт.)</span>
+                <span class="summary-value" id="subtotalValue">0 ₽</span>
+            </div>
+            <div class="summary-row">
+                <span>Доставка</span>
+                <span class="summary-value">Бесплатно</span>
+            </div>
+            <div class="summary-divider"></div>
+            <div class="summary-row total">
+                <span>Итого</span>
+                <span class="summary-value" id="totalValue">0 ₽</span>
+            </div>
+
+            <button class="btn btn-primary btn-full" id="checkoutBtn" disabled style="margin-top: 20px;">ОФОРМИТЬ ЗАКАЗ</button>
+        </div>
+    </aside>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Подключаем исправленный скрипт -->
+<script src="{% static 'core/js/cart.js' %}"></script>
+{% endblock %}

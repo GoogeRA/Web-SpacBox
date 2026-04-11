@@ -118,7 +118,6 @@
                 </select>
             </div>
         </div>
-
         <!-- Components Grid/List -->
         <section class="components-section">
             <div class="components-grid view-grid" id="components-container">
@@ -149,7 +148,8 @@
                             <span class="price-value">{{ component.price|floatformat:0 }} ₽</span>
                         </div>
                         {% if component.in_stock %}
-                        <button class="add-to-cart-btn" onclick="addToCart('{{ component.name }}', {{ component.id }})">В СБОРКУ</button>
+                        <!-- Добавлен data-id для идентификации товара -->
+                        <button class="add-to-cart-btn" data-id="{{ component.id }}">В КОРЗИНУ</button>
                         {% else %}
                         <button class="add-to-cart-btn disabled" disabled>ОЖИДАЕТСЯ</button>
                         {% endif %}
@@ -225,3 +225,4 @@
     });
 </script>
 {% endblock %}
+

@@ -6,6 +6,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
+import json
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
+
 from .models import Component, Category, SavedBuild, Order, Favorite, Notification, UserProfile
 
 
@@ -207,6 +212,8 @@ def component_detail_view(request, component_id):
 
     return render(request, 'core/component_detail.html', {'component': component})
 
+def cart_view(request):
+    return render(request, 'core/cart.html')
 
 def get_time_ago(dt):
     """Возвращает время в формате '2 часа назад'"""
@@ -224,3 +231,77 @@ def get_time_ago(dt):
         return f'{int(seconds // 86400)} дн. назад'
     else:
         return dt.strftime('%d.%m.%Y')
+
+@require_POST
+def add_to_cart(request):
+    """Добавляет компонент в корзину (сессия Django)"""
+    try:
+        data = json.loads(request.body)
+        component_id = str(data.get('component_id'))
+        if not component_id:
+            return JsonResponse({'status': 'error', 'message': 'ID не указан'}, status=400)
+
+        cart = request.session.get('cart', {})
+        cart[component_id] = cart.get(component_id, 0) + 1
+        request.session['cart'] = cart
+        request.session.modified = True
+
+        return JsonResponse({
+            'status': 'success',
+            'total_items': sum(cart.values()),
+            'message': 'Товар добавлен в корзину'
+        })
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+@require_POST
+def remove_from_cart(request):
+    """Удаляет компонент из корзины"""
+    data = json.loads(request.body)
+    component_id = str(data.get('component_id'))
+    cart = request.session.get('cart', {})
+    cart.pop(component_id, None)
+    request.session['cart'] = cart
+    request.session.modified = True
+    return JsonResponse({'status': 'success', 'total_items': sum(cart.values())})
+
+@require_POST
+def update_cart_quantity(request):
+    """Обновляет количество товара в корзине"""
+    data = json.loads(request.body)
+    component_id = str(data.get('component_id'))
+    quantity = int(data.get('quantity', 1))
+    if quantity < 1:
+        return remove_from_cart(request)
+    cart = request.session.get('cart', {})
+    cart[component_id] = quantity
+    request.session['cart'] = cart
+    request.session.modified = True
+    return JsonResponse({'status': 'success', 'total_items': sum(cart.values())})
+
+def cart_view(request):
+    """Страница корзины"""
+    cart = request.session.get('cart', {})
+    cart_items = []
+    total_price = 0
+    total_count = 0
+
+    for comp_id, qty in cart.items():
+        try:
+            comp = Component.objects.get(id=comp_id)
+            line_total = comp.price * qty
+            cart_items.append({
+                'component': comp,
+                'quantity': qty,
+                'line_total': line_total
+            })
+            total_price += line_total
+            total_count += qty
+        except Component.DoesNotExist:
+            pass
+
+    return render(request, 'core/cart.html', {
+        'cart_items': cart_items,
+        'total_price': total_price,
+        'total_count': total_count
+    })
