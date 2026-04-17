@@ -139,6 +139,11 @@
                             <h3 class="component-name">{{ component.name }}</h3>
                             <p class="component-category">{{ component.category }}</p>
                             <p class="component-manufacturer">{{ component.manufacturer }}</p>
+                            <button type="button"
+                                    class="btn-compare {% if component.id|stringformat:'s' in compare_ids %}active{% endif %}"
+                                    onclick="event.preventDefault(); event.stopPropagation(); toggleCompare(this, {{ component.id }})">
+                                {% if component.id|stringformat:'s' in compare_ids %}✓ В сравнении{% else %}Сравнить{% endif %}
+                            </button>
                         </div>
                     </a>
 
@@ -154,6 +159,7 @@
                         <button class="add-to-cart-btn disabled" disabled>ОЖИДАЕТСЯ</button>
                         {% endif %}
                     </div>
+
 
                 </div>
                 {% empty %}
@@ -223,6 +229,33 @@
         const savedView = localStorage.getItem('componentsView') || 'grid';
         switchView(savedView);
     });
+
+    function getCSRFToken() {
+    return document.cookie.split('; ').find(row => row.startsWith('csrftoken='))?.split('=')[1] || '';
+    }
+
+    function toggleCompare(btn, componentId) {
+        const action = btn.classList.contains('active') ? 'remove' : 'add';
+        fetch("{% url 'core:compare_manage' %}", {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCSRFToken()},
+            body: JSON.stringify({ action: action, component_id: componentId })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === 'success') {
+                if (action === 'add') {
+                    btn.classList.add('active');
+                    btn.textContent = '✓ В сравнении';
+                } else {
+                    btn.classList.remove('active');
+                    btn.textContent = 'Сравнить';
+                }
+            } else {
+                alert(data.message);
+            }
+        });
+    }
 </script>
 {% endblock %}
 

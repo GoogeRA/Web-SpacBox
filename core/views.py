@@ -14,6 +14,87 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import Component, Category, SavedBuild, Order, Favorite, Notification, UserProfile
 
 
+@require_POST
+def compare_manage(request):
+    """AJAX-обработчик для управления списком сравнения"""
+    try:
+        data = json.loads(request.body)
+        action = data.get('action')
+        component_id = str(data.get('component_id'))
+        compare_list = request.session.get('compare', [])
+
+        if action == 'add':
+            if len(compare_list) >= 4:
+                return JsonResponse({'status': 'error', 'message': 'Максимум 4 компонента для сравнения'}, status=400)
+            if component_id not in compare_list:
+                compare_list.append(component_id)
+        elif action == 'remove':
+            if component_id in compare_list:
+                compare_list.remove(component_id)
+        elif action == 'clear':
+            compare_list = []
+
+        request.session['compare'] = compare_list
+        request.session.modified = True
+
+        return JsonResponse({
+            'status': 'success',
+            'count': len(compare_list),
+            'in_list': component_id in compare_list
+        })
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+def compare_view(request):
+    """Страница сравнения: собирает компоненты из сессии и формирует строки таблицы"""
+    compare_ids = request.session.get('compare', [])
+    compare_components = []
+    for cid in compare_ids:
+        try:
+            comp = Component.objects.get(id=cid)
+            comp.specs = comp.specifications or {}
+            compare_components.append(comp)
+        except Component.DoesNotExist:
+            continue
+
+    # Собираем все уникальные ключи характеристик
+    spec_keys = set()
+    for comp in compare_components:
+        spec_keys.update(comp.specs.keys())
+
+    # Формируем строки таблицы
+    table_rows = [
+        {'name': 'Производитель', 'values': [c.manufacturer for c in compare_components]},
+        {'name': 'Категория', 'values': [c.category.name if c.category else '—' for c in compare_components]},
+        {'name': 'Цена', 'values': [f'{c.price:,.0f} ₽' for c in compare_components]},
+    ]
+
+    for key in sorted(spec_keys):
+        row_vals = []
+        for comp in compare_components:
+            val = comp.specs.get(key, '—')
+            # Преобразуем списки/словари в строку или ставим прочерк
+            row_vals.append(str(val) if not isinstance(val, (list, dict)) else '—')
+        table_rows.append({'name': key, 'values': row_vals})
+
+    return render(request, 'core/compare.html', {
+        'compare_components': compare_components,
+        'table_rows': table_rows
+    })
+
+def components(request):
+    """... ваш существующий код без изменений ..."""
+    # ... (все фильтры, пагинация остаются как есть) ...
+
+    # 👇 ДОБАВЬТЕ эту строку в конец перед return render
+    compare_ids = [str(x) for x in request.session.get('compare', [])]
+
+    context = {
+        # ... ваши существующие переменные ...
+        'compare_ids': compare_ids,  # 👈 ПЕРЕДАЁМ В ШАБЛОН
+    }
+    return render(request, 'core/components.html', context)
+
 def index(request):
     """Главная страница SpecBox"""
     return render(request, 'core/index.html')

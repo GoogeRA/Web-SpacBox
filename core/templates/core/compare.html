@@ -1,0 +1,78 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}SpecBox | Сравнение{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/style_compare.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="compare-controls">
+    <button class="btn btn-danger" onclick="clearCompare()">Очистить список</button>
+    <a href="{% url 'core:components' %}" class="btn btn-outline">← Вернуться в каталог</a>
+</div>
+
+{% if compare_components %}
+<div class="compare-wrapper">
+    <table class="compare-table">
+        <thead>
+            <tr>
+                <th>Характеристика</th>
+                {% for comp in compare_components %}
+                <th>
+                    <div class="product-card-header">
+                        <div class="product-image-placeholder">{{ comp.name|first }}</div>
+                        <p class="product-name">{{ comp.name }}</p>
+                        <p class="product-price">{{ comp.price|floatformat:0 }} ₽</p>
+                        <span class="{% if comp.in_stock %}in-stock{% else %}out-stock{% endif %}">
+                            {% if comp.in_stock %}В наличии{% else %}Нет в наличии{% endif %}
+                        </span>
+                        <button class="btn-remove" onclick="removeFromCompare({{ comp.id }})" title="Удалить">✕</button>
+                    </div>
+                </th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in table_rows %}
+            <tr>
+                <td>{{ row.name }}</td>
+                {% for val in row.values %}
+                    <td>{{ val }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="empty-state">
+    <div class="empty-icon">📊</div>
+    <h3>Список сравнения пуст</h3>
+    <p>Добавьте компоненты из каталога, нажав кнопку "Сравнить"</p>
+    <a href="{% url 'core:components' %}" class="btn btn-primary">Перейти в каталог</a>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function getCSRFToken() {
+    return document.cookie.split('; ').find(row => row.startsWith('csrftoken='))?.split('=')[1] || '';
+}
+function removeFromCompare(id) {
+    fetch("{% url 'core:compare_manage' %}", {
+        method: 'POST', headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCSRFToken()},
+        body: JSON.stringify({ action: 'remove', component_id: id })
+    }).then(() => location.reload());
+}
+function clearCompare() {
+    fetch("{% url 'core:compare_manage' %}", {
+        method: 'POST', headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCSRFToken()},
+        body: JSON.stringify({ action: 'clear' })
+    }).then(() => location.reload());
+}
+</script>
+{% endblock %}
+

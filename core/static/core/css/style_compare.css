@@ -1,0 +1,145 @@
+/* ========================================
+COMPARE.CSS - СТИЛИ СТРАНИЦЫ СРАВНЕНИЯ
+======================================== */
+
+.compare-controls {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 30px;
+    justify-content: center;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s;
+}
+
+.btn-primary { background: linear-gradient(135deg, #9d4edd 0%, #7e3cc5 100%); color: #fff; }
+.btn-primary:hover { box-shadow: 0 0 15px #9d4edd; transform: translateY(-2px); }
+
+.btn-outline { background: transparent; border: 1px solid #9d4edd; color: #9d4edd; }
+.btn-outline:hover { background: rgba(157, 78, 221, 0.1); }
+
+.btn-danger { background: rgba(255, 82, 82, 0.2); border: 1px solid #ff5252; color: #ff5252; }
+.btn-danger:hover { background: rgba(255, 82, 82, 0.4); color: #fff; }
+
+/* Таблица */
+.compare-wrapper {
+    overflow-x: auto;
+    background: rgba(25, 25, 50, 0.6);
+    border: 1px solid rgba(157, 78, 221, 0.3);
+    border-radius: 16px;
+    padding: 20px;
+}
+
+.compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px; /* Чтобы на мобильных был скролл */
+}
+
+.compare-table th, .compare-table td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid rgba(157, 78, 221, 0.1);
+    vertical-align: middle;
+}
+
+/* Первая колонка (Названия характеристик) */
+.compare-table th:first-child,
+.compare-table td:first-child {
+    text-align: left;
+    color: #b0b0d0;
+    font-weight: 500;
+    width: 200px;
+    background: rgba(25, 25, 50, 0.8);
+    position: sticky;
+    left: 0;
+    z-index: 10;
+    border-right: 1px solid rgba(157, 78, 221, 0.2);
+}
+
+/* Карточка товара в заголовке */
+.product-card-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.product-image-placeholder {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, rgba(157, 78, 221, 0.3), rgba(99, 102, 241, 0.3));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #fff;
+    border: 2px solid #9d4edd;
+}
+
+.product-name { color: #fff; font-size: 1.1rem; font-weight: 700; margin: 0; }
+.product-price { color: #10b981; font-size: 1.2rem; font-weight: 700; margin: 0; }
+.in-stock { color: #10b981; font-size: 0.8rem; }
+.out-stock { color: #ff5252; font-size: 0.8rem; }
+
+.btn-remove {
+    background: transparent;
+    border: none;
+    color: #ff5252;
+    font-size: 1.2rem;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: 0.3s;
+}
+.btn-remove:hover { opacity: 1; transform: scale(1.2); }
+
+/* Строки с разными значениями */
+.diff {
+    background: rgba(157, 78, 221, 0.15);
+    color: #fff;
+    border-radius: 6px;
+}
+
+/* Пустое состояние */
+.empty-state {
+    text-align: center;
+    padding: 60px;
+    background: rgba(25, 25, 50, 0.6);
+    border-radius: 16px;
+    border: 1px dashed rgba(157, 78, 221, 0.3);
+}
+.empty-icon { font-size: 4rem; margin-bottom: 20px; opacity: 0.5; }
+.empty-state h3 { color: #fff; margin-bottom: 10px; }
+.empty-state p { color: #b0b0d0; margin-bottom: 25px; }
+
+/* Кнопка "Сравнить" в каталоге */
+.btn-compare {
+    background: transparent;
+    border: 1px solid rgba(157, 78, 221, 0.4);
+    color: #9d4edd;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+    margin-top: 8px;
+    width: 100%;
+}
+.btn-compare:hover {
+    background: rgba(157, 78, 221, 0.1);
+}
+.btn-compare.active {
+    background: #9d4edd;
+    color: #fff;
+    border-color: #9d4edd;
+}
